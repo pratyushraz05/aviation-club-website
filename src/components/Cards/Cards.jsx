@@ -1,4 +1,4 @@
-import "./Card.css";
+import "./Cards.css";
 import Button from "../Button/Button";
 
 function Card({ image, title, description, buttonText }) {

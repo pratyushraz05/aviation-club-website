@@ -1,5 +1,5 @@
 import "./Navbar.css";
-
+import { Link } from "react-router-dom";
 function Navbar() {
   return (
     <nav className="navbar">
@@ -12,12 +12,12 @@ function Navbar() {
       </div>
 
       <ul className="nav-links">
-        <li><a href="#"> Home</a></li>
-        <li><a href="#"> Events</a></li>
-        <li><a href="#"> Gallery</a></li>
-        <li><a href="#"> Results</a></li>
-        <li><a href="#"> Contact</a></li>
-      </ul>
+  <li><Link to="/">Home</Link></li>
+  <li><Link to="/events">Events</Link></li>
+  <li><Link to="/gallery">Gallery</Link></li>
+  <li><Link to="/results">Results</Link></li>
+  <li><Link to="/contact">Contact</Link></li>
+</ul>
     </nav>
   );
 }
