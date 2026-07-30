@@ -1,13 +1,506 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>aviation-club-website</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aviation Club | National Institute of Technology Raipur</title>
+<meta name="description" content="Official Aviation Club of NIT Raipur — workshops, UAV competitions, and aircraft development projects." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar" id="navbar">
+  <div class="navbar-inner">
+
+    <a href="#hero" class="brand">
+      <img src="images/logo.png" alt="NIT Raipur Logo" class="nit-logo">
+
+      <div class="brand-text">
+        <span class="club-name">Aviation Club</span>
+        <small>NIT Raipur</small>
+      </div>
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Primary navigation">
+      <a href="#about">About</a>
+      <a href="#history">History</a>
+      <a href="#projects">Projects</a>
+      <a href="#activities">Activities</a>
+      <a href="#notifications">Notices</a>
+      <a href="#contact" class="nav-cta">Join Us</a>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+      aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="hero" aria-label="Introduction">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="clouds" aria-hidden="true">
+    <span class="cloud c1"></span>
+    <span class="cloud c2"></span>
+    <span class="cloud c3"></span>
+  </div>
+
+  <div class="flight-path" aria-hidden="true">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="none">
+      <path id="heroPath" d="M -50 320 C 200 340, 350 180, 550 200 S 850 60, 1050 40" />
+    </svg>
+    <div class="plane-on-path" id="planeOnPath">✈</div>
+  </div>
+
+  <div class="hero-content reveal fade-up">
+    <p class="eyebrow">Dream &bull; Design &bull; Fly</p>
+    <h1>Aviation Club<br><span>National Institute of Technology Raipur</span></h1>
+    <p class="hero-sub">
+      From glider builds and CAD workshops to STOL and VTOL aircraft development,
+      the Aviation Club turns aerodynamic theory into flight-tested engineering —
+      one competition, one prototype at a time.
+    </p>
+    <div class="hero-buttons">
+      <a href="#about" class="btn btn-primary">Explore Club</a>
+      <a href="#contact" class="btn btn-secondary">Join Us</a>
+    </div>
+  </div>
+
+  <a href="#about" class="scroll-cue" aria-label="Scroll to About section">
+    <span></span>
+  </a>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="about" id="about" aria-labelledby="about-heading">
+  <div class="container about-grid">
+    <div class="about-image reveal fade-left">
+      <img src="images/about-club.jpg" alt="Aviation Club members working on a UAV assembly" loading="lazy">
+      <div class="about-badge">
+        <strong>6</strong>
+        <span>Events organized this session</span>
+      </div>
+    </div>
+    <div class="about-content reveal fade-right">
+      <p class="eyebrow">About the Club</p>
+      <h2 id="about-heading">Engineering flight, one prototype at a time</h2>
+      <p>
+        The Aviation Club of NIT Raipur brings together students who want to
+        move beyond theory and build things that actually fly. Through the
+        academic year, the club runs workshops on aerodynamics and CAD,
+        organizes UAV and drone competitions, and drives original aircraft
+        projects from concept to flight test.
+      </p>
+      <p>
+        Every activity — from the Air Force Day quiz and RC plane landings to
+        the STOL and VTOL development projects — bridges classroom
+        aerodynamics with practical engineering: precision, innovation and
+        critical thinking applied to real aircraft.
+      </p>
+      <ul class="about-list">
+        <li><strong>Innovation:</strong> Original STOL and VTOL aircraft projects, from literature review to flight test.</li>
+        <li><strong>UAV &amp; Drones:</strong> Full-cycle quadcopter design, assembly and racing competitions.</li>
+        <li><strong>Aeromodelling:</strong> Glider builds, RC plane landings and parachute-landing challenges.</li>
+        <li><strong>Workshops:</strong> CAD (Creo Parametric), aerodynamics fundamentals, and simulation tools like OpenVSP, FEA and CFD.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CLUB HISTORY (TIMELINE) ===================== -->
+<section class="history" id="history" aria-labelledby="history-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Club History</p>
+      <h2 id="history-heading">The route so far</h2>
+    </div>
+
+    <ol class="timeline">
+      <li class="timeline-item reveal fade-right">
+        <div class="timeline-dot" aria-hidden="true">✈</div>
+        <div class="timeline-card">
+          <span class="timeline-date">8 October 2025</span>
+          <h3>Air Force Day</h3>
+          <p>Aviation quiz, RC plane landing and parachute landing challenges honoring the Indian Air Force, with 50 participants at Hira Hall.</p>
+        </div>
+      </li>
+      <li class="timeline-item reveal fade-left">
+        <div class="timeline-dot" aria-hidden="true">◧</div>
+        <div class="timeline-card">
+          <span class="timeline-date">8 November 2025</span>
+          <h3>DIMENSIONS: CAD Workshop &amp; Competition</h3>
+          <p>Creo Parametric training followed by a two-tier CAD design competition for 75 beginner and expert participants.</p>
+        </div>
+      </li>
+      <li class="timeline-item reveal fade-right">
+        <div class="timeline-dot" aria-hidden="true">〜</div>
+        <div class="timeline-card">
+          <span class="timeline-date">31 Jan – 1 Feb 2026</span>
+          <h3>Aerodynamics Workshop</h3>
+          <p>Two-day session on flight principles and drone systems with glider-building and a live air show, for 95 participants.</p>
+        </div>
+      </li>
+      <li class="timeline-item reveal fade-left">
+        <div class="timeline-dot" aria-hidden="true">◆</div>
+        <div class="timeline-card">
+          <span class="timeline-date">7 February 2026</span>
+          <h3>Deliver the Pizza (DTP)</h3>
+          <p>Drone design and assembly competition across four teams; Team MACHX6 won, Team Garud finished as runner-up.</p>
+        </div>
+      </li>
+      <li class="timeline-item reveal fade-right">
+        <div class="timeline-dot" aria-hidden="true">🏁</div>
+        <div class="timeline-card">
+          <span class="timeline-date">8 February 2026</span>
+          <h3>UAV Racing Competition</h3>
+          <p>End-to-end UAV design, FEA/CFD analysis and a live racing round; Team Garud took first place, MACHX6 second.</p>
+        </div>
+      </li>
+      <li class="timeline-item reveal fade-left">
+        <div class="timeline-dot" aria-hidden="true">⚡</div>
+        <div class="timeline-card">
+          <span class="timeline-date">4 April 2026</span>
+          <h3>Blitz Competition</h3>
+          <p>A three-hour, individual CAD-FEA-CFD sprint testing 21 participants on design, analysis and optimization speed.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===================== MISSION & VISION ===================== -->
+<section class="mission-vision" aria-labelledby="mv-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Purpose</p>
+      <h2 id="mv-heading">Mission &amp; Vision</h2>
+    </div>
+    <div class="mv-grid">
+      <div class="mv-card mv-primary reveal fade-left">
+        <div class="mv-icon" aria-hidden="true">🚀</div>
+        <h3>Our Mission</h3>
+        <p>
+          To bridge aerodynamic theory and practical engineering by giving
+          students hands-on exposure to CAD, FEA, CFD, and UAV systems —
+          through workshops, competitions, and original aircraft projects
+          such as our STOL and VTOL builds — while building teamwork,
+          precision, and critical thinking along the way.
+        </p>
+      </div>
+      <div class="mv-card reveal fade-right">
+        <div class="mv-icon" aria-hidden="true">🔭</div>
+        <h3>Our Vision</h3>
+        <p>
+          To grow NIT Raipur's Aviation Club into a launchpad for
+          aerospace-minded engineers — inspiring students to explore
+          emerging aviation technologies, take on increasingly complex
+          UAV and aircraft designs, and carry that curiosity into
+          industry-ready careers.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FACULTY IN-CHARGE ===================== -->
+<section class="faculty" aria-labelledby="faculty-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Faculty In-Charge</p>
+      <h2 id="faculty-heading">Guided by Experience</h2>
+    </div>
+
+    <div class="faculty-card reveal fade-up">
+
+      <div class="faculty-photo">
+        <img src="images/fac.jpg"
+             alt="Dr. N. V. Swamy Naidu"
+             loading="lazy">
+      </div>
+
+      <div class="faculty-info">
+        <h3>Dr. N. V. Swamy Naidu</h3>
+        <p class="faculty-role">
+          Head of Department, Mechanical Engineering
+        </p>
+
+        <p class="faculty-org">
+          National Institute of Technology Raipur
+        </p>
+
+        <p class="faculty-msg">
+          As Chief Guest for Air Force Day and lead speaker at the
+          Aerodynamics Workshop, Dr. Naidu has consistently encouraged
+          students to combine strong engineering fundamentals with
+          practical experimentation. His guidance inspires students to
+          innovate, collaborate, and transform ideas into successful
+          aviation projects.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- ===================== CLUB REACH (COUNTERS) ===================== -->
+<section class="reach" aria-labelledby="reach-heading">
+  <div class="container">
+    <div class="section-head light reveal fade-up">
+      <p class="eyebrow">Club Reach</p>
+      <h2 id="reach-heading">Measured in flights, not just numbers</h2>
+    </div>
+    <div class="reach-grid">
+      <div class="reach-card reveal fade-up">
+        <span class="reach-number" data-count="6">0</span>
+        <span class="reach-label">Events Organized</span>
+      </div>
+      <div class="reach-card reveal fade-up">
+        <span class="reach-number" data-count="2">0</span>
+        <span class="reach-label">Aircraft Projects</span>
+      </div>
+      <div class="reach-card reveal fade-up">
+        <span class="reach-number" data-count="289" data-suffix="+">0</span>
+        <span class="reach-label">Combined Event Participations</span>
+      </div>
+      <div class="reach-card reveal fade-up">
+        <span class="reach-number" data-count="4">0</span>
+        <span class="reach-label">Student Competition Teams</span>
+      </div>
+    </div>
+    <!-- 50 (Air Force Day) + 75 (DIMENSIONS) + 95 (Aerodynamics Workshop)
+         + 24 (DTP) + 24 (UAV Racing) + 21 (Blitz) = 289 -->
+  </div>
+</section>
+
+<!-- ===================== ACTIVITIES ===================== -->
+<section class="activities" id="activities" aria-labelledby="activities-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Activities</p>
+      <h2 id="activities-heading">What we actually build and fly</h2>
+    </div>
+    <div class="activities-grid">
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🛬</div>
+        <h3>RC Plane Landing</h3>
+        <p>Precision landing challenge from Air Force Day, testing control and basic aerodynamic judgment.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🪂</div>
+        <h3>Parachute Landing Challenge</h3>
+        <p>Exploring how small design changes affect stability, drag and landing accuracy.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">📐</div>
+        <h3>CAD Workshop &amp; Competition</h3>
+        <p>Beginner and expert rounds in Creo Parametric as part of the DIMENSIONS workshop.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🌬️</div>
+        <h3>Glider-Making Activity</h3>
+        <p>Hands-on glider construction and a friendly build-off during the Aerodynamics Workshop.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🎥</div>
+        <h3>Live Air Show</h3>
+        <p>Demonstrations of drones, gliders and RC planes led by industry expert Dr. Aruna Rana.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🚁</div>
+        <h3>Drone Assembly &amp; Flight Trials</h3>
+        <p>Teams built quadcopters from scratch and ran live flight trials during Deliver the Pizza.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">🏁</div>
+        <h3>UAV Racing</h3>
+        <p>A full design-to-flight competition on a dedicated football-ground race track.</p>
+      </div>
+      <div class="activity-card reveal fade-up">
+        <div class="activity-icon" aria-hidden="true">⏱️</div>
+        <h3>Blitz: Timed CAD-FEA-CFD Sprint</h3>
+        <p>A three-hour individual challenge covering the complete design, analysis and optimization workflow.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURED PROJECTS ===================== -->
+<section class="projects" id="projects" aria-labelledby="projects-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Featured Projects</p>
+      <h2 id="projects-heading">From simulation to flight test</h2>
+    </div>
+    <div class="projects-grid">
+      <article class="project-card reveal fade-left">
+        <p class="project-tag">Short Take-Off &amp; Landing</p>
+        <h3>STOL Aircraft Development</h3>
+        <div class="chip-row">
+          <span class="chip">Overview</span>
+          <span class="chip">CAD</span>
+          <span class="chip">CFD</span>
+          <span class="chip">FEA</span>
+          <span class="chip">Testing</span>
+        </div>
+        <p>
+          A full-cycle STOL build: aerodynamic sizing validated in OpenVSP,
+          a Creo CAD model, FEA on the wing structure, CFD on airflow, and a
+          Styrofoam-and-carbon-fibre airframe that completed multiple
+          flight test rounds.
+        </p>
+        <button type="button" class="link-btn">Learn More <span aria-hidden="true">→</span></button>
+      </article>
+      <article class="project-card reveal fade-right">
+        <p class="project-tag">Vertical Take-Off &amp; Landing</p>
+        <h3>VTOL Aircraft</h3>
+        <div class="chip-row">
+          <span class="chip">Tilt-Wing</span>
+          <span class="chip">Tilt-Rotor</span>
+          <span class="chip">MATLAB Simulation</span>
+          <span class="chip">Control Systems</span>
+        </div>
+        <p>
+          Ongoing work on a tilt-wing-to-tilt-rotor VTOL, now in
+          MATLAB-based dynamic simulation, targeting a 12-14% cut in power
+          consumption alongside improved transition stability and payload
+          capacity.
+        </p>
+        <button type="button" class="link-btn">Learn More <span aria-hidden="true">→</span></button>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== NOTIFICATIONS ===================== -->
+<section class="notifications" id="notifications" aria-labelledby="notifications-heading">
+  <div class="container container-narrow">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Notice Board</p>
+      <h2 id="notifications-heading">Recent Notifications</h2>
+    </div>
+    <div class="notice-board reveal fade-up">
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 04 Apr 2026</div>
+        <div class="notice-body">
+          <h3>Blitz Competition results announced</h3>
+          <p>21 participants completed a three-hour CAD-FEA-CFD design sprint, earning a 100% 4-star-or-above feedback score.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 08 Feb 2026</div>
+        <div class="notice-body">
+          <h3>UAV Racing Competition: Team Garud wins</h3>
+          <p>Team Garud topped the leaderboard on technical documentation and flight performance; Lakshmi Sahithi named Best Mentor.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 07 Feb 2026</div>
+        <div class="notice-body">
+          <h3>Deliver the Pizza (DTP): Team MACHX6 wins</h3>
+          <p>MACHX6 built and flew the strongest quadcopter across four competing teams in this two-phase UAV challenge.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 31 Jan – 01 Feb 2026</div>
+        <div class="notice-body">
+          <h3>Two-day Aerodynamics Workshop concludes</h3>
+          <p>95 participants covered flight principles, drone systems and a live air show with industry expert Dr. Aruna Rana.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 08 Nov 2025</div>
+        <div class="notice-body">
+          <h3>DIMENSIONS CAD Workshop &amp; Competition held</h3>
+          <p>75 participants trained in Creo Parametric before competing across beginner and expert design categories.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+      <div class="notice">
+        <div class="notice-date"><span aria-hidden="true">📌</span> 08 Oct 2025</div>
+        <div class="notice-body">
+          <h3>Air Force Day celebrated at Hira Hall</h3>
+          <p>50 participants joined an aviation quiz, RC plane landing and parachute landing challenge with Dr. N. V. Swamy Naidu.</p>
+        </div>
+        <button type="button" class="link-btn">Read More</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHY JOIN US ===================== -->
+<section class="why-join" aria-labelledby="why-heading">
+  <div class="container">
+    <div class="section-head reveal fade-up">
+      <p class="eyebrow">Why Join</p>
+      <h2 id="why-heading">Why students choose the Aviation Club</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">🤝</div>
+        <h3>Hands-on Learning</h3>
+        <p>Build gliders, assemble quadcopters and run live flight trials instead of only reading about aerodynamics.</p>
+      </div>
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">🔬</div>
+        <h3>Research</h3>
+        <p>Apply OpenVSP, FEA and CFD on active aircraft projects like the club's STOL and VTOL development.</p>
+      </div>
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">💡</div>
+        <h3>Innovation</h3>
+        <p>Take a project from literature review through to a working prototype, mentored by senior club members.</p>
+      </div>
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">🏆</div>
+        <h3>Competitions</h3>
+        <p>Test your skills in Blitz, UAV Racing and Deliver the Pizza against fellow student teams.</p>
+      </div>
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">🚁</div>
+        <h3>Drone Technology</h3>
+        <p>Work with real flight controllers, ESCs and motors through UAV racing and delivery-drone competitions.</p>
+      </div>
+      <div class="why-card reveal fade-up">
+        <div class="why-icon" aria-hidden="true">📐</div>
+        <h3>Technical Skills</h3>
+        <p>Train in Creo Parametric from first sketches to parametric modelling in the DIMENSIONS workshop series.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACT BANNER ===================== -->
+<!-- ===================== CONTACT BANNER ===================== -->
+<div class="hero-buttons">
+    <a href="#about" class="btn btn-secondary">Join Now</a>
+
+    <a href="https://www.instagram.com/aviation_nitrr/"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn btn-outline-light">
+       Contact Us
+    </a>
+</div>
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>&copy; <span id="year"></span> Aviation Club, National Institute of Technology Raipur. G.E. Road, Raipur - 492010 (C.G.)</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
 </html>
