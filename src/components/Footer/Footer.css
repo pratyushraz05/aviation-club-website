@@ -1,0 +1,16 @@
+.footer{
+    background: linear-gradient(90deg,#11192c,#0c0c0c);
+    color: white;
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
+}
+
+.footer h2{
+    color: #f7f9fa;
+    margin-bottom: 10px;
+}
+
+.footer p{
+    margin: 8px 0;
+}
