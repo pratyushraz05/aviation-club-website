@@ -1,34 +1,26 @@
-import { Routes, Route, Link } from 'react-router-dom'
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
+import Layout from './Layout/layout'; // Pulling in Amruta's wrapper
 
 // Importing the team's pages
-import Home from './pages/Home/Home'
-import Events from './pages/Events/Events'
-import Projects from './pages/Projects/Projects'
-import Team from './pages/Team/Team'
+import Home from './pages/Home/Home';
+import Events from './pages/Events/Events';
+import Projects from './pages/Projects/Projects';
+import Team from './pages/Team/Team';
 
 function App() {
   return (
-    <div>
-      <h1>Aviation Club</h1>
-      
-      {/* Temporary Navigation Menu to test the routing */}
-      <nav style={{ padding: '10px', borderBottom: '1px solid #ccc', marginBottom: '20px' }}>
-        <Link to="/" style={{ marginRight: '15px' }}>Home</Link>
-        <Link to="/events" style={{ marginRight: '15px' }}>Events</Link>
-        <Link to="/projects" style={{ marginRight: '15px' }}>Projects</Link>
-        <Link to="/team">Team</Link>
-      </nav>
-
-      {/* The Routes: Swaps out components based on the URL */}
+    // The Layout automatically adds the Navbar at the top and Footer at the bottom
+    <Layout>
+      {/* The Routes swap out the middle section based on the URL */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/team" element={<Team />} />
       </Routes>
-    </div>
-  )
+    </Layout>
+  );
 }
 
-export default App
+export default App;
