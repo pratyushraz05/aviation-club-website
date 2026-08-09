@@ -9,11 +9,12 @@ function TeamCard({ title, members }) {
       <div className="team-grid">
 
         {members.map((member) => (
-          <div className="team-card" key={member.id}>
-            <h3>{member.name}</h3>
-            <p>{member.role}</p>
-            <p>{member.year}</p>
-          </div>
+         <div className="team-card" key={member.id}>
+        <img src={member.image} alt={member.name} />
+         <h3>{member.name}</h3>
+         <p>{member.role}</p>
+         {member.year && <p>{member.year}</p>}
+</div>
         ))}
 
       </div>

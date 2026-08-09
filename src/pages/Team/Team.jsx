@@ -1,5 +1,6 @@
-import TeamCard from "../components/TeamCard";
-
+import TeamCard from "../../components/TeamCard";
+import './Team.css';
+import naiduImg from"../../assets/naidu.jpg";
 
 function Team() {
   const faculty = [
@@ -7,7 +8,7 @@ function Team() {
       id: 1,
       name: "Dr. N.V. Swamy Naidu",
       role: "Faculty In-Charge",
-      image: ""
+      image: naiduImg
     }
   ];
 
@@ -144,25 +145,13 @@ function Team() {
   ];
 
   return (
-    <div className="team-container">
-
+    
+    <div className="team-page">
       <h1>Our Team</h1>
-      <h2>Faculty</h2>
-
-      <div className="faculty-grid">
-        {faculty.map((member) => (
-          <div className="faculty-card" key={member.id}>
-            <img src={member.image} alt={member.name} />
-            <h3>{member.name}</h3>
-            <p>{member.role}</p>
-          </div>
-        ))}
-      </div>
-        <h3>Team Members</h3>
+      
+      <TeamCard title="Faculty" members={faculty} />
       <TeamCard title="Core Team" members={coreTeam} />
-
       <TeamCard title="Technical Team" members={technicalTeam} />
-
     </div>
   );
 }
