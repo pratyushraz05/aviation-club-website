@@ -8,7 +8,7 @@ function Layout({ children }) {
     <>
       <Navbar />
 
-      <main className="main-content">
+      <main >
         {children}
       </main>
 
