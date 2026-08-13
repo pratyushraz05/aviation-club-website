@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Layout from './Layout/layout'; // Pulling in Amruta's wrapper
+import ProjectDetails from './pages/Projects/ProjectDetails';
 
 // Importing the team's pages
 import Home from './pages/Home/Home';
@@ -16,8 +17,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/projects" element={<Projects />} />
+       <Route path="/projects" element={<Projects />} />
+<Route path="/projects/:id" element={<ProjectDetails />} />
         <Route path="/team" element={<Team />} />
+
       </Routes>
     </Layout>
   );
