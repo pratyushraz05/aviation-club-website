@@ -1,0 +1,47 @@
+:root {
+  --bg: #0B1120;        /* Deep space navy background */
+  --primary: #38BDF8;   /* Vibrant sky blue */
+  --primary-hover: #0EA5E9;
+  --secondary: #94A3B8; /* Steel gray */
+  --sky: #1E293B;       /* Dark card accent */
+  --accent: #FDE047;    /* Bright electric yellow */
+  --accent-hover: #FACC15;
+  --success: #10B981;
+  --white: #FFFFFF;
+  --text: #F1F5F9;      /* Off-white text for readability */
+  --text-soft: #94A3B8;
+  --card: #1E293B;      /* Slightly lighter navy for cards */
+  --card-border: #334155;
+  --alt-bg: #0F172A;    /* Alternating section background */
+
+  --font-display: 'Poppins', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --shadow-lift: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+/* =========================================================
+   GLOBAL LAYOUT STRUCTURE
+   ========================================================= */
+.container {
+  max-width: 1200px;    /* Prevents content from stretching too wide on huge monitors */
+  margin: 0 auto;       /* Automatically centers the container on the screen */
+  padding: 0 24px;      /* Adds breathing room on mobile screens */
+}
+
+/* Optional: Add some spacing between sections */
+section {
+  padding: 60px 0;
+}

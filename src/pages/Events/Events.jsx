@@ -47,6 +47,7 @@ export default function Events() {
 
   return (
     <div className="events-page">
+      <div className="container">
       {/* 1. Vegam Hero Section */}
       <section className="vegam-hero">
         <div className="vegam-content">
@@ -286,6 +287,7 @@ export default function Events() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

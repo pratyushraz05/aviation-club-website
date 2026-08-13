@@ -1,3 +1,14 @@
+import CurrentProjects from "./CurrentProjects";
+import PreviousProjects from "./PreviousProjects";
+
 export default function Projects() {
-  return <h2>Pravallika's Projects Page</h2>
+  return (
+    <div className="projects-wrapper">
+      {/* This new container div will center everything inside it! */}
+      <div className="container">
+        <CurrentProjects />
+        <PreviousProjects />
+      </div>
+    </div>
+  );
 }
