@@ -1,6 +1,6 @@
 # ✈️ Aviation Club Website - Git Workflow 
 
-Welcome to the team! **Pratyush** is the GitHub & Integration Lead. If you face merge conflicts, reach out to him.
+Welcome to the team! 
 
 ## Branch Naming Rules
 Never push directly to the `main` branch. Create a new branch for your work:
