@@ -2,6 +2,10 @@ import { useEffect } from "react";
 import "./Home.css";
 import facPhoto from "../../assets/fac.jpg"; // Brought this back for the Faculty section!
 
+// Add your logo imports here! (Make sure the file extensions match what you have in your assets folder)
+import aviationLogo from "../../assets/aviation-logo.png"; 
+import nitrrLogo from "../../assets/nitrr-logo.png";
+
 export default function Home() {
   // Keeps scroll reveal animations and smooth scrolling for in-page anchor links
   useEffect(() => {
@@ -52,20 +56,16 @@ export default function Home() {
         <div className="hero-bg" aria-hidden="true"></div>
         <div className="hero-overlay" aria-hidden="true"></div>
 
-        <div className="clouds" aria-hidden="true">
-          <span className="cloud c1"></span>
-          <span className="cloud c2"></span>
-          <span className="cloud c3"></span>
-        </div>
-
-        <div className="flight-path" aria-hidden="true">
-          <svg viewBox="0 0 1000 400" preserveAspectRatio="none">
-            <path id="heroPath" d="M -50 320 C 200 340, 350 180, 550 200 S 850 60, 1050 40" />
-          </svg>
-          <div className="plane-on-path" id="planeOnPath">✈</div>
-        </div>
-
         <div className="hero-content reveal fade-up">
+          
+          {/* ================= NEW LOGO LOCKUP ================= */}
+          <div className="hero-logos">
+            <img src={aviationLogo} alt="Aviation Club" className="hero-logo-img" />
+            <div className="logo-divider"></div>
+            <img src={nitrrLogo} alt="NIT Raipur" className="hero-logo-img" />
+          </div>
+          {/* =================================================== */}
+
           <p className="eyebrow">Dream &bull; Design &bull; Fly</p>
           <h1>Aviation Club<br /><span>National Institute of Technology Raipur</span></h1>
           <p className="hero-sub">
@@ -75,7 +75,7 @@ export default function Home() {
           </p>
           <div className="hero-buttons">
             <a href="#about" className="btn btn-primary">Explore Club</a>
-            <a href="/team" className="btn btn-secondary">Join Us</a>
+            <a href="https://www.instagram.com/aviation_nitrr/" target="_blank" rel="noopener nonreferrer" className="btn btn-secondary">Join Us</a>
           </div>
         </div>
 
@@ -89,11 +89,10 @@ export default function Home() {
         <div className="container about-grid">
           <div className="about-image reveal fade-left">
             <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000&auto=format&fit=crop" alt="Aviation Club members working on a UAV assembly" loading="lazy" />
-            <div className="about-badge">
-              <strong>6</strong>
-              <span>Events organized this session</span>
-            </div>
+            
           </div>
+           
+
           <div className="about-content reveal fade-right">
             <p className="eyebrow">About the Club</p>
             <h2 id="about-heading">Engineering flight, one prototype at a time</h2>
