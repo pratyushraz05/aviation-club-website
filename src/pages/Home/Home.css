@@ -452,3 +452,32 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--primary); margin: 0;
   .notice { flex-direction: column; align-items: flex-start; gap: 10px; }
   .notice-date { width: auto; }
 }
+/* =========================================================
+   HERO LOGO LOCKUP
+   ========================================================= */
+.hero-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;          
+  margin-bottom: 24px; 
+}
+
+.hero-logo-img {
+  height: 70px;       /* Keeps them small, elegant, and uniform */
+  width: auto;
+  object-fit: contain;
+  opacity: 0.9;       
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.hero-logo-img:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.logo-divider {
+  width: 1px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.3); 
+}

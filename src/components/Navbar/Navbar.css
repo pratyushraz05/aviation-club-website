@@ -47,3 +47,33 @@
     background: #659433;
     color: #0F172A;
 }
+/* =========================================================
+   NAVBAR LOGO & TEXT LAYOUT
+   ========================================================= */
+.logo-link {
+  display: flex;
+  align-items: center; /* Aligns the image and text vertically in the center */
+  gap: 12px;           /* Creates perfect spacing between the image and text */
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-logo-img {
+  height: 45px; 
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.logo-link:hover .nav-logo-img {
+  transform: scale(1.05); 
+}
+
+.logo-text {
+  font-size: 0.9rem;
+  line-height: 1.2;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
