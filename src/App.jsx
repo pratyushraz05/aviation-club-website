@@ -8,6 +8,8 @@ import Home from './pages/Home/Home';
 import Events from './pages/Events/Events';
 import Projects from './pages/Projects/Projects';
 import Team from './pages/Team/Team';
+import Gallery from './pages/Gallery/Gallery'; 
+import Contact from "./pages/Contact/Contact";
 
 function App() {
   return (
@@ -17,10 +19,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/events" element={<Events />} />
-       <Route path="/projects" element={<Projects />} />
-<Route path="/projects/:id" element={<ProjectDetails />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/projects/:id" element={<ProjectDetails />} />
         <Route path="/team" element={<Team />} />
-
+        <Route path="/gallery" element={<Gallery />} /> 
+        <Route path="/contact" element={<Contact />}/>
       </Routes>
     </Layout>
   );

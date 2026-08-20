@@ -1,0 +1,116 @@
+/* =========================================================
+   FEEDBACK COMPONENT STYLES
+   ========================================================= */
+.feedback {
+  margin-top: 60px;
+  padding-top: 60px;
+  border-top: 1px solid var(--card-border, #334155); /* Clean divider line */
+}
+
+.feedback-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.feedback-header h1 {
+  font-size: 2.5rem;
+  color: var(--white, #f8fafc);
+  margin-bottom: 12px;
+}
+
+.feedback-header p {
+  color: var(--text-soft, #94a3b8);
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.feedback-card {
+  max-width: 650px;
+  margin: 0 auto;
+  background: var(--card, #1e293b);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid var(--card-border, #334155);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Styling the input boxes and textarea for dark mode */
+.feedback-form input,
+.feedback-form textarea {
+  width: 100%;
+  padding: 16px;
+  background: var(--bg, #0b1120);
+  border: 1px solid var(--card-border, #334155);
+  border-radius: 8px;
+  color: var(--white, #f8fafc);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Glowing border effect when you click inside a box */
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+  border-color: var(--primary, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* The Star Rating Section */
+.rating {
+  margin: 10px 0;
+}
+
+.rating h3 {
+  color: var(--white, #f8fafc);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.rating h3 {
+  color: var(--white, #f8fafc);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.stars {
+  display: flex;
+  gap: 8px;
+}
+
+/* Adds the pointer finger and smooth color changing animation */
+.star-icon {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out, transform 0.2s ease;
+}
+
+.star-icon:hover {
+  transform: scale(1.1); /* Makes the star slightly pop out when hovered! */
+}
+
+/* The Submit Button */
+.feedback-form button {
+  margin-top: 10px;
+  padding: 16px;
+  background: var(--primary, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.feedback-form button:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}

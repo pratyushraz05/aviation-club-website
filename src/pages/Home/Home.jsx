@@ -1,10 +1,80 @@
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react"; // 🚀 Cleaned up imports!
 import "./Home.css";
-import facPhoto from "../../assets/fac.jpg"; // Brought this back for the Faculty section!
-
-// Add your logo imports here! (Make sure the file extensions match what you have in your assets folder)
+import facPhoto from "../../assets/fac.jpg";
 import aviationLogo from "../../assets/aviation-logo.png"; 
 import nitrrLogo from "../../assets/nitrr-logo.png";
+
+// ===================== NOTICE BOARD DATA & COMPONENT =====================
+const notificationsData = [
+  {
+    id: 1,
+    date: "04 Apr 2026",
+    title: "Blitz Competition results announced",
+    summary: "21 participants completed a three-hour CAD-FEA-CFD design sprint, earning a 100% 4-star-or-above feedback score.",
+    extraText: " The judges were highly impressed with the rapid prototyping skills and simulated aerodynamics demonstrated under pressure."
+  },
+  {
+    id: 2,
+    date: "08 Feb 2026",
+    title: "UAV Racing Competition: Team Garud wins",
+    summary: "Team Garud topped the leaderboard on technical documentation and flight performance; Lakshmi Sahithi named Best Mentor.",
+    extraText: " The final race came down to a nail-biting finish, with Team Garud securing the win by mere milliseconds."
+  },
+  {
+    id: 3,
+    date: "07 Feb 2026",
+    title: "Deliver the Pizza (DTP): Team MACHX6 wins",
+    summary: "MACHX6 built and flew the strongest quadcopter across four competing teams in this two-phase UAV challenge.",
+    extraText: " Their custom payload dropping mechanism was incredibly precise, hitting the target perfectly during the final phase."
+  },
+  {
+    id: 4,
+    date: "31 Jan – 01 Feb 2026",
+    title: "Two-day Aerodynamics Workshop concludes",
+    summary: "95 participants covered flight principles, drone systems and a live air show with industry expert Dr. Aruna Rana.",
+    extraText: " Students also got hands-on experience calibrating flight controllers and troubleshooting basic motor synchronization."
+  },
+  {
+    id: 5,
+    date: "08 Nov 2025",
+    title: "DIMENSIONS CAD Workshop & Competition held",
+    summary: "75 participants trained in Creo Parametric before competing across beginner and expert design categories.",
+    extraText: " The winning designs have been sent to the 3D printing lab to be featured in the upcoming club showcase."
+  },
+  {
+    id: 6,
+    date: "08 Oct 2025",
+    title: "Air Force Day celebrated at Hira Hall",
+    summary: "50 participants joined an aviation quiz, RC plane landing and parachute landing challenge with Dr. N. V. Swamy Naidu.",
+    extraText: " The event concluded with an inspiring speech about the future of aerospace engineering in India."
+  }
+];
+
+// 🚀 The "Smart" Card that makes the Read More buttons work!
+function NoticeCard({ date, title, summary, extraText }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="notice">
+      <div className="notice-date"><span aria-hidden="true">📌</span> {date}</div>
+      <div className="notice-body">
+        <h3>{title}</h3>
+        <p>
+          {summary}
+          {isExpanded && <span className="extra-text">{extraText}</span>}
+        </p>
+      </div>
+      <button 
+        type="button" 
+        className="link-btn" 
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        {isExpanded ? "Read Less" : "Read More"}
+      </button>
+    </div>
+  );
+}
+// =========================================================================
 
 export default function Home() {
   // Keeps scroll reveal animations and smooth scrolling for in-page anchor links
@@ -29,7 +99,7 @@ export default function Home() {
       revealEls.forEach((el) => el.classList.add("in-view"));
     }
 
-    // Smooth scroll for in-page anchors (like clicking "Explore Club" in the hero)
+    // Smooth scroll for in-page anchors
     const anchorEls = document.querySelectorAll('a[href^="#"]');
     const handleAnchorClick = function (e) {
       const targetId = this.getAttribute("href");
@@ -57,14 +127,11 @@ export default function Home() {
         <div className="hero-overlay" aria-hidden="true"></div>
 
         <div className="hero-content reveal fade-up">
-          
-          {/* ================= NEW LOGO LOCKUP ================= */}
           <div className="hero-logos">
             <img src={aviationLogo} alt="Aviation Club" className="hero-logo-img" />
             <div className="logo-divider"></div>
             <img src={nitrrLogo} alt="NIT Raipur" className="hero-logo-img" />
           </div>
-          {/* =================================================== */}
 
           <p className="eyebrow">Dream &bull; Design &bull; Fly</p>
           <h1>Aviation Club<br /><span>National Institute of Technology Raipur</span></h1>
@@ -75,7 +142,7 @@ export default function Home() {
           </p>
           <div className="hero-buttons">
             <a href="#about" className="btn btn-primary">Explore Club</a>
-            <a href="https://www.instagram.com/aviation_nitrr/" target="_blank" rel="noopener nonreferrer" className="btn btn-secondary">Join Us</a>
+            <a href="https://www.instagram.com/aviation_nitrr/" target="_blank" rel="noopener noreferrer" className="btn btn-secondary">Join Us</a>
           </div>
         </div>
 
@@ -89,9 +156,7 @@ export default function Home() {
         <div className="container about-grid">
           <div className="about-image reveal fade-left">
             <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000&auto=format&fit=crop" alt="Aviation Club members working on a UAV assembly" loading="lazy" />
-            
           </div>
-           
 
           <div className="about-content reveal fade-right">
             <p className="eyebrow">About the Club</p>
@@ -198,11 +263,9 @@ export default function Home() {
               <p className="faculty-role">
                 Head of Department, Mechanical Engineering
               </p>
-
               <p className="faculty-org">
                 National Institute of Technology Raipur
               </p>
-
               <p className="faculty-msg">
                 As Chief Guest for Air Force Day and lead speaker at the
                 Aerodynamics Workshop, Dr. Naidu has consistently encouraged
@@ -223,55 +286,18 @@ export default function Home() {
             <p className="eyebrow">Notice Board</p>
             <h2 id="notifications-heading">Recent Notifications</h2>
           </div>
+          
           <div className="notice-board reveal fade-up">
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 04 Apr 2026</div>
-              <div className="notice-body">
-                <h3>Blitz Competition results announced</h3>
-                <p>21 participants completed a three-hour CAD-FEA-CFD design sprint, earning a 100% 4-star-or-above feedback score.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 08 Feb 2026</div>
-              <div className="notice-body">
-                <h3>UAV Racing Competition: Team Garud wins</h3>
-                <p>Team Garud topped the leaderboard on technical documentation and flight performance; Lakshmi Sahithi named Best Mentor.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 07 Feb 2026</div>
-              <div className="notice-body">
-                <h3>Deliver the Pizza (DTP): Team MACHX6 wins</h3>
-                <p>MACHX6 built and flew the strongest quadcopter across four competing teams in this two-phase UAV challenge.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 31 Jan – 01 Feb 2026</div>
-              <div className="notice-body">
-                <h3>Two-day Aerodynamics Workshop concludes</h3>
-                <p>95 participants covered flight principles, drone systems and a live air show with industry expert Dr. Aruna Rana.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 08 Nov 2025</div>
-              <div className="notice-body">
-                <h3>DIMENSIONS CAD Workshop &amp; Competition held</h3>
-                <p>75 participants trained in Creo Parametric before competing across beginner and expert design categories.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
-            <div className="notice">
-              <div className="notice-date"><span aria-hidden="true">📌</span> 08 Oct 2025</div>
-              <div className="notice-body">
-                <h3>Air Force Day celebrated at Hira Hall</h3>
-                <p>50 participants joined an aviation quiz, RC plane landing and parachute landing challenge with Dr. N. V. Swamy Naidu.</p>
-              </div>
-              <button type="button" className="link-btn">Read More</button>
-            </div>
+            {/* 🚀 This loop creates the interactive buttons! */}
+            {notificationsData.map((notice) => (
+              <NoticeCard 
+                key={notice.id}
+                date={notice.date}
+                title={notice.title}
+                summary={notice.summary}
+                extraText={notice.extraText}
+              />
+            ))}
           </div>
         </div>
       </section>

@@ -1,0 +1,94 @@
+/* =========================================================
+   CONTACT PAGE STYLES
+   ========================================================= */
+.contact-page {
+  padding: 60px 0 100px;
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.contact-header h1 {
+  font-size: 3rem;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.contact-header p {
+  color: var(--text-soft);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* The Grid layout for the contact items */
+.contact-card {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  padding: 50px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.contact-item .icon {
+  font-size: 1.8rem;
+  color: var(--primary);
+  margin-top: 5px;
+}
+
+.contact-item h3 {
+  color: var(--white);
+  font-size: 1.3rem;
+  margin: 0 0 8px 0;
+}
+
+.contact-item p {
+  color: var(--text-soft);
+  margin: 0;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+/* Social Media Section */
+.social-section {
+  grid-column: 1 / -1; /* Spans the full width of the grid at the bottom */
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 30px;
+  border-top: 1px solid var(--card-border);
+}
+
+.social-section h3 {
+  color: var(--white);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.social-icons a {
+  color: var(--text-soft);
+  font-size: 2rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: var(--primary);
+  transform: translateY(-3px);
+}
