@@ -1,79 +1,373 @@
-/* --- Main Page Container --- */
-.team-page {
-  padding: 60px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #f8fafc; /* Adds a very subtle, premium off-white/gray background */
+ .team-page {
+  min-height: 100vh;
+  padding: 80px 6% 100px;
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(35, 103, 205, 0.06),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(35, 103, 205, 0.04),
+      transparent 25%
+    ),
+    #f8fafc;
+  color: #17243d;
+  font-family: Inter, "Segoe UI", sans-serif;
 }
 
-/* --- Stylish Main Title --- */
-.team-page h1 {
+.team-header {
+  max-width: 850px;
+  margin: 0 auto 65px;
   text-align: center;
-  font-size: 3.5rem;
+}
+
+.team-header > span {
+  color: #1769e0;
+  font-size: 13px;
   font-weight: 800;
-  margin-bottom: 20px;
-  background: linear-gradient(90deg, #1e3a8a, #3b82f6); /* Aviation blue gradient */
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  letter-spacing: 4px;
 }
 
-/* --- Section Subtitles (Faculty & Core Team) --- */
-.team-page h2 {
+.team-header h1 {
+  margin: 15px 0 0;
+  font-size: clamp(45px, 6vw, 70px);
+  line-height: 1;
+  font-weight: 800;
+}
+
+.team-header h1 strong {
+  color: #2469d1;
+}
+
+.team-line {
+  width: 65px;
+  height: 3px;
+  margin: 25px auto;
+  border-radius: 5px;
+  background: #2469d1;
+}
+
+.team-header p {
+  margin: 0;
+  color: #68758a;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.team-section {
+  max-width: 1150px;
+  margin: 0 auto 75px;
+}
+
+.section-title {
+  margin-bottom: 30px;
   text-align: center;
-  font-size: 2.2rem;
-  color: #0f172a;
-  margin: 70px 0 40px 0;
-  position: relative;
 }
 
-/* Adds a sleek little blue underline below the subheadings */
-.team-page h2::after {
-  content: '';
+.section-title h2 {
+  margin: 0;
+  color: #17243d;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.section-title span {
   display: block;
-  width: 60px;
-  height: 4px;
-  background-color: #3b82f6;
+  width: 45px;
+  height: 3px;
   margin: 12px auto 0;
-  border-radius: 2px;
+  border-radius: 5px;
+  background: #2469d1;
 }
 
-/* --- The Grid Layout --- */
-.team-grid {
+.members-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px;
-  padding: 10px;
+  grid-template-columns: repeat(3, 330px);
+  justify-content: center;
+  gap: 28px;
 }
 
-/* --- The Cards (Drop this in so the actual cards look amazing) --- */
-.team-card {
-  background: white;
+/* FACULTY */
+
+.faculty-grid {
+  grid-template-columns: 500px;
+  justify-content: center;
+}
+
+/* CORE TEAM */
+
+.core-grid {
+  grid-template-columns: repeat(2, 420px);
+  justify-content: center;
+  gap: 28px;
+}
+
+.core-grid .member-card {
+  width: 420px;
+  box-sizing: border-box;
+}
+
+/* MEMBER CARD */
+
+.member-card {
+  min-height: 260px;
+  padding: 28px 20px;
+  border: 1px solid #e1e8f1;
   border-radius: 16px;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background: #fff;
   text-align: center;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease-in-out;
-  border: 1px solid #e2e8f0;
+  box-shadow: 0 7px 22px rgba(30, 55, 90, 0.055);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-/* Hover Animation: Makes the card float up smoothly when hovered */
-.team-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.05);
-  border-color: #bfdbfe;
+.member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(30, 55, 90, 0.11);
 }
 
-/* Styling the images inside the cards to be perfect circles */
-.team-card img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
+.member-card.featured {
+  min-height: 300px;
+  padding: 35px;
+}
+
+/* MEMBER IMAGE */
+
+.member-image {
+  width: 125px;
+  height: 125px;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  border: 5px solid #f0f4f9;
+  border-radius: 8px;
+  background: #eef2f7;
+}
+
+.featured .member-image {
+  width: 150px;
+  height: 150px;
+}
+
+.member-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
   object-fit: cover;
-  margin-bottom: 20px;
-  border: 4px solid #f1f5f9;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+
+/* MEMBER INFO */
+
+.member-info h3 {
+  margin: 0;
+  color: #17243d;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.featured .member-info h3 {
+  font-size: 21px;
+}
+
+.member-info p {
+  margin: 8px 0 14px;
+  color: #6a778b;
+  font-size: 14px;
+}
+
+/* BRANCH */
+
+.branch {
+  display: inline-block;
+  padding: 7px 13px;
+  border: 1px solid #dfe7f1;
+  border-radius: 7px;
+  background: #f3f7fc;
+  color: #65738a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.branch b {
+  color: #2469d1;
+}
+
+/* NON-TECHNICAL TEAM */
+
+.non-technical-grid {
+  grid-template-columns: repeat(3, 300px);
+  justify-content: center;
+  gap: 18px 28px;
+}
+
+.non-technical-grid .no-photo {
+  min-height: 0;
+  height: 125px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.no-photo .member-info {
+  width: 100%;
+}
+
+.no-photo .member-info h3 {
+  margin: 0 0 10px;
+  font-size: 18px;
+}
+
+.no-photo .branch {
+  margin: 0;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .team-page {
+    padding: 60px 25px 80px;
+  }
+
+  .members-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .faculty-grid {
+    grid-template-columns: minmax(250px, 600px);
+  }
+
+  .core-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .core-grid .member-card {
+    width: 100%;
+  }
+
+  .non-technical-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .team-page {
+    padding: 50px 16px 70px;
+  }
+
+  .team-header h1 {
+    font-size: 42px;
+  }
+
+  .team-header p br {
+    display: none;
+  }
+
+  .team-header > span {
+    font-size: 10px;
+    letter-spacing: 3px;
+  }
+
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .faculty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .core-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .core-grid .member-card {
+    width: 100%;
+  }
+
+  .non-technical-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .non-technical-grid .no-photo {
+    height: 110px;
+  }
+
+  .team-section {
+    margin-bottom: 55px;
+  }
+}
+
+
+
+
+/* =========================================================
+   TECHNICAL TEAM CARDS (DARK MODE ADAPTED)
+   ========================================================= */
+.member-card {
+  min-height: 260px;
+  padding: 28px 20px;
+  border: 1px solid var(--card-border, #334155); /* Adapted for dark theme */
+  border-radius: 16px;
+  background: var(--card, #1e293b); /* Adapted for dark theme */
+  text-align: center;
+  box-shadow: 0 7px 22px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.member-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.4);
+}
+
+.member-card.featured {
+  min-height: 300px;
+  padding: 35px;
+}
+
+/* MEMBER IMAGE */
+.member-image {
+  width: 125px;
+  height: 125px;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  border: 5px solid var(--alt-bg, #0f172a); /* Adapted for dark theme */
+  border-radius: 8px;
+  background: var(--bg, #0b1120);
+}
+
+.featured .member-image {
+  width: 150px;
+  height: 150px;
+}
+
+.member-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+/* MEMBER INFO */
+.member-info h3 {
+  margin: 0;
+  color: var(--white, #f8fafc); /* Adapted for dark theme */
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.featured .member-info h3 {
+  font-size: 21px;
+}
+
+.member-info p {
+  margin: 8px 0 14px;
+  color: var(--text-soft, #94a3b8); /* Adapted for dark theme */
+  font-size: 14px;
+} */
+

@@ -1,159 +1,220 @@
-import TeamCard from "../../components/TeamCard";
-import './Team.css';
-import naiduImg from"../../assets/naidu.jpg";
+import "./Team.css";
+import naiduImg from "../../assets/naidu.jpg";
+const faculty = [
+  {
+    name: "Dr. N.V. Swamy Naidu",
+    role: "Faculty In-Charge",
+    image: naiduImg,
+  },
+];
 
-function Team() {
-  const faculty = [
-    {
-      id: 1,
-      name: "Dr. N.V. Swamy Naidu",
-      role: "Faculty In-Charge",
-      image: naiduImg
-    }
-  ];
+const coreTeam = [
+  {
+    name: "Sivaratri Lakshmi Sahithi",
+    role: "Core Team",
+    image: "/team/sahithi.jpg",
+  },
+  {
+    name: "Kritika Tripathi",
+    role: "Core Team",
+    image: "/team/kritika-tripathi.jpg",
+  },
+];
 
-  const coreTeam = [
-    {
-      id: 1,
-      name: "Sivaratri Lakshmi Sahithi",
-      role: "President",
-      year: "4th Year"
-    },
-    {
-      id: 2,
-      name: "Kritika Tripathi",
-      role: "President",
-      year: "4rd Year"
-    }
-  ];
+const technicalTeam = [
+  {
+    name: "RAGHAVA",
+    branch: "IT",
+    role: "Technical Team",
+    image: "/team/raghava.jpg",
+  },
+  {
+    name: "PRATYUSH RAJ",
+    branch: "CSE",
+    role: "Technical Team",
+    image: "/team/pratyush.jpg",
+  },
+  {
+    name: "PRAVALIKA",
+    branch: "IT",
+    role: "Technical Team",
+    image: "/team/pravalika.jpg",
+  },
+  {
+    name: "PREMANVITHA",
+    branch: "CSE",
+    role: "Technical Team",
+    image: "/team/premanvitha.jpg",
+  },
+  {
+    name: "AMRUTHA",
+    branch: "CSE",
+    role: "Technical Team",
+    image: "/team/amrutha.jpg",
+  },
+  {
+    name: "VAISHNAVI",
+    branch: "CSE",
+    role: "Technical Team",
+    image: "/team/vaishnavi.jpg",
+  },
+];
 
-  const technicalTeam = [
-    {
-      id: 1,
-      name: "Ashwajit Dalal",
-      role: "Mechanical",
-      year: "3rd Year"
-    },
-    {
-      id: 2,
-      name: "Subash Kumar Saho",
-      role: "Mechanical",
-      year: "3rd Year"
-    },
-    {
-      id: 3,
-      name: "Kritika Misti",
-      role: "Mechanical",
-      year: "3rd Year"
-    },
-    {
-      id: 4,
-      name: "Shivesh",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 5,
-      name: "Joshanavi",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 6,
-      name: "Aman",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 7,
-      name: "Rasazna",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 8,
-      name: "Pranav",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 9,
-      name: "Abhijeet",
-      role: "Mechanical",
-      year: "2nd Year"
-    },
-    {
-      id: 10,
-      name: "Awishra",
-      role: "ECE",
-      year: "3rd Year"
-    },
-    {
-      id: 11,
-      name: "Vijay",
-      role: "ECE",
-      year: "3rd Year"
-    },
-    {
-      id: 12,
-      name: "Vimal",
-      role: "ECE",
-      year: "2nd Year"
-    },
-    {
-      id: 13,
-      name: "Jasmita Abhi",
-      role: "ECE",
-      year: "2nd Year"
-    },
-    {
-      id: 14,
-      name: "Pratyush Raj",
-      role: "CSE",
-      year: "2nd Year"
-    },
-    {
-      id: 15,
-      name: "Amruta Sri",
-      role: "CSE",
-      year: "2nd Year"
-    },
-    {
-      id: 16,
-      name: "Sai Premanvitha",
-      role: "CSE",
-      year: "2nd Year"
-    },
-    {
-      id: 17,
-      name: "Vaishnavi",
-      role: "CSE",
-      year: "2nd Year"
-    },
-    {
-      id: 18,
-      name: "Pravallika",
-      role: "IT",
-      year: "2nd Year"
-    },
-    {
-      id: 19,
-      name: "Raghava",
-      role: "IT",
-      year: "2nd Year"
-    }
-  ];
-
+const nonTechnicalTeam = [
+  {
+    name: "Ashwajit Dalal",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/ashwajit.jpg",
+  },
+  {
+    name: "Subash Kumar Saho",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/subash.jpg",
+  },
+  {
+    name: "Kritika Misti",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/kritika-misti.jpg",
+  },
+  {
+    name: "Shivanshi",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/shivanshi.jpg",
+  },
+  {
+    name: "Jestarnavi",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/jestarnavi.jpg",
+  },
+  {
+    name: "Ariny",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/ariny.jpg",
+  },
+  {
+    name: "Roozana",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/roozana.jpg",
+  },
+  {
+    name: "Pranav",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/pranav.jpg",
+  },
+  {
+    name: "Abhijeet",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/abhijeet.jpg",
+  },
+  {
+    name: "Jamniti Abhi",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/jamniti-abhi.jpg",
+  },
+];
+function MemberCard({ member, featured = false, noPhoto = false }) {
   return (
-    
-    <div className="team-page">
-      <h1>Our Team</h1>
-      
-      <TeamCard title="Faculty" members={faculty} />
-      <TeamCard title="Core Team" members={coreTeam} />
-      <TeamCard title="Technical Team" members={technicalTeam} />
+    <div className={`member-card ${featured ? "featured" : ""} ${noPhoto ? "no-photo" : ""}`}>
+      {!noPhoto && (
+        <div className="member-image">
+          <img src={member.image} alt={member.name} />
+        </div>
+      )}
+
+      <div className="member-info">
+        <h3>{member.name}</h3>
+
+        {!noPhoto && <p>{member.role}</p>}
+
+        {member.branch && (
+          <span className="branch">
+            BRANCH: <b>{member.branch}</b>
+          </span>
+        )}
+      </div>
     </div>
   );
 }
 
-export default Team;
+function TeamSection({ title, members, featured = false }) {
+  const gridClass = featured
+    ? "faculty-grid"
+    : title === "Core Team"
+    ? "core-grid"
+    : title === "Non-Technical Team"
+    ? "non-technical-grid"
+    : "";
+
+  return (
+    <section className="team-section">
+      <div className="section-title">
+        <h2>{title}</h2>
+        <span />
+      </div>
+
+      <div className={`members-grid ${gridClass}`}>
+        {members.map((member) => (
+          <MemberCard
+            key={member.name}
+            member={member}
+            featured={featured}
+            noPhoto={title === "Non-Technical Team"}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function Team() {
+  return (
+    <main className="team-page">
+      <header className="team-header">
+        <span>AVIATION CLUB • NIT RAIPUR</span>
+
+        <h1>
+          Our <strong>Team</strong>
+        </h1>
+
+        <div className="team-line" />
+
+        <p>
+          Meet the people behind the ideas, projects and activities
+          <br />
+          that drive the Aviation Club forward.
+        </p>
+      </header>
+
+      <TeamSection
+        title="Faculty"
+        members={faculty}
+        featured
+      />
+
+      <TeamSection
+        title="Core Team"
+        members={coreTeam}
+      />
+
+      <TeamSection
+        title="Technical Team"
+        members={technicalTeam}
+      />
+
+      <TeamSection
+        title="Non-Technical Team"
+        members={nonTechnicalTeam}
+      />
+    </main>
+  );
+}
