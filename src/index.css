@@ -24,13 +24,30 @@
   --shadow-lift: 0 18px 40px rgba(0, 0, 0, 0.4);
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
-  background-color: var(--bg);
-  color: var(--text);
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+  color: var(--text);
+
+  background: linear-gradient(
+    -45deg,
+    #0b1120,
+    #0f172a,
+    #164e63,
+    #1e3a5f,
+    #0b1120
+  );
+  background-size: 400% 400%;
+  animation: atmosphericShift 12s ease-in-out infinite;
 }
 /* =========================================================
    GLOBAL LAYOUT STRUCTURE
@@ -44,4 +61,19 @@ body {
 /* Optional: Add some spacing between sections */
 section {
   padding: 60px 0;
+}
+
+/* =========================================================
+   GLOBAL BACKGROUND ANIMATION ENGINE
+   ========================================================= */
+@keyframes atmosphericShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
