@@ -140,12 +140,68 @@ h1, h2, h3 { font-family: var(--font-display); color: var(--primary); margin: 0;
   overflow: hidden;
   text-align: center;
 }
-.hero-bg {
-  position: absolute; inset: 0;
-  background-image: url('https://media.istockphoto.com/photos/unmanned-aircraft-patrol-air-sky-at-high-altitude-picture-id1091861384?k=20&m=1091861384&s=612x612&w=0&h=q4lthgqtRgYOXCuguP0G1-5por0G23nSgiVfi_sZMOg=');
-  background-size: cover;
-  background-position: center;
+
+
+/* ===================== ANIMATED SKY BACKGROUND ===================== */
+.animated-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* A nice dark gradient to fit your theme */
+  background: radial-gradient(circle at center, #1e293b 0%, #0b1120 100%);
+  z-index: 0;
 }
+
+.flying-plane {
+  position: absolute;
+  color: var(--primary, #3b82f6);
+  opacity: 0.15; /* Kept subtle so it doesn't make the text hard to read */
+  filter: blur(1px); /* Adds a slight atmospheric distance effect */
+}
+
+/* Positioning, sizing, and timing for each individual plane */
+.plane-1 { 
+  top: 75%; 
+  left: -10%; 
+  font-size: 3rem; 
+  animation: flyRight 20s linear infinite; 
+}
+.plane-2 { 
+  top: 40%; 
+  left: -10%; 
+  font-size: 1.5rem; 
+  animation: flyRight 35s linear infinite 5s; 
+}
+.plane-3 { 
+  top: 85%; 
+  left: -10%; 
+  font-size: 5rem; 
+  opacity: 0.08; /* Bigger planes in the "foreground" are more transparent */
+  filter: blur(3px);
+  animation: flyRight 25s linear infinite 12s; 
+}
+.plane-4 { 
+  top: 20%; 
+  left: -10%; 
+  font-size: 2rem; 
+  animation: flyRight 40s linear infinite 2s; 
+}
+
+/* The actual flight path engine */
+@keyframes flyRight {
+  0% { 
+    transform: translate(0, 0) rotate(45deg); 
+  }
+  100% { 
+    /* Moves the plane way off the top right of the screen */
+    transform: translate(120vw, -60vh) rotate(45deg); 
+  }
+}
+
+
 .hero-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(11,79,140,0.82) 0%, rgba(11,79,140,0.72) 50%, rgba(6,45,80,0.9) 100%);

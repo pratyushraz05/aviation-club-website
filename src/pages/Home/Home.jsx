@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"; // 🚀 Cleaned up imports!
+import React, { useEffect, useState } from "react"; 
 import "./Home.css";
 import facPhoto from "../../assets/fac.jpg";
 import aviationLogo from "../../assets/aviation-logo.png"; 
 import nitrrLogo from "../../assets/nitrr-logo.png";
+import { FaPlane } from "react-icons/fa";
 
 // ===================== NOTICE BOARD DATA & COMPONENT =====================
 const notificationsData = [
@@ -50,7 +51,6 @@ const notificationsData = [
   }
 ];
 
-// 🚀 The "Smart" Card that makes the Read More buttons work!
 function NoticeCard({ date, title, summary, extraText }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -77,7 +77,6 @@ function NoticeCard({ date, title, summary, extraText }) {
 // =========================================================================
 
 export default function Home() {
-  // Keeps scroll reveal animations and smooth scrolling for in-page anchor links
   useEffect(() => {
     // Scroll reveal
     const revealEls = document.querySelectorAll(".reveal");
@@ -123,7 +122,15 @@ export default function Home() {
     <>
       {/* ===================== HERO ===================== */}
       <section className="hero" id="hero" aria-label="Introduction">
-        <div className="hero-bg" aria-hidden="true"></div>
+        
+        {/* 🚀 HERE IS THE NEW ANIMATED SKY! */}
+        <div className="animated-sky" aria-hidden="true">
+          <FaPlane className="flying-plane plane-1" />
+          <FaPlane className="flying-plane plane-2" />
+          <FaPlane className="flying-plane plane-3" />
+          <FaPlane className="flying-plane plane-4" />
+        </div>
+
         <div className="hero-overlay" aria-hidden="true"></div>
 
         <div className="hero-content reveal fade-up">
@@ -288,7 +295,6 @@ export default function Home() {
           </div>
           
           <div className="notice-board reveal fade-up">
-            {/* 🚀 This loop creates the interactive buttons! */}
             {notificationsData.map((notice) => (
               <NoticeCard 
                 key={notice.id}

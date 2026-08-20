@@ -6,7 +6,7 @@ export const EVENTS_DATA = [
     duration: '02:00 P.M. – 6:00 P.M.',
     venue: 'S-11, Academic Building',
     isUpcoming: false, // Set to true if it's an upcoming event
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80',
+    image: '/images/3.png',
     purpose: [
       'Bridge the gap between theory and real-world engineering practice',
       'Enhance practical proficiency in CAD, FEA, and CFD tools',
@@ -37,7 +37,7 @@ The competition was conducted as an individual event, where participants were gi
     venue: 'Hira Hall',
     speakerInfo: 'Dr. N.V. Swamy Naidu, HOD, Mechanical Department, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=600&q=80',
+    image: '/images/2.png',
     purpose: [
       'Honor Air Force Day and highlight the legacy of the Indian Air Force',
       'Increase awareness and knowledge of aviation technology and history',
@@ -67,7 +67,7 @@ Subsequently, an RC Plane Landing Competition was conducted, through which parti
     venue: 'S-11, Academic Building',
     speakerInfo: 'Aniket Singh, 3rd year, Mechanical Department, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=600&q=80',
+    image: '/images/cad-workshop.jpg',
     purpose: [
       'Teach the fundamentals of CAD using Creo Parametric',
       'Bridge theory and practice by allowing students to apply concepts in a competition',
@@ -101,7 +101,7 @@ Following the learning session, a CAD design competition was conducted, divided 
     venue: 'S-11, Academic Building',
     speakerInfo: 'Dr. N. V. Swamy Naidu, Dr. Aruna Rana, and Honumant Nethani',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80',
+    image: '/images/3.png',
     purpose: [
       'Build foundational understanding of aerodynamics and flight principles',
       'Explain real-world aviation systems such as aircraft and drones',
@@ -132,7 +132,7 @@ Day 2: Industry expert Dr. Aruna Rana delivered a session on drone working princ
     duration: '10:00 A.M. – 05:30 P.M.',
     venue: 'Football Ground, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1527977966376-1c8408f9f108?auto=format&fit=crop&w=600&q=80',
+    image: '/images/4.png',
     purpose: [
       'Bridge theory and practice in unmanned aerial vehicle (UAV) systems',
       'Develop practical skills in assembling and operating quadcopters',
@@ -164,7 +164,7 @@ Phase 2 (Assembly & Flight): Shortlisted teams were provided complete drone kits
     duration: '10:00 A.M. – 05:30 P.M.',
     venue: 'Football Ground, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=600&q=80',
+    image: '/images/6.png',
     purpose: [
       'Provide end-to-end exposure to UAV engineering: design, analysis, fabrication, and testing',
       'Apply theoretical concepts like aerodynamics, FEA, and CFD in practical scenarios',
@@ -193,7 +193,7 @@ On match day, following safety inspections, teams raced on a designated track at
     duration: 'Multi-Phase R&D Project',
     venue: 'Makerspace & Flying Grounds, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80',
+    image: '/images/5.png',
     purpose: [
       'Design and build a functional Short Take-Off and Landing (STOL) aircraft',
       'Achieve efficient low-speed flight and reduced runway footprint requirements',
@@ -219,7 +219,7 @@ The physical aircraft was fabricated using lightweight Styrofoam reinforced with
     duration: 'Ongoing R&D Initiative',
     venue: 'Aviation Club Lab, NIT Raipur',
     isUpcoming: false,
-    image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80',
+    image: '/images/7.png',
     purpose: [
       'Design, analyze, and prototype a hybrid VTOL aerial vehicle system',
       'Reduce hover-to-cruise power consumption by 12–14% compared to existing designs',
