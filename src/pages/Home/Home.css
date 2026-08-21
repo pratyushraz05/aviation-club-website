@@ -1239,3 +1239,48 @@ h3 {
     animation: none !important;
   }
 }
+
+
+/* =========================================================
+   JOIN US MODAL POPUP STYLING
+   ========================================================= */
+.join-modal-card {
+  background: var(--card, #1e293b);
+  border: 1px solid var(--card-border, #334155);
+  border-radius: var(--radius-lg, 20px);
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  position: relative;
+  box-shadow: var(--shadow-lift);
+  text-align: center;
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.join-modal-card h3 {
+  color: var(--white, #ffffff);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.join-modal-card p {
+  color: var(--text-soft, #94a3b8);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.join-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.join-option-btn {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  padding: 12px 20px;
+  font-size: 1rem;
+  text-decoration: none;
+}

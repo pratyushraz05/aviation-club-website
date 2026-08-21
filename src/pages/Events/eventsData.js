@@ -1,11 +1,31 @@
 export const EVENTS_DATA = [
+{
+    id: 'current-featured-event',
+    title: 'Aviation Club Annual Event 2026',
+    date: 'Upcoming • To Be Announced',
+    duration: 'Full Day Event',
+    venue: 'NIT Raipur Campus',
+    isUpcoming: true,
+    image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
+    purpose: [
+      'Showcase upcoming drone designs and aerodynamic prototypes',
+      'Provide hands-on platform for student engineers',
+      'Encourage cross-college collaboration and competitive spirit'
+    ],
+    description: `Get ready for our upcoming drone design and aerodynamics challenges. Stay tuned for registration guidelines, problem statements, and exciting technical challenges designed to push the boundaries of student aviation engineering.`,
+    outcomes: [
+      'Early access to competition problem statements and guidelines',
+      'Opportunities for cross-functional team formation',
+      'Direct interaction with faculty mentors and industry experts'
+    ]
+  },
   {
     id: 'blitz-competition',
     title: 'Blitz Competition',
     date: '4th April 2026',
     duration: '02:00 P.M. – 6:00 P.M.',
     venue: 'S-11, Academic Building',
-    isUpcoming: false, // Set to true if it's an upcoming event
+    isUpcoming: false,
     image: '/images/3.png',
     purpose: [
       'Bridge the gap between theory and real-world engineering practice',
@@ -28,8 +48,7 @@ The competition was conducted as an individual event, where participants were gi
       'Exposure to competitive and industry-relevant technical challenges'
     ]
   },
-  
- {
+  {
     id: 'airforce-day-2025',
     title: 'Air Force Day Celebration & Competition',
     date: '8th October 2025',
@@ -123,8 +142,6 @@ Day 2: Industry expert Dr. Aruna Rana delivered a session on drone working princ
       'Provided practical exposure to real-world aviation applications'
     ]
   },
-  // Add these objects to your existing array in src/pages/Events/eventsData.js
-
   {
     id: 'deliver-the-pizza-2026',
     title: 'Deliver the Pizza (DTP)',
@@ -218,7 +235,7 @@ The physical aircraft was fabricated using lightweight Styrofoam reinforced with
     date: '2025 – 2026 Academic Session',
     duration: 'Ongoing R&D Initiative',
     venue: 'Aviation Club Lab, NIT Raipur',
-    isUpcoming: false,
+    isUpcoming: true,
     image: '/images/7.png',
     purpose: [
       'Design, analyze, and prototype a hybrid VTOL aerial vehicle system',
@@ -238,5 +255,4 @@ The team utilized Agile management frameworks to iterate through control system 
       'Established a foundation to build a physical prototype targeting 12-14% efficiency gains'
     ]
   }
-   
 ];
