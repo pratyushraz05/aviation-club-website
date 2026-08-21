@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import "./Home.css";
 
@@ -68,7 +67,6 @@ const notificationsData = [
 
 // ===================== NOTICE CARD =====================
 
-// 🚀 Updated NoticeCard: No button, clicking anywhere on the card expands it!
 function NoticeCard({ date, title, summary, extraText }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -93,6 +91,9 @@ function NoticeCard({ date, title, summary, extraText }) {
 // ===================== HOME =====================
 
 export default function Home() {
+  // State to control the Join Us popup modal
+  const [showJoinModal, setShowJoinModal] = useState(false);
+
   useEffect(() => {
     // ===================== SCROLL REVEAL =====================
 
@@ -238,14 +239,51 @@ export default function Home() {
               Explore Club
             </a>
 
-            <a
-              href="https://www.instagram.com/aviation_nitrr/"
-              target="_blank"
-              rel="noopener noreferrer"
+            {/* Click to open the Join Us Popup Modal */}
+            <button
+              type="button"
               className="btn btn-secondary"
+              onClick={() => setShowJoinModal(true)}
             >
               Join Us
-            </a>
+            </button>
+
+            {/* Popup Modal */}
+            {showJoinModal && (
+              <div className="modal-backdrop" onClick={() => setShowJoinModal(false)}>
+                <div className="join-modal-card" onClick={(e) => e.stopPropagation()}>
+                  <button 
+                    type="button" 
+                    className="close-btn" 
+                    onClick={() => setShowJoinModal(false)}
+                  >
+                    &times;
+                  </button>
+                  
+                  <h3>Join the Aviation Club</h3>
+                  <p>Choose your platform to connect and stay updated with our latest events and projects:</p>
+                  
+                  <div className="join-modal-options">
+                    <a
+                      href="https://www.instagram.com/aviation_nitrr/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary join-option-btn"
+                    >
+                      📷 Instagram
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/company/aviation-nitrr/posts/?feedView=all"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-secondary join-option-btn"
+                    >
+                      💼 LinkedIn
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>

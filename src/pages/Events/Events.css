@@ -183,3 +183,129 @@
   from { opacity: 0; transform: translateY(20px) scale(0.95); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+/* =========================================================
+   CURRENT EVENT FEATURED CARD STYLING
+   ========================================================= */
+.current-event-section {
+  margin-top: 20px;
+}
+
+.current-event-card {
+  background: var(--card, #1e293b);
+  border: 1px solid var(--primary, #38bdf8);
+  border-radius: var(--radius-lg, 20px);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.12), var(--shadow-lift);
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .current-event-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.current-event-card .card-img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  border-bottom: none;
+  border-right: 1px solid var(--card-border);
+}
+
+/* =========================================================
+   REPORT MODAL PHOTO GALLERY SPACES
+   ========================================================= */
+.report-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.photo-slot img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-sm, 10px);
+  border: 1px solid var(--card-border);
+  transition: transform 0.3s ease;
+}
+
+.photo-slot img:hover {
+  transform: scale(1.03);
+}
+
+/* =========================================================
+   CURRENT EVENT FEATURED CARD STYLING
+   ========================================================= */
+.current-event-section {
+  margin-top: 20px;
+}
+
+.current-event-card {
+  background: var(--card, #1e293b);
+  border: 1px solid var(--primary, #38bdf8);
+  border-radius: var(--radius-lg, 20px);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.12), var(--shadow-lift);
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* If the card contains an image, use a 2-column layout */
+.current-event-card:has(.card-img) {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  text-align: left;
+}
+
+@media (max-width: 768px) {
+  .current-event-card:has(.card-img) {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+.current-event-card .card-img {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  object-fit: cover;
+  border-bottom: none;
+  border-right: 1px solid var(--card-border);
+}
+
+.current-event-card .card-body {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Align text back to left only when side image is present */
+.current-event-card:has(.card-img) .card-body {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.current-event-card .card-footer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.current-event-card:has(.card-img) .card-footer {
+  justify-content: flex-start;
+}
+
+.current-event-card .badge {
+  margin-bottom: 8px;
+}
