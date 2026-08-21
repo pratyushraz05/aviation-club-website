@@ -198,7 +198,7 @@
 /* NON-TECHNICAL TEAM */
 
 .non-technical-grid {
-  grid-template-columns: repeat(3, 300px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 330px));
   justify-content: center;
   gap: 18px 28px;
 }
