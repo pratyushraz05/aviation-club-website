@@ -84,10 +84,11 @@
 
 .members-grid {
   display: grid;
-  grid-template-columns: repeat(3, 330px);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 330px));
+  justify-content:center;
   gap: 28px;
 }
+
 
 /* FACULTY */
 
