@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Layout from './Layout/layout'; // Pulling in Amruta's wrapper
+import Layout from './Layout/Layout'; 
 import ProjectDetails from './pages/Projects/ProjectDetails';
 
 // Importing the team's pages
