@@ -65,12 +65,24 @@ function Contact() {
           </div>
 
           <div className="social-section">
-            <h3>Follow Us</h3>
-            <div className="social-icons">
-              <a href="#" target="_blank" rel="noreferrer"><FaInstagram /></a>
-              <a href="#" target="_blank" rel="noreferrer"><FaLinkedin /></a>
-              <a href="#" target="_blank" rel="noreferrer"><FaYoutube /></a>
-            </div>
+  <h3>Follow Us</h3>
+  <div className="social-icons">
+    {/* Instagram Link */}
+    <a href="https://www.instagram.com/aviation_nitrr/" target="_blank" rel="noreferrer" title="Instagram">
+      <FaInstagram />
+    </a>
+    
+    {/* LinkedIn Link */}
+    <a href="https://www.linkedin.com/company/aviation-nitrr/posts/?feedView=all" target="_blank" rel="noreferrer" title="LinkedIn">
+      <FaLinkedin />
+    </a>
+    
+    {/* YouTube - Coming Soon (Disabled link or tooltip) */}
+    <a href="#coming-soon" onClick={(e) => { e.preventDefault(); alert("YouTube channel coming soon!"); }} title="YouTube - Coming Soon" style={{ opacity: 0.5, cursor: "not-allowed" }}>
+      <FaYoutube />
+    </a>
+  </div>
+
           </div>
         </div>
 

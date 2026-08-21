@@ -12,12 +12,12 @@ const coreTeam = [
   {
     name: "Sivaratri Lakshmi Sahithi",
     role: "Core Team",
-    image: "/team/sahithi.jpg",
+   // image: "/team/sahithi.jpg",
   },
   {
     name: "Kritika Tripathi",
     role: "Core Team",
-    image: "/team/kritika-tripathi.jpg",
+   // image: "/team/kritika-tripathi.jpg",
   },
 ];
 
