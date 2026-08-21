@@ -719,6 +719,80 @@ h3 {
   line-height: 1.6;
 }
 
+/* =========================================================
+   ENHANCED CLUB HISTORY TIMELINE STYLES
+   ========================================================= */
+
+/* Make the timeline items interactive */
+.timeline-item {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* Stunning Hover Effect for Timeline Cards */
+.timeline-card {
+  background: var(--card, #1e293b);
+  border: 1px solid var(--card-border, #334155);
+  border-radius: var(--radius-lg, 20px);
+  padding: 24px;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* When you hover over a milestone card, it lifts up and glows! */
+.timeline-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--primary, #38bdf8);
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15), var(--shadow-lift);
+}
+
+/* Subtle accent line on the side of the card that glows on hover */
+.timeline-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary, #38bdf8);
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.timeline-card:hover::before {
+  opacity: 1;
+}
+
+/* Glowing Pulse Effect for the Timeline Center Dots/Icons */
+.timeline-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: var(--card, #1e293b);
+  border: 2px solid var(--primary, #38bdf8);
+  border-radius: 50%;
+  color: var(--primary, #38bdf8);
+  font-size: 1.2rem;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+  animation: dotPulse 3s infinite ease-in-out;
+  z-index: 2;
+}
+
+/* The gentle breathing pulse animation */
+@keyframes dotPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(56, 189, 248, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0);
+  }
+}
 
 /* =========================================================
    FACULTY
@@ -893,6 +967,16 @@ h3 {
   color: var(--text-soft);
 }
 
+
+.notice {
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.notice:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary); /* Glows slightly with your primary blue on hover */
+}
 
 /* =========================================================
    READ MORE BUTTON

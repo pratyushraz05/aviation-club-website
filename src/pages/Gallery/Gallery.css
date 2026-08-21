@@ -4,7 +4,7 @@
   background:
     radial-gradient(circle at 8% 8%, rgba(35, 103, 205, 0.06), transparent 24%),
     radial-gradient(circle at 92% 90%, rgba(35, 103, 205, 0.05), transparent 25%),
-    #f8fafc;
+    #1f4c79;
   color: #17243d;
   font-family: Inter, "Segoe UI", sans-serif;
 }
@@ -95,7 +95,7 @@
   overflow: hidden;
   border: 1px solid #e1e8f1;
   border-radius: 20px;
-  background: #fff;
+  background: #c1deff;
   box-shadow: 0 10px 30px rgba(30, 55, 90, 0.06);
   transition:
     transform 0.3s ease,
@@ -246,7 +246,7 @@
   margin: auto;
   padding: 45px;
   border-radius: 22px;
-  background: #f8fafc;
+  background: #c2e6f7f9;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
 }
 
