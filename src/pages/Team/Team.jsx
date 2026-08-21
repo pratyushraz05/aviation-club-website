@@ -7,7 +7,13 @@ const faculty = [
     image: naiduImg,
   },
 ];
-
+const mentor = [
+  {
+    name:"Honumant Nethani",
+    role:"Mentor",
+    image: "/team/Honumant.jpg",
+  }
+]
 const coreTeam = [
   {
     name: "Sivaratri Lakshmi Sahithi",
@@ -62,16 +68,16 @@ const technicalTeam = [
 
 const nonTechnicalTeam = [
   {
+    name: "Subhash Kumar Saho",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/subhash.jpg",
+  },
+  {
     name: "Ashwajit Dalal",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
     image: "/team/ashwajit.jpg",
-  },
-  {
-    name: "Subash Kumar Saho",
-    branch: "MECHANICAL",
-    role: "Non-Technical Team",
-    image: "/team/subash.jpg",
   },
   {
     name: "Kritika Misti",
@@ -80,28 +86,29 @@ const nonTechnicalTeam = [
     image: "/team/kritika-misti.jpg",
   },
   {
-    name: "Shivanshi",
+    name: "Shivesh Vikrant S",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
     image: "/team/shivanshi.jpg",
   },
   {
-    name: "Jestarnavi",
+    name: "Joshnavi",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
-    image: "/team/jestarnavi.jpg",
+    image: "/team/joshnavi.jpg",
+  },
+
+  {
+    name: "Aman",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/aman.jpg",
   },
   {
-    name: "Ariny",
+    name: "Rasazna",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
-    image: "/team/ariny.jpg",
-  },
-  {
-    name: "Roozana",
-    branch: "MECHANICAL",
-    role: "Non-Technical Team",
-    image: "/team/roozana.jpg",
+    image: "/team/Rasazna.jpg",
   },
   {
     name: "Pranav",
@@ -110,16 +117,22 @@ const nonTechnicalTeam = [
     image: "/team/pranav.jpg",
   },
   {
-    name: "Abhijeet",
+    name: "V Sai Akhil",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
     image: "/team/abhijeet.jpg",
   },
   {
-    name: "Jamniti Abhi",
-    branch: "MECHANICAL",
+    name: "Jasmitha Abhi",
+    branch: "ECE",
     role: "Non-Technical Team",
     image: "/team/jamniti-abhi.jpg",
+  },
+  {
+    name: "Vijay Karan",
+    branch: "MECHANICAL",
+    role: "Non-Technical Team",
+    image: "/team/vijay.jpg",
   },
 ];
 function MemberCard({ member, featured = false, noPhoto = false }) {
@@ -150,6 +163,8 @@ function TeamSection({ title, members, featured = false }) {
   const gridClass = featured
     ? "faculty-grid"
     : title === "Core Team"
+    ? "mentor-grid"
+    : title === "Core Team"
     ? "core-grid"
     : title === "Non-Technical Team"
     ? "non-technical-grid"
@@ -168,7 +183,7 @@ function TeamSection({ title, members, featured = false }) {
             key={member.name}
             member={member}
             featured={featured}
-            noPhoto={title === "Non-Technical Team"}
+            Photo={title === "Non-Technical Team"}
           />
         ))}
       </div>
@@ -199,6 +214,11 @@ export default function Team() {
         title="Faculty"
         members={faculty}
         featured
+      />
+
+      <TeamSection
+        title="Mentor"
+        members={mentor}
       />
 
       <TeamSection
