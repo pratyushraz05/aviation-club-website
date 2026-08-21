@@ -62,7 +62,7 @@ const technicalTeam = [
     name: "VAISHNAVI",
     branch: "CSE",
     role: "Technical Team",
-    image: "/team/vaishnavi.jpg",
+    image: "/team/Vaishnavi.jpg",
   },
 ];
 
@@ -89,7 +89,7 @@ const nonTechnicalTeam = [
     name: "Shivesh Vikrant S",
     branch: "MECHANICAL",
     role: "Non-Technical Team",
-    image: "/team/shivanshi.jpg",
+    image: "/team/shivesh.jpg",
   },
   {
     name: "Joshnavi",
