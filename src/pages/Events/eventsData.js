@@ -1,24 +1,24 @@
 export const EVENTS_DATA = [
-{
-    id: 'current-featured-event',
-    title: 'Aviation Club Annual Event 2026',
-    date: 'Upcoming • To Be Announced',
-    duration: 'Full Day Event',
-    venue: 'NIT Raipur Campus',
-    isUpcoming: false,
-    image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
-    purpose: [
-      'Showcase upcoming drone designs and aerodynamic prototypes',
-      'Provide hands-on platform for student engineers',
-      'Encourage cross-college collaboration and competitive spirit'
-    ],
-    description: `Get ready for our upcoming drone design and aerodynamics challenges. Stay tuned for registration guidelines, problem statements, and exciting technical challenges designed to push the boundaries of student aviation engineering.`,
-    outcomes: [
-      'Early access to competition problem statements and guidelines',
-      'Opportunities for cross-functional team formation',
-      'Direct interaction with faculty mentors and industry experts'
-    ]
-  },
+// {
+//     id: 'current-featured-event',
+//     title: 'Aviation Club Annual Event 2026',
+//     date: 'Upcoming • To Be Announced',
+//     duration: 'Full Day Event',
+//     venue: 'NIT Raipur Campus',
+//     isUpcoming: false,
+//     image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
+//     purpose: [
+//       'Showcase upcoming drone designs and aerodynamic prototypes',
+//       'Provide hands-on platform for student engineers',
+//       'Encourage cross-college collaboration and competitive spirit'
+//     ],
+//     description: `Get ready for our upcoming drone design and aerodynamics challenges. Stay tuned for registration guidelines, problem statements, and exciting technical challenges designed to push the boundaries of student aviation engineering.`,
+//     outcomes: [
+//       'Early access to competition problem statements and guidelines',
+//       'Opportunities for cross-functional team formation',
+//       'Direct interaction with faculty mentors and industry experts'
+//     ]
+//   },
   {
     id: 'blitz-competition',
     title: 'Blitz Competition',
