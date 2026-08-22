@@ -5,7 +5,7 @@ export const EVENTS_DATA = [
     date: 'Upcoming • To Be Announced',
     duration: 'Full Day Event',
     venue: 'NIT Raipur Campus',
-    isUpcoming: true,
+    isUpcoming: false,
     image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
     purpose: [
       'Showcase upcoming drone designs and aerodynamic prototypes',
