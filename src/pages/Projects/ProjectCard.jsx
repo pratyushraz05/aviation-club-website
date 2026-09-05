@@ -14,8 +14,10 @@ export default function ProjectCard({ project }) {
       {/* This maps over the array and turns each technology into a styled pill/tag */}
       <div className="tech-tags">
         {project.technologies?.map((tech, index) => (
-          <span key={index} className="tech-tag">{tech}</span>
-        ))}
+  <span key={index} className="tech-tag">
+    {typeof tech === "object" ? tech.name : tech}
+  </span>
+))}
       </div>
 
       <div className="card-footer-link">
