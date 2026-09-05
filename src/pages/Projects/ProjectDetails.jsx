@@ -63,9 +63,24 @@ function ProjectDetails() {
             <section className="details-section">
               <span className="section-label">TECHNOLOGY</span>
               <h2>Technologies Used</h2>
-              <div className="technology-large-container">
-                {project.technologies.map((technology) => (
-                  <span className="technology-large" key={technology}>{technology}</span>
+              <div className="technology-cards-grid">
+                {project.technologies.map((tech, index) => (
+                  <div className="technology-card" key={index}>
+                    <div className="tech-card-header">
+                      <h3>{tech.name}</h3>
+                      {tech.link && (
+                        <a 
+                          href={tech.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="tech-external-link"
+                        >
+                          Official Docs ↗
+                        </a>
+                      )}
+                    </div>
+                    <p>{tech.description}</p>
+                  </div>
                 ))}
               </div>
             </section>
@@ -95,6 +110,40 @@ function ProjectDetails() {
                   <div className="outcome-item" key={index}>
                     <span className="number-badge">{index + 1}</span>
                     <p>{outcome}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 🚀 NEW: Mentor Section */}
+          {project.mentor && (
+            <section className="details-section project-mentor-section">
+              <span className="section-label">MENTORSHIP</span>
+              <h2>Project Mentor</h2>
+              <div className="project-team-card" style={{ maxWidth: "400px", marginTop: "20px" }}>
+                <img src={project.mentor.image} alt={project.mentor.name} className="project-team-avatar" />
+                <div>
+                  <h3>{project.mentor.name}</h3>
+                  <p className="project-team-role">{project.mentor.role}</p>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* 🚀 NEW: Contributors Section */}
+          {project.contributors && (
+            <section className="details-section project-contributors-section">
+              <span className="section-label">TEAM</span>
+              <h2>Project Contributors</h2>
+              <div className="project-contributors-grid">
+                {project.contributors.map((person, index) => (
+                  <div className="project-team-card" key={index}>
+                    <img src={person.image} alt={person.name} className="project-team-avatar" />
+                    <div>
+                      <h3>{person.name}</h3>
+                      <p className="project-team-role">{person.role}</p>
+                    </div>
                   </div>
                 ))}
               </div>
