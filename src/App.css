@@ -1,0 +1,18 @@
+.scroll-top {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+  background: #eaeaea;
+  color: rgb(21, 15, 15);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+.scroll-top:hover {
+  transform: scale(1.1);
+}
