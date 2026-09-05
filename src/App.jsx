@@ -3,6 +3,7 @@ import './App.css';
 import Layout from './Layout/Layout'; 
 import ProjectDetails from './pages/Projects/ProjectDetails';
 
+
 // Importing the team's pages
 import Home from './pages/Home/Home';
 import Events from './pages/Events/Events';
@@ -11,6 +12,7 @@ import Team from './pages/Team/Team';
 import Gallery from './pages/Gallery/Gallery'; 
 import Contact from "./pages/Contact/Contact";
 
+import Results from "./pages/Results/Results"
 function App() {
   return (
     // The Layout automatically adds the Navbar at the top and Footer at the bottom
@@ -24,7 +26,14 @@ function App() {
         <Route path="/team" element={<Team />} />
         <Route path="/gallery" element={<Gallery />} /> 
         <Route path="/contact" element={<Contact />}/>
+        <Route path="/results" element={<Results />} />
       </Routes>
+      <button
+  className="scroll-top"
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+>
+  ↑
+</button>
     </Layout>
   );
 }

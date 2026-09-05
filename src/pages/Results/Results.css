@@ -1,0 +1,97 @@
+/* =========================
+   RESULTS SECTION
+========================= */
+
+.results-section {
+  min-height: 100vh;
+  padding: 100px 8%;
+  background: #1f3258e6;
+  color: #ffffff;
+  text-align: center;
+}
+
+.results-section h2 {
+  font-size: 42px;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.results-subtitle {
+  color: #9aa8bd;
+  font-size: 17px;
+  margin-bottom: 50px;
+}
+
+/* Cards container */
+.results-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Individual result card */
+.result-card {
+  background: linear-gradient(145deg, #0b1220, #05070d);
+  border: 1px solid #1479ff;
+  border-radius: 16px;
+  padding: 30px 25px;
+  text-align: left;
+  transition: 0.3s ease;
+  box-shadow: 0 0 15px rgba(20, 121, 255, 0.15);
+}
+
+.result-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 30px rgba(20, 121, 255, 0.35);
+}
+
+/* Year */
+.result-year {
+  display: inline-block;
+  color: #4da3ff;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Event name */
+.result-card h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+/* Position */
+.result-card h4 {
+  font-size: 18px;
+  color: #2997ff;
+  margin-bottom: 10px;
+}
+
+/* Team */
+.result-team {
+  color: #c5d3e6;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Description */
+.result-description {
+  color: #8f9caf;
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .results-container {
+    grid-template-columns: 1fr;
+  }
+
+  .results-section h2 {
+    font-size: 34px;
+  }
+}
+
