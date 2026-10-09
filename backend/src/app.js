@@ -17,7 +17,9 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 
 const app = express();
 
-if (isProduction()) app.set("trust proxy", 1);
+if (isProduction()) {
+app.set("trust proxy", 1);
+}
 
 app.use(
 helmet({
@@ -30,10 +32,11 @@ policy: "cross-origin",
 app.use(
 cors({
 origin: (origin, callback) => {
-if (!origin || allowedOrigins().includes(origin.replace(//+$/, ""))) {
-return callback(null, true);
-}
-return callback(null, false);
+  if (!origin || allowedOrigins().includes(origin)) {
+    callback(null, true);
+  } else {
+    callback(null, false);
+  }
 },
 credentials: true,
 methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -52,14 +55,12 @@ message: "Aviation Club API is running successfully!",
 
 app.use("/api", apiLimiter);
 app.use("/api", csrfProtection);
-
 app.use("/api/auth", authRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/gallery", galleryRoutes);
-
 app.use("/api", notFound);
 app.use(errorHandler);
 
