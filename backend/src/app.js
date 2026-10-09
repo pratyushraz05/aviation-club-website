@@ -42,7 +42,6 @@ app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 const feedbackRoutes = require('./routes/feedbackRoutes');
-app.use('/api/feedback', feedbackRoutes);
 
 
 // Test route
@@ -56,7 +55,7 @@ app.use("/api", csrfProtection); // only checks POST/PUT/PATCH/DELETE
 app.use("/api/auth", authRoutes);
 app.use("/api/results", resultRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("/api/feedback", feedbackRoutes); 
+app.use('/api/feedback', feedbackRoutes);
 app.use("/api/team", teamRoutes);
 
 app.use("/api", notFound);
