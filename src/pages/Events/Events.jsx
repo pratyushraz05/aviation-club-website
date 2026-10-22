@@ -1,14 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Events.css';
-import { EVENTS_DATA } from './eventsData';
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/events');
+
+        if (!response.ok) {
+          throw new Error('Failed to load events.');
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error('Invalid events response.');
+        }
+
+        setEvents(
+          result.data.map((event) => ({
+            ...event,
+            id: event.eventId,
+          }))
+        );
+      } catch (err) {
+        setError(err.message || 'Could not connect to the server.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
   // Filter out any upcoming events versus past events
-  const upcomingEvents = EVENTS_DATA.filter((e) => e.isUpcoming);
-  const pastEvents = EVENTS_DATA.filter((e) => !e.isUpcoming);
+  const upcomingEvents = events.filter((e) => e.isUpcoming);
+const pastEvents = events.filter((e) => !e.isUpcoming);
+  if (loading) {
+    return <div className="events-page">Loading events...</div>;
+  }
 
+  if (error) {
+    return (
+      <div className="events-page">
+        Unable to load events: {error}
+      </div>
+    );
+  }
   return (
     <div className="events-page">
       <div className="container">
