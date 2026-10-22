@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import API from '../../../project/src/services/api';
 import './Events.css';
 
 export default function Events() {
@@ -10,13 +11,8 @@ export default function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/events');
-
-        if (!response.ok) {
-          throw new Error('Failed to load events.');
-        }
-
-        const result = await response.json();
+        const response = await API.get('/events');
+        const result = response.data;
 
         if (!result.success || !Array.isArray(result.data)) {
           throw new Error('Invalid events response.');
@@ -37,9 +33,11 @@ export default function Events() {
 
     fetchEvents();
   }, []);
+
   // Filter out any upcoming events versus past events
   const upcomingEvents = events.filter((e) => e.isUpcoming);
-const pastEvents = events.filter((e) => !e.isUpcoming);
+  const pastEvents = events.filter((e) => !e.isUpcoming);
+
   if (loading) {
     return <div className="events-page">Loading events...</div>;
   }
@@ -51,6 +49,7 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
       </div>
     );
   }
+
   return (
     <div className="events-page">
       <div className="container">
@@ -71,7 +70,7 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
                 <div className="card-body">
                   <span className="badge">LIVE NOW / UPCOMING</span>
                   <h3 className="card-title">{event.title}</h3>
-                  <p className="card-meta">📅 {event.date} • 🕒 {event.duration}</p>
+                  <p className="card-meta">📅 {event.date} | 🕒 {event.duration}</p>
                   <p className="card-meta">📍 {event.venue}</p>
                   <p className="card-desc">{event.description.slice(0, 160)}...</p>
                   

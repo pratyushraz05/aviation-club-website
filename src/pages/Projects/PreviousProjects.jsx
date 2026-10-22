@@ -1,11 +1,50 @@
+import React, { useEffect, useState } from 'react';
+import API from '../../../project/src/services/api';
 import ProjectCard from "./ProjectCard";
-import projectData from "./projectData";
 
 function PreviousProjects() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const previousProjects = projectData.filter(
-    (project) => project.category === "Previous Projects"
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await API.get('/projects');
+        const result = response.data;
+
+        if (!result.success || !Array.isArray(result.data)) {
+          throw new Error('Invalid projects response.');
+        }
+
+        setProjects(
+          result.data.map((project) => ({
+            ...project,
+            id: project.projectId || project._id,
+          }))
+        );
+      } catch (err) {
+        setError(err.message || 'Could not connect to the server.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
+  // Filter out projects matching the previous projects category
+  const previousProjects = projects.filter(
+    (project) => project.category === "Previous Projects" || project.isCurrent === false
   );
+
+  if (loading) {
+    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px' }}>Loading previous projects...</p></div>;
+  }
+
+  if (error) {
+    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px', color: 'red' }}>Error loading projects: {error}</p></div>;
+  }
 
   return (
     <div className="projects-page">

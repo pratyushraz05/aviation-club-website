@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const Event = require("../models/eventModel");
 
@@ -72,7 +71,13 @@ const getEventById = async (req, res) => {
 
 const createEvent = async (req, res) => {
   try {
-    const data = await Event.create(req.body);
+    // If a file was uploaded via multer-storage-cloudinary, req.file.path contains the secure image URL
+    const eventData = { ...req.body };
+    if (req.file) {
+      eventData.image = req.file.path;
+    }
+
+    const data = await Event.create(eventData);
 
     return res.status(201).json({
       success: true,
@@ -92,9 +97,15 @@ const updateEvent = async (req, res) => {
       });
     }
 
+    // If a new file is uploaded during update, update the image URL as well
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.image = req.file.path;
+    }
+
     const data = await Event.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,
