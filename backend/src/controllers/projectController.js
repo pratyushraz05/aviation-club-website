@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 const Project = require("../models/projectModel");
 
@@ -72,7 +71,13 @@ const getProjectById = async (req, res) => {
 
 const createProject = async (req, res) => {
   try {
-    const data = await Project.create(req.body);
+    const projectData = { ...req.body };
+    // If an image file is uploaded via Cloudinary storage middleware, attach its URL
+    if (req.file) {
+      projectData.image = req.file.path;
+    }
+
+    const data = await Project.create(projectData);
 
     return res.status(201).json({
       success: true,
@@ -92,9 +97,15 @@ const updateProject = async (req, res) => {
       });
     }
 
+    const updateData = { ...req.body };
+    // If a new image file is uploaded, update its Cloudinary URL
+    if (req.file) {
+      updateData.image = req.file.path;
+    }
+
     const data = await Project.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,
