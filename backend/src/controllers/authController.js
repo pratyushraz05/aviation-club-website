@@ -4,7 +4,6 @@ const { ACCESS_COOKIE, TOKEN_HOURS, cookieOptions } = require("../config/authCon
 const validateLogin = (body = {}) => {
   const errors = [];
   const { email, password } = body;
-  // typeof checks also block NoSQL-injection payloads such as {"email": {"$gt": ""}}
   if (typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email.trim()) || email.length > 254) {
     errors.push("A valid email is required");
   }
@@ -12,6 +11,49 @@ const validateLogin = (body = {}) => {
     errors.push("Password is required");
   }
   return errors;
+};
+
+const validateRegister = (body = {}) => {
+  const errors = [];
+  const { name, email, password } = body;
+  if (typeof name !== "string" || name.trim().length < 2 || name.length > 100) {
+    errors.push("Name must be at least 2 characters");
+  }
+  if (typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email.trim()) || email.length > 254) {
+    errors.push("A valid email address is required");
+  }
+  if (typeof password !== "string" || password.length < 6 || password.length > 200) {
+    errors.push("Password must be at least 6 characters long");
+  }
+  return errors;
+};
+
+const register = async (req, res, next) => {
+  try {
+    const errors = validateRegister(req.body);
+    if (errors.length) {
+      return res.status(400).json({ success: false, message: "Validation failed", errors });
+    }
+
+    const { user, token } = await authService.register(req.body);
+
+    res.cookie(ACCESS_COOKIE, token, {
+      ...cookieOptions(),
+      maxAge: TOKEN_HOURS * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Registration successful",
+      user,
+      token,
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
+    next(error);
+  }
 };
 
 const login = async (req, res, next) => {
@@ -27,8 +69,11 @@ const login = async (req, res, next) => {
       ...cookieOptions(),
       maxAge: TOKEN_HOURS * 60 * 60 * 1000,
     });
-    res.status(200).json({ success: true, message: "Login successful", user });
+    res.status(200).json({ success: true, message: "Login successful", user, token });
   } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
     next(error);
   }
 };
@@ -47,4 +92,58 @@ const me = (req, res) => {
   });
 };
 
-module.exports = { login, logout, me };
+// Head / Admin role: Get all users
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await authService.getAllUsers();
+    res.status(200).json({ success: true, count: users.length, users });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Head / Admin role: Update a user's role
+const updateRole = async (req, res, next) => {
+  try {
+    const { role } = req.body;
+    if (!role) {
+      return res.status(400).json({ success: false, message: "Role is required" });
+    }
+
+    const updatedUser = await authService.updateUserRole(req.params.id, role);
+    res.status(200).json({
+      success: true,
+      message: `User role updated to ${role}`,
+      user: updatedUser,
+    });
+  } catch (error) {
+    if (error.statusCode) {
+      return res.status(error.statusCode).json({ success: false, message: error.message });
+    }
+    next(error);
+  }
+};
+
+// Logged-in User: Request Member status
+const requestMembership = async (req, res, next) => {
+  try {
+    const updatedUser = await authService.requestMembership(req.user._id, req.body);
+    res.status(200).json({
+      success: true,
+      message: "Membership request submitted for Head review",
+      user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  logout,
+  me,
+  getUsers,
+  updateRole,
+  requestMembership,
+};

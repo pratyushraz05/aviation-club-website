@@ -12,8 +12,16 @@ const userSchema = new mongoose.Schema(
     },
     // bcrypt hash only. `select: false` keeps it out of every query by default.
     password: { type: String, required: true, select: false },
-    // "admin" is the only role that can modify content.
-    role: { type: String, enum: ["admin", "user"], default: "user" },
+    // "admin" or "head" can modify content, "member" has portal access, "user" is normal visitor
+    role: {
+      type: String,
+      enum: ["user", "member", "head", "admin"],
+      default: "user",
+    },
+    branch: { type: String, trim: true, default: "" },
+    year: { type: String, trim: true, default: "" },
+    subteam: { type: String, trim: true, default: "" },
+    membershipRequested: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     failedLoginAttempts: { type: Number, default: 0 },
     lockUntil: { type: Date, default: null },
