@@ -1,26 +1,30 @@
-import "./Navbar.css";
-import { Link } from "react-router-dom";
-import aviationLogo from "../../assets/aviation-logo.png";
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import useAuth from '../../context/useAuth';
+import './Navbar.css';
+import aviationLogo from '../../assets/aviation-logo.png';
 
 function Navbar() {
-  
-  // This function tells the browser to smoothly scroll back to the top
+  const { user, isMember, isHead, logout } = useAuth();
+  const navigate = useNavigate();
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/', { replace: true });
   };
 
   return (
     <nav className="navbar">
-      
       <div className="logo">
-        {/* We added the onClick event right here! */}
         <Link to="/" className="logo-link" onClick={scrollToTop}>
-          
           <img src={aviationLogo} alt="Aviation Club" className="nav-logo-img" />
-          
           <div className="logo-text">
             ✈
             <br />
@@ -37,8 +41,47 @@ function Navbar() {
         <li><Link to="/projects">Projects</Link></li>
         <li><Link to="/team">Team</Link></li>
         <li><Link to="/gallery">Gallery</Link></li>
-        <li><Link to="/results">Results</Link></li> 
-        <li><Link to="/contact">Contact & FeedBack</Link></li>
+        <li><Link to="/results">Results</Link></li>
+        <li><Link to="/contact">Contact & Feedback</Link></li>
+
+        {/* Member Portal link - visible to Members and Heads */}
+        {isMember && (
+          <li>
+            <Link to="/portal" className="nav-portal-btn">
+              Member Portal
+            </Link>
+          </li>
+        )}
+
+        {/* Head Console link - visible to Heads and Admins */}
+        {isHead && (
+          <li>
+            <Link to="/admin" className="nav-admin-btn">
+              👑 Head Console
+            </Link>
+          </li>
+        )}
+
+        {/* Auth Group */}
+        <li className="nav-auth-group">
+          {user ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div className="nav-user-pill">
+                <span>{user.name?.split(' ')[0]}</span>
+                <span className={`nav-user-role-badge ${user.role}`}>
+                  {user.role}
+                </span>
+              </div>
+              <button onClick={handleLogout} className="btn-nav-logout" title="Sign out">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="nav-auth-btn">
+              Sign In
+            </Link>
+          )}
+        </li>
       </ul>
     </nav>
   );

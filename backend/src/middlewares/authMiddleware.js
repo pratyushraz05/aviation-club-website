@@ -9,19 +9,23 @@ const notAuthenticated = (res) =>
     message: "Not authenticated",
   });
 
-// Reads the JWT from the HttpOnly cookie, verifies it and loads the user.
-// The user is re-read from the database on every request, so deactivating an
-// account or changing its role takes effect immediately.
+// Reads the JWT from the HttpOnly cookie or Authorization Bearer header,
+// verifies it and loads the user from the database.
 const authenticate = async (req, res, next) => {
   try {
-    const token = req.cookies && req.cookies[ACCESS_COOKIE];
+    let token = req.cookies && req.cookies[ACCESS_COOKIE];
+
+    if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+
     if (!token) return notAuthenticated(res);
 
     let payload;
     try {
       payload = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
     } catch (err) {
-      return notAuthenticated(res); // expired / tampered token
+      return notAuthenticated(res); // expired or tampered token
     }
 
     const user = await User.findById(payload.sub);
@@ -34,18 +38,37 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-// Use AFTER authenticate.
-const adminOnly = (req, res, next) => {
-  if (!req.user || req.user.role !== "admin") {
-    return res.status(403).json({ success: false, message: "Admin access required" });
+// Generic Role-based Access Control middleware
+const requireRole = (...allowedRoles) => (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: "Authentication required" });
   }
+
+  if (!allowedRoles.includes(req.user.role)) {
+    return res.status(403).json({
+      success: false,
+      message: `Access denied. Requires one of: ${allowedRoles.join(", ")}`,
+      currentRole: req.user.role,
+    });
+  }
+
   next();
 };
 
-// Backward-compatible names from the original project. They now use the secure
-// cookie + role implementation, so any older code that still imports
-// { protect, admin } keeps working and is just as safe as the new routes.
+// Convenience role guards
+const headOnly = requireRole("head", "admin");
+const memberOnly = requireRole("member", "head", "admin");
+const adminOnly = headOnly; // Heads and Admins have administrative privileges
+
 const protect = authenticate;
 const admin = adminOnly;
 
-module.exports = { authenticate, adminOnly, protect, admin };
+module.exports = {
+  authenticate,
+  requireRole,
+  headOnly,
+  memberOnly,
+  adminOnly,
+  protect,
+  admin,
+};

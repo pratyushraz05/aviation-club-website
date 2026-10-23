@@ -22,13 +22,48 @@ const toPublicUser = (user) => ({
   name: user.name,
   email: user.email,
   role: user.role,
+  branch: user.branch || "",
+  year: user.year || "",
+  subteam: user.subteam || "",
+  membershipRequested: !!user.membershipRequested,
+  isActive: user.isActive !== false,
+  createdAt: user.createdAt,
 });
 
 const signToken = (user) =>
-  jwt.sign({ sub: String(user._id), role: user.role }, process.env.JWT_SECRET, {
-    algorithm: "HS256",
-    expiresIn: `${TOKEN_HOURS}h`,
+  jwt.sign(
+    { sub: String(user._id), role: user.role, name: user.name },
+    process.env.JWT_SECRET,
+    {
+      algorithm: "HS256",
+      expiresIn: `${TOKEN_HOURS}h`,
+    }
+  );
+
+const register = async ({ name, email, password, branch = "", year = "", subteam = "", requestMembership = false }) => {
+  const normalizedEmail = email.toLowerCase().trim();
+
+  const existing = await User.findOne({ email: normalizedEmail });
+  if (existing) {
+    throw new AuthError(409, "An account with this email already exists");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const newUser = await User.create({
+    name: name.trim(),
+    email: normalizedEmail,
+    password: hashedPassword,
+    role: "user", // Starts as normal user until promoted by Head/Admin
+    branch: branch.trim(),
+    year: year.trim(),
+    subteam: subteam.trim(),
+    membershipRequested: !!requestMembership,
+    isActive: true,
   });
+
+  return { user: toPublicUser(newUser), token: signToken(newUser) };
+};
 
 const login = async (email, password) => {
   const user = await User.findOne({ email: email.toLowerCase().trim() }).select("+password");
@@ -66,4 +101,55 @@ const login = async (email, password) => {
   return { user: toPublicUser(user), token: signToken(user) };
 };
 
-module.exports = { login, toPublicUser, AuthError };
+const getAllUsers = async () => {
+  const users = await User.find({}).sort({ createdAt: -1 });
+  return users.map(toPublicUser);
+};
+
+const updateUserRole = async (userId, newRole) => {
+  const validRoles = ["user", "member", "head", "admin"];
+  if (!validRoles.includes(newRole)) {
+    throw new AuthError(400, `Invalid role. Must be one of: ${validRoles.join(", ")}`);
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { role: newRole } },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new AuthError(404, "User not found");
+  }
+
+  return toPublicUser(user);
+};
+
+const requestMembership = async (userId, details = {}) => {
+  const updateData = { membershipRequested: true };
+  if (details.branch) updateData.branch = details.branch.trim();
+  if (details.year) updateData.year = details.year.trim();
+  if (details.subteam) updateData.subteam = details.subteam.trim();
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: updateData },
+    { new: true }
+  );
+
+  if (!user) {
+    throw new AuthError(404, "User not found");
+  }
+
+  return toPublicUser(user);
+};
+
+module.exports = {
+  login,
+  register,
+  getAllUsers,
+  updateUserRole,
+  requestMembership,
+  toPublicUser,
+  AuthError,
+};

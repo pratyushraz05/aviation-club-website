@@ -5,7 +5,7 @@
     padding: 12px 35px;
     background: linear-gradient(90deg, rgb(17, 37, 49), #102052);
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    height: 95px;
+    min-height: 95px;
 }
 
 .logo{
@@ -29,14 +29,15 @@
     display: flex;
     align-items: center;
     list-style: none;
-    gap: 20px;               /* Reduced from 35px */
+    gap: 15px;
     margin-left: auto;
+    flex-wrap: wrap;
 }
 
 .nav-links a{
     color: white;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 600;
     padding: 6px 14px;
     border-radius: 25px;
@@ -47,13 +48,11 @@
     background: #659433;
     color: #0F172A;
 }
-/* =========================================================
-   NAVBAR LOGO & TEXT LAYOUT
-   ========================================================= */
+
 .logo-link {
   display: flex;
-  align-items: center; /* Aligns the image and text vertically in the center */
-  gap: 12px;           /* Creates perfect spacing between the image and text */
+  align-items: center;
+  gap: 12px;
   text-decoration: none;
   color: inherit;
 }
@@ -76,4 +75,100 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* User & Auth Badges */
+.nav-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.nav-auth-btn {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  padding: 6px 16px !important;
+  border-radius: 20px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+}
+
+.nav-auth-btn:hover {
+  background: #38bdf8 !important;
+  color: #0f172a !important;
+}
+
+.nav-portal-btn {
+  background: rgba(56, 189, 248, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(56, 189, 248, 0.4) !important;
+}
+
+.nav-portal-btn:hover {
+  background: #38bdf8 !important;
+  color: #0f172a !important;
+}
+
+.nav-admin-btn {
+  background: rgba(234, 179, 8, 0.15) !important;
+  color: #facc15 !important;
+  border: 1px solid rgba(234, 179, 8, 0.4) !important;
+}
+
+.nav-admin-btn:hover {
+  background: #facc15 !important;
+  color: #0f172a !important;
+}
+
+.nav-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+.nav-user-role-badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.nav-user-role-badge.head,
+.nav-user-role-badge.admin {
+  background: #facc15;
+  color: #0f172a;
+}
+
+.nav-user-role-badge.member {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.nav-user-role-badge.user {
+  background: #64748b;
+  color: #ffffff;
+}
+
+.btn-nav-logout {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-nav-logout:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ffffff;
 }

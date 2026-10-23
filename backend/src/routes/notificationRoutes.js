@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/notificationController");
+const { authenticate, headOnly } = require("../middlewares/authMiddleware");
 
-// No auth here. Raghava will add admin middleware on POST/PUT/DELETE later.
+// Public view notifications
 router.get("/", controller.getNotifications);
-router.post("/", controller.createNotification);
-router.put("/:id", controller.updateNotification);
-router.delete("/:id", controller.deleteNotification);
+
+// Head / Admin only write operations
+router.post("/", authenticate, headOnly, controller.createNotification);
+router.put("/:id", authenticate, headOnly, controller.updateNotification);
+router.delete("/:id", authenticate, headOnly, controller.deleteNotification);
 
 module.exports = router;

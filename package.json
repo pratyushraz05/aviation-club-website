@@ -6,7 +6,8 @@
     "build": "npm run build --prefix frontend",
     "lint": "npm run lint --prefix frontend",
     "preview": "npm run preview --prefix frontend",
-    "server": "npm run dev --prefix backend"
+    "server": "npm run dev --prefix backend",
+    "seed:roles": "npm run seed:roles --prefix backend"
   }
 }
 
