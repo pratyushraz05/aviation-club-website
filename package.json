@@ -1,6 +1,10 @@
 {
   "name": "aviation-club-website",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "dev": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend",
@@ -10,4 +14,3 @@
     "seed:roles": "npm run seed:roles --prefix backend"
   }
 }
-
