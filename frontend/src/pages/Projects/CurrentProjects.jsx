@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import API from '../../../project/src/services/api';
+import API from '../../services/api';
 import ProjectCard from "./ProjectCard";
 
-function PreviousProjects() {
+function CurrentProjects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -17,6 +17,7 @@ function PreviousProjects() {
           throw new Error('Invalid projects response.');
         }
 
+        // Map backend documents to match the shape expected by ProjectCard
         setProjects(
           result.data.map((project) => ({
             ...project,
@@ -33,13 +34,13 @@ function PreviousProjects() {
     fetchProjects();
   }, []);
 
-  // Filter out projects matching the previous projects category
-  const previousProjects = projects.filter(
-    (project) => project.category === "Previous Projects" || project.isCurrent === false
+  // Filter out projects for the current category matching your criteria
+  const currentProjects = projects.filter(
+    (project) => project.category === "Current Projects" || project.isCurrent === true
   );
 
   if (loading) {
-    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px' }}>Loading previous projects...</p></div>;
+    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px' }}>Loading current projects...</p></div>;
   }
 
   if (error) {
@@ -56,12 +57,12 @@ function PreviousProjects() {
         </span>
 
         <h1>
-          Previous Projects
+          Current Projects
         </h1>
 
         <p>
-          Explore completed engineering projects developed by
-          Aviation Club members.
+          Projects currently under development, analysis and simulation
+          by the Aviation Club.
         </p>
 
       </section>
@@ -71,7 +72,7 @@ function PreviousProjects() {
 
         <div className="projects-grid">
 
-          {previousProjects.map((project) => (
+          {currentProjects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
@@ -86,4 +87,4 @@ function PreviousProjects() {
   );
 }
 
-export default PreviousProjects;
+export default CurrentProjects;

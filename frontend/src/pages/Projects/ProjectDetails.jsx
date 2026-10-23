@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from "react-router-dom";
-import API from '../../../project/src/services/api'; // Adjust path if needed to reach your services folder
+import API from '../../services/api';
 import "./Projects.css";
 
 function ProjectDetails() {

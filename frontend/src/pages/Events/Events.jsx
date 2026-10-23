@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import API from '../../../project/src/services/api';
+import API from '../../services/api';
 import './Events.css';
 
 export default function Events() {
