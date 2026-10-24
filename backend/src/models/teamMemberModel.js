@@ -18,3 +18,4 @@ const teamMemberSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("TeamMember", teamMemberSchema);
+

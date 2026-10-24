@@ -59,7 +59,11 @@ const csrfProtection = (req, res, next) => {
   }
 
   const origin = req.get("origin");
-  if (origin && !allowedOrigins().includes(origin.replace(/\/+$/, ""))) {
+  if (
+    origin &&
+    !allowedOrigins().includes(origin.replace(/\/+$/, "")) &&
+    !origin.endsWith(".vercel.app")
+  ) {
     return res.status(403).json({ success: false, message: "Request origin not allowed" });
   }
 
