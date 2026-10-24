@@ -48,8 +48,12 @@ const csrfProtection = (req, res, next) => {
     return next();
   }
 
-  // Allow registration and login to proceed if CSRF cookie hasn't been negotiated yet
-  if (req.path === "/auth/login" || req.path === "/auth/register") {
+  // Allow registration, login, and public feedback submission to proceed if CSRF cookie hasn't been negotiated yet
+  if (
+    req.path === "/auth/login" ||
+    req.path === "/auth/register" ||
+    (req.path === "/feedback" && req.method === "POST")
+  ) {
     const headerToken = req.get("x-csrf-token");
     const cookieToken = req.cookies && req.cookies[CSRF_COOKIE];
     if (headerToken && cookieToken) {
