@@ -44,11 +44,11 @@ function Navbar() {
         <li><Link to="/results">Results</Link></li>
         <li><Link to="/contact">Contact & Feedback</Link></li>
 
-        {/* Member Portal link - visible to Members and Heads */}
-        {isMember && (
+        {/* Portal link - visible to all registered users */}
+        {user && (
           <li>
             <Link to="/portal" className="nav-portal-btn">
-              Member Portal
+              {isMember ? 'Member Portal' : 'My Profile & Portal'}
             </Link>
           </li>
         )}
@@ -66,12 +66,12 @@ function Navbar() {
         <li className="nav-auth-group">
           {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div className="nav-user-pill">
+              <Link to="/portal" className="nav-user-pill" style={{ textDecoration: 'none' }} title="View Profile & Portal">
                 <span>{user.name?.split(' ')[0]}</span>
                 <span className={`nav-user-role-badge ${user.role}`}>
                   {user.role}
                 </span>
-              </div>
+              </Link>
               <button onClick={handleLogout} className="btn-nav-logout" title="Sign out">
                 Logout
               </button>

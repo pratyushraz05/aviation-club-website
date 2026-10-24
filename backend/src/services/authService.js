@@ -144,12 +144,69 @@ const requestMembership = async (userId, details = {}) => {
   return toPublicUser(user);
 };
 
+const updateProfile = async (userId, data = {}) => {
+  const allowed = ["name", "branch", "year", "subteam"];
+  const updateData = {};
+  allowed.forEach((field) => {
+    if (data[field] !== undefined) updateData[field] = String(data[field]).trim();
+  });
+
+  if (data.email) {
+    const normEmail = String(data.email).toLowerCase().trim();
+    const existing = await User.findOne({ email: normEmail, _id: { $ne: userId } });
+    if (existing) throw new AuthError(409, "Email is already taken by another account");
+    updateData.email = normEmail;
+  }
+
+  const user = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
+  if (!user) throw new AuthError(404, "User not found");
+  return toPublicUser(user);
+};
+
+const updateUserByAdmin = async (userId, data = {}) => {
+  const allowed = ["name", "branch", "year", "subteam", "role", "membershipRequested", "isActive"];
+  const updateData = {};
+  allowed.forEach((field) => {
+    if (data[field] !== undefined) {
+      if (typeof data[field] === "string") updateData[field] = data[field].trim();
+      else updateData[field] = data[field];
+    }
+  });
+
+  if (data.role) {
+    const validRoles = ["user", "member", "head", "admin"];
+    if (!validRoles.includes(data.role)) {
+      throw new AuthError(400, `Invalid role. Must be one of: ${validRoles.join(", ")}`);
+    }
+  }
+
+  if (data.email) {
+    const normEmail = String(data.email).toLowerCase().trim();
+    const existing = await User.findOne({ email: normEmail, _id: { $ne: userId } });
+    if (existing) throw new AuthError(409, "Email is already taken by another account");
+    updateData.email = normEmail;
+  }
+
+  const user = await User.findByIdAndUpdate(userId, { $set: updateData }, { new: true, runValidators: true });
+  if (!user) throw new AuthError(404, "User not found");
+  return toPublicUser(user);
+};
+
+const deleteUserByAdmin = async (userId) => {
+  const user = await User.findByIdAndDelete(userId);
+  if (!user) throw new AuthError(404, "User not found");
+  return true;
+};
+
 module.exports = {
   login,
   register,
   getAllUsers,
   updateUserRole,
   requestMembership,
+  updateProfile,
+  updateUserByAdmin,
+  deleteUserByAdmin,
   toPublicUser,
   AuthError,
 };

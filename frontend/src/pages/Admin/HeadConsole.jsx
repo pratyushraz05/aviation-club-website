@@ -65,6 +65,20 @@ export default function HeadConsole() {
     description: '',
   });
 
+  // User Registration Data Edit Modal State (Head Control)
+  const [showUserModal, setShowUserModal] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [userFormData, setUserFormData] = useState({
+    name: '',
+    email: '',
+    branch: '',
+    year: '',
+    subteam: 'General',
+    role: 'user',
+    isActive: true,
+  });
+  const [savingUser, setSavingUser] = useState(false);
+
   const fetchUsers = async () => {
     try {
       const res = await API.get('/auth/users');
@@ -86,7 +100,8 @@ export default function HeadConsole() {
   const fetchFeedback = async () => {
     try {
       const res = await API.get('/feedback');
-      if (res.data?.feedback) setFeedbacks(res.data.feedback);
+      const list = res.data?.feedback || res.data?.data || [];
+      setFeedbacks(Array.isArray(list) ? list : []);
     } catch (err) {
       console.error('Failed to load feedback:', err);
     }
@@ -144,6 +159,50 @@ export default function HeadConsole() {
       setTimeout(() => setSuccessMsg(''), 4000);
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to update role');
+    }
+  };
+
+  const openEditUserModal = (u) => {
+    setEditingUser(u);
+    setUserFormData({
+      name: u.name || '',
+      email: u.email || '',
+      branch: u.branch || '',
+      year: u.year || '',
+      subteam: u.subteam || 'General',
+      role: u.role || 'user',
+      isActive: u.isActive !== false,
+    });
+    setShowUserModal(true);
+  };
+
+  const handleSaveUserData = async (e) => {
+    e.preventDefault();
+    try {
+      setSavingUser(true);
+      setError('');
+      await API.put(`/auth/users/${editingUser.id}`, userFormData);
+      setSuccessMsg(`✓ Registration profile for "${userFormData.name}" updated successfully!`);
+      setShowUserModal(false);
+      await fetchUsers();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to update user');
+    } finally {
+      setSavingUser(false);
+    }
+  };
+
+  const handleDeleteUser = async (u) => {
+    if (!window.confirm(`Are you sure you want to delete user account "${u.name}" (${u.email})?`)) return;
+    try {
+      setError('');
+      await API.delete(`/auth/users/${u.id}`);
+      setSuccessMsg(`User "${u.name}" account deleted`);
+      await fetchUsers();
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to delete user');
     }
   };
 
@@ -395,7 +454,10 @@ export default function HeadConsole() {
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'feedback' ? 'active' : ''}`}
-            onClick={() => setActiveTab('feedback')}
+            onClick={() => {
+              setActiveTab('feedback');
+              fetchFeedback();
+            }}
           >
             📬 Feedback ({feedbacks.length})
           </button>
@@ -454,6 +516,14 @@ export default function HeadConsole() {
                       <td>{u.subteam || 'General'}</td>
                       <td>
                         <div className="table-actions">
+                          <button
+                            className="btn-table-action"
+                            style={{ background: '#0284c7', color: '#ffffff' }}
+                            onClick={() => openEditUserModal(u)}
+                            title="Edit user's registration data, department, branch, or role"
+                          >
+                            ✏️ Edit Data
+                          </button>
                           {u.role !== 'member' && (
                             <button
                               className="btn-table-action promote-member"
@@ -478,6 +548,13 @@ export default function HeadConsole() {
                               Revoke to User
                             </button>
                           )}
+                          <button
+                            className="btn-table-action demote"
+                            onClick={() => handleDeleteUser(u)}
+                            title="Delete user account"
+                          >
+                            🗑️ Delete
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -485,6 +562,259 @@ export default function HeadConsole() {
                 )}
               </tbody>
             </table>
+
+            {/* HEAD MODAL: EDIT USER REGISTRATION DATA */}
+            {showUserModal && editingUser && (
+              <div
+                style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000,
+                  padding: '20px',
+                }}
+                onClick={() => setShowUserModal(false)}
+              >
+                <div
+                  style={{
+                    background: '#0f172a',
+                    border: '1px solid #334155',
+                    borderRadius: '16px',
+                    padding: '28px',
+                    maxWidth: '600px',
+                    width: '100%',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h3 style={{ margin: 0, fontSize: '1.3rem', color: '#f8fafc' }}>
+                      👑 Head Control: Edit User Registration Data
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setShowUserModal(false)}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#94a3b8',
+                        fontSize: '1.4rem',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSaveUserData} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={userFormData.name}
+                          onChange={(e) => setUserFormData({ ...userFormData, name: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Email Address *
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={userFormData.email}
+                          onChange={(e) => setUserFormData({ ...userFormData, email: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Branch / Department
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Mechanical, CSE"
+                          value={userFormData.branch}
+                          onChange={(e) => setUserFormData({ ...userFormData, branch: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Year of Study
+                        </label>
+                        <select
+                          value={userFormData.year}
+                          onChange={(e) => setUserFormData({ ...userFormData, year: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="">None / Not specified</option>
+                          <option value="1st Year">1st Year</option>
+                          <option value="2nd Year">2nd Year</option>
+                          <option value="3rd Year">3rd Year</option>
+                          <option value="4th Year">4th Year</option>
+                          <option value="Postgraduate">Postgraduate</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Aviation Wing / Subteam
+                        </label>
+                        <select
+                          value={userFormData.subteam}
+                          onChange={(e) => setUserFormData({ ...userFormData, subteam: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="General">General</option>
+                          <option value="Aerodynamics & CFD">Aerodynamics &amp; CFD Wing</option>
+                          <option value="Avionics & Drone Tech">Avionics, Drones &amp; Telemetry</option>
+                          <option value="Structures & CAD">Structures &amp; 3D CAD Modelling</option>
+                          <option value="Operations & Media">Operations, Events &amp; Logistics</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                          Account Role
+                        </label>
+                        <select
+                          value={userFormData.role}
+                          onChange={(e) => setUserFormData({ ...userFormData, role: e.target.value })}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            color: '#ffffff',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value="user">User (Normal Registered Student)</option>
+                          <option value="member">Member (Full Member Portal Access)</option>
+                          <option value="head">Head (Club Head Administrator)</option>
+                          <option value="admin">Admin (Super Administrator)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                        Account Standing
+                      </label>
+                      <select
+                        value={userFormData.isActive ? 'active' : 'inactive'}
+                        onChange={(e) => setUserFormData({ ...userFormData, isActive: e.target.value === 'active' })}
+                        style={{
+                          width: '100%',
+                          padding: '10px 12px',
+                          background: '#1e293b',
+                          border: '1px solid #334155',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          boxSizing: 'border-box',
+                        }}
+                      >
+                        <option value="active">Active (Permitted to log in)</option>
+                        <option value="inactive">Suspended / Inactive</option>
+                      </select>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '10px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowUserModal(false)}
+                        style={{
+                          padding: '10px 18px',
+                          background: '#334155',
+                          color: '#ffffff',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={savingUser}
+                        style={{
+                          padding: '10px 24px',
+                          background: '#38bdf8',
+                          color: '#0f172a',
+                          border: 'none',
+                          borderRadius: '8px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          opacity: savingUser ? 0.7 : 1,
+                        }}
+                      >
+                        {savingUser ? 'Saving Changes...' : 'Save User Data'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

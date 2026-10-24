@@ -40,11 +40,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Member Portal - accessible to Members, Heads, and Admins */}
+          {/* Member & User Portal - accessible to all authenticated users */}
           <Route
             path="/portal"
             element={
-              <ProtectedRoute allowedRoles={['member', 'head', 'admin']}>
+              <ProtectedRoute allowedRoles={['user', 'member', 'head', 'admin']}>
                 <MemberPortal />
               </ProtectedRoute>
             }

@@ -48,12 +48,19 @@ const csrfProtection = (req, res, next) => {
     return next();
   }
 
-  // Allow registration, login, and public feedback submission to proceed if CSRF cookie hasn't been negotiated yet
+  // Public feedback submissions are completely exempt from CSRF
   if (
-    req.path === "/auth/login" ||
-    req.path === "/auth/register" ||
-    (req.path === "/feedback" && req.method === "POST")
+    req.method === "POST" &&
+    (req.path === "/feedback" ||
+      req.path === "/feedback/" ||
+      req.originalUrl?.includes("/feedback") ||
+      req.url?.includes("/feedback"))
   ) {
+    return next();
+  }
+
+  // Allow registration and login to proceed if CSRF cookie hasn't been negotiated yet
+  if (req.path === "/auth/login" || req.path === "/auth/register") {
     const headerToken = req.get("x-csrf-token");
     const cookieToken = req.cookies && req.cookies[CSRF_COOKIE];
     if (headerToken && cookieToken) {

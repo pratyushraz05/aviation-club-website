@@ -106,6 +106,16 @@ export function AuthProvider({ children }) {
     throw new Error(data.message || 'Request failed');
   };
 
+  const updateProfile = async (profileData) => {
+    const { data } = await API.put('/auth/profile', profileData);
+    if (data.success && data.user) {
+      setUser(data.user);
+      localStorage.setItem('aviation_user', JSON.stringify(data.user));
+      return data.user;
+    }
+    throw new Error(data.message || 'Failed to update profile');
+  };
+
   // Helper flags
   const isMember = user ? ['member', 'head', 'admin'].includes(user.role) : false;
   const isHead = user ? ['head', 'admin'].includes(user.role) : false;
@@ -122,6 +132,7 @@ export function AuthProvider({ children }) {
         logout,
         updateUserRole,
         requestMembership,
+        updateProfile,
         isMember,
         isHead,
         isCommonUser,
