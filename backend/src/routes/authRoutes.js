@@ -11,11 +11,14 @@ router.post("/login", loginLimiter, controller.login);
 router.post("/logout", controller.logout);
 router.get("/me", authenticate, controller.me);
 
-// User membership request
+// User self-service
 router.post("/request-membership", authenticate, controller.requestMembership);
+router.put("/profile", authenticate, controller.updateProfile);
 
 // Head / Admin user management
 router.get("/users", authenticate, headOnly, controller.getUsers);
 router.patch("/users/:id/role", authenticate, headOnly, controller.updateRole);
+router.put("/users/:id", authenticate, headOnly, controller.updateUserByAdmin);
+router.delete("/users/:id", authenticate, headOnly, controller.deleteUserByAdmin);
 
 module.exports = router;
