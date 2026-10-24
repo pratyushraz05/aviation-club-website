@@ -9,6 +9,9 @@ export default function HeadConsole() {
   const [users, setUsers] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [galleries, setGalleries] = useState([]);
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -35,6 +38,31 @@ export default function HeadConsole() {
     category: 'Current',
     technologies: 'Creo Parametric, ArduPilot, RC Transmitter',
     teamLead: '',
+  });
+
+  const [newMember, setNewMember] = useState({
+    name: '',
+    role: '',
+    section: 'technicalTeam',
+    branch: 'CSE',
+    image: '',
+  });
+
+  const [newAlbum, setNewAlbum] = useState({
+    title: '',
+    subtitle: '',
+    category: 'Events',
+    note: '',
+    highlights: '',
+    imageUrls: '',
+  });
+
+  const [newResult, setNewResult] = useState({
+    event: '',
+    year: '2026',
+    position: '🥇 1st Place',
+    team: 'Aviation Club Team',
+    description: '',
   });
 
   const fetchUsers = async () => {
@@ -64,10 +92,44 @@ export default function HeadConsole() {
     }
   };
 
+  const fetchTeam = async () => {
+    try {
+      const res = await API.get('/team');
+      if (res.data?.allMembers) setTeamMembers(res.data.allMembers);
+    } catch (err) {
+      console.error('Failed to load team:', err);
+    }
+  };
+
+  const fetchGalleries = async () => {
+    try {
+      const res = await API.get('/gallery');
+      if (res.data?.data) setGalleries(res.data.data);
+    } catch (err) {
+      console.error('Failed to load galleries:', err);
+    }
+  };
+
+  const fetchResults = async () => {
+    try {
+      const res = await API.get('/results');
+      if (res.data?.data) setResults(res.data.data);
+    } catch (err) {
+      console.error('Failed to load results:', err);
+    }
+  };
+
   useEffect(() => {
     const loadAll = async () => {
       setLoading(true);
-      await Promise.all([fetchUsers(), fetchAnnouncements(), fetchFeedback()]);
+      await Promise.all([
+        fetchUsers(),
+        fetchAnnouncements(),
+        fetchFeedback(),
+        fetchTeam(),
+        fetchGalleries(),
+        fetchResults(),
+      ]);
       setLoading(false);
     };
     loadAll();
@@ -137,6 +199,92 @@ export default function HeadConsole() {
     }
   };
 
+  const handleCreateTeamMember = async (e) => {
+    e.preventDefault();
+    try {
+      setError('');
+      await API.post('/team', newMember);
+      setSuccessMsg('Team member added successfully!');
+      setNewMember({ name: '', role: '', section: 'technicalTeam', branch: 'CSE', image: '' });
+      await fetchTeam();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to add team member');
+    }
+  };
+
+  const handleDeleteTeamMember = async (id) => {
+    if (!window.confirm('Remove this member from team roster?')) return;
+    try {
+      await API.delete(`/team/${id}`);
+      await fetchTeam();
+      setSuccessMsg('Team member removed');
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError(err.message || 'Failed to remove member');
+    }
+  };
+
+  const handleCreateAlbum = async (e) => {
+    e.preventDefault();
+    try {
+      setError('');
+      const payload = {
+        title: newAlbum.title,
+        subtitle: newAlbum.subtitle,
+        category: newAlbum.category,
+        note: newAlbum.note,
+        highlights: newAlbum.highlights.split(',').map((h) => h.trim()).filter(Boolean),
+        imageUrls: newAlbum.imageUrls.split(',').map((u) => u.trim()).filter(Boolean),
+      };
+      await API.post('/gallery', payload);
+      setSuccessMsg('Gallery album created!');
+      setNewAlbum({ title: '', subtitle: '', category: 'Events', note: '', highlights: '', imageUrls: '' });
+      await fetchGalleries();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to create gallery album');
+    }
+  };
+
+  const handleDeleteAlbum = async (id) => {
+    if (!window.confirm('Delete this gallery album?')) return;
+    try {
+      await API.delete(`/gallery/${id}`);
+      await fetchGalleries();
+      setSuccessMsg('Album deleted');
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError(err.message || 'Failed to delete album');
+    }
+  };
+
+  const handleCreateResult = async (e) => {
+    e.preventDefault();
+    try {
+      setError('');
+      await API.post('/results', newResult);
+      setSuccessMsg('Result published successfully!');
+      setNewResult({ event: '', year: '2026', position: '🥇 1st Place', team: 'Aviation Club Team', description: '' });
+      await fetchResults();
+      setTimeout(() => setSuccessMsg(''), 4000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to publish result');
+    }
+  };
+
+  const handleDeleteResult = async (id) => {
+    if (!window.confirm('Delete this result?')) return;
+    try {
+      await API.delete(`/results/${id}`);
+      await fetchResults();
+      setSuccessMsg('Result deleted');
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError(err.message || 'Failed to delete result');
+    }
+  };
+
   const memberCount = users.filter((u) => u.role === 'member').length;
   const headCount = users.filter((u) => u.role === 'head' || u.role === 'admin').length;
   const pendingRequests = users.filter((u) => u.role === 'user' && u.membershipRequested).length;
@@ -151,13 +299,13 @@ export default function HeadConsole() {
               <span>👑 Head Management Console</span>
               <span className="admin-badge">{user?.role === 'admin' ? 'Super Admin' : 'Club Head'}</span>
             </h1>
-            <p>Welcome, {user?.name}. Manage club memberships, publish events, and moderate content.</p>
+            <p>Welcome, {user?.name}. Manage club memberships, team roster, gallery, events, and results.</p>
           </div>
 
           <div className="admin-stats-row">
             <div className="admin-stat-card">
               <div className="number">{users.length}</div>
-              <div className="label">Total Accounts</div>
+              <div className="label">Users</div>
             </div>
             <div className="admin-stat-card">
               <div className="number">{memberCount}</div>
@@ -166,6 +314,14 @@ export default function HeadConsole() {
             <div className="admin-stat-card">
               <div className="number">{headCount}</div>
               <div className="label">Heads</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="number">{teamMembers.length}</div>
+              <div className="label">Team Roster</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="number">{galleries.length}</div>
+              <div className="label">Albums</div>
             </div>
             <div className="admin-stat-card" style={{ borderColor: pendingRequests > 0 ? '#ef4444' : undefined }}>
               <div className="number" style={{ color: pendingRequests > 0 ? '#f87171' : undefined }}>
@@ -186,28 +342,46 @@ export default function HeadConsole() {
             {pendingRequests > 0 && <span className="membership-requested-badge">{pendingRequests} Pending</span>}
           </button>
           <button
+            className={`admin-tab-btn ${activeTab === 'team' ? 'active' : ''}`}
+            onClick={() => setActiveTab('team')}
+          >
+            🛡️ Team Roster ({teamMembers.length})
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'gallery' ? 'active' : ''}`}
+            onClick={() => setActiveTab('gallery')}
+          >
+            🖼️ Gallery Albums ({galleries.length})
+          </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'results' ? 'active' : ''}`}
+            onClick={() => setActiveTab('results')}
+          >
+            🏆 Results & Awards ({results.length})
+          </button>
+          <button
             className={`admin-tab-btn ${activeTab === 'announcements' ? 'active' : ''}`}
             onClick={() => setActiveTab('announcements')}
           >
-            📢 Post Portal Announcement
+            📢 Announcements
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'events' ? 'active' : ''}`}
             onClick={() => setActiveTab('events')}
           >
-            📅 Publish Event
+            📅 Events
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
-            🚀 Add Project
+            🚀 Projects
           </button>
           <button
             className={`admin-tab-btn ${activeTab === 'feedback' ? 'active' : ''}`}
             onClick={() => setActiveTab('feedback')}
           >
-            📬 Visitor Feedback ({feedbacks.length})
+            📬 Feedback ({feedbacks.length})
           </button>
         </nav>
 
@@ -298,7 +472,320 @@ export default function HeadConsole() {
           </div>
         )}
 
-        {/* TAB 2: Post Announcement */}
+        {/* TAB 2: Team Roster Manager */}
+        {activeTab === 'team' && (
+          <div>
+            <div className="admin-create-form">
+              <h3>Add Team Member to Roster</h3>
+              <form onSubmit={handleCreateTeamMember} className="auth-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Full Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Sahil Sharma"
+                      value={newMember.name}
+                      onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Role</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Aerodynamics Lead / Member"
+                      value={newMember.role}
+                      onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Section</label>
+                    <select
+                      value={newMember.section}
+                      onChange={(e) => setNewMember({ ...newMember, section: e.target.value })}
+                    >
+                      <option value="technicalTeam">Technical Team</option>
+                      <option value="nonTechnicalTeam">Non-Technical Team</option>
+                      <option value="coreTeam">Core Team</option>
+                      <option value="faculty">Faculty</option>
+                      <option value="mentor">Mentor</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Branch</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. MECHANICAL, CSE"
+                      value={newMember.branch}
+                      onChange={(e) => setNewMember({ ...newMember, branch: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Photo URL (Cloudinary or local /team/name.jpg)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. /team/pratyush.jpg or https://..."
+                    value={newMember.image}
+                    onChange={(e) => setNewMember({ ...newMember, image: e.target.value })}
+                  />
+                </div>
+                <button type="submit" className="btn-auth-submit">
+                  Save Member to Roster
+                </button>
+              </form>
+            </div>
+
+            <div className="data-table-container">
+              <h3 style={{ color: '#ffffff', marginBottom: '1rem' }}>Active Team Members ({teamMembers.length})</h3>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Member</th>
+                    <th>Role</th>
+                    <th>Section</th>
+                    <th>Branch</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teamMembers.map((m) => (
+                    <tr key={m._id || m.name}>
+                      <td>
+                        <strong>{m.name}</strong>
+                      </td>
+                      <td>{m.role}</td>
+                      <td>{m.section}</td>
+                      <td>{m.branch || '—'}</td>
+                      <td>
+                        <button
+                          className="btn-table-action demote"
+                          onClick={() => handleDeleteTeamMember(m._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: Gallery Manager */}
+        {activeTab === 'gallery' && (
+          <div>
+            <div className="admin-create-form">
+              <h3>Create Gallery Album</h3>
+              <form onSubmit={handleCreateAlbum} className="auth-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Album Title</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Drone Precision Landing 2026"
+                      value={newAlbum.title}
+                      onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Category</label>
+                    <select
+                      value={newAlbum.category}
+                      onChange={(e) => setNewAlbum({ ...newAlbum, category: e.target.value })}
+                    >
+                      <option value="Events">Events</option>
+                      <option value="Workshops">Workshops</option>
+                      <option value="Competitions">Competitions</option>
+                      <option value="Projects">Projects</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Subtitle (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Annual Autonomous Challenge"
+                    value={newAlbum.subtitle}
+                    onChange={(e) => setNewAlbum({ ...newAlbum, subtitle: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Description Note</label>
+                  <textarea
+                    rows="3"
+                    placeholder="Overview of the event and tasks..."
+                    value={newAlbum.note}
+                    onChange={(e) => setNewAlbum({ ...newAlbum, note: e.target.value })}
+                    style={{ background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '0.6rem', borderRadius: '8px', fontFamily: 'inherit' }}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Highlights (comma separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Drone Piloting, CAD Modelling, Flight Testing"
+                    value={newAlbum.highlights}
+                    onChange={(e) => setNewAlbum({ ...newAlbum, highlights: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Image URLs (comma separated)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. /gallery/01_Air_Force_Day/1.png, https://res.cloudinary.com/..."
+                    value={newAlbum.imageUrls}
+                    onChange={(e) => setNewAlbum({ ...newAlbum, imageUrls: e.target.value })}
+                  />
+                </div>
+                <button type="submit" className="btn-auth-submit">
+                  Publish Gallery Album
+                </button>
+              </form>
+            </div>
+
+            <div className="data-table-container">
+              <h3 style={{ color: '#ffffff', marginBottom: '1rem' }}>Active Gallery Albums ({galleries.length})</h3>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Photos</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {galleries.map((g) => (
+                    <tr key={g._id || g.title}>
+                      <td>
+                        <strong>{g.title}</strong>
+                        {g.subtitle && <span style={{ fontSize: '0.8rem', color: '#94a3b8', display: 'block' }}>{g.subtitle}</span>}
+                      </td>
+                      <td>{g.category}</td>
+                      <td>{g.images ? g.images.length : (g.folder ? 'Multiple' : 0)}</td>
+                      <td>
+                        <button
+                          className="btn-table-action demote"
+                          onClick={() => handleDeleteAlbum(g._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: Results & Awards */}
+        {activeTab === 'results' && (
+          <div>
+            <div className="admin-create-form">
+              <h3>Publish Competition Result / Award</h3>
+              <form onSubmit={handleCreateResult} className="auth-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Competition Name</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Boeing National Aeromodelling"
+                      value={newResult.event}
+                      onChange={(e) => setNewResult({ ...newResult, event: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Year</label>
+                    <input
+                      type="text"
+                      required
+                      value={newResult.year}
+                      onChange={(e) => setNewResult({ ...newResult, year: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Position / Standing</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 🥇 1st Place / Finalist"
+                      value={newResult.position}
+                      onChange={(e) => setNewResult({ ...newResult, position: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Team / Members</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Team Aero-NITRR"
+                      value={newResult.team}
+                      onChange={(e) => setNewResult({ ...newResult, team: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea
+                    rows="3"
+                    placeholder="Brief description of the victory and performance..."
+                    value={newResult.description}
+                    onChange={(e) => setNewResult({ ...newResult, description: e.target.value })}
+                    style={{ background: '#1e293b', border: '1px solid #334155', color: '#fff', padding: '0.6rem', borderRadius: '8px', fontFamily: 'inherit' }}
+                  />
+                </div>
+                <button type="submit" className="btn-auth-submit">
+                  Publish Result
+                </button>
+              </form>
+            </div>
+
+            <div className="data-table-container">
+              <h3 style={{ color: '#ffffff', marginBottom: '1rem' }}>Active Results & Awards ({results.length})</h3>
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Competition</th>
+                    <th>Standing</th>
+                    <th>Team</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.map((r) => (
+                    <tr key={r._id || r.event}>
+                      <td>{r.year}</td>
+                      <td><strong>{r.event}</strong></td>
+                      <td>{r.position}</td>
+                      <td>{r.team}</td>
+                      <td>
+                        <button
+                          className="btn-table-action demote"
+                          onClick={() => handleDeleteResult(r._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: Announcements */}
         {activeTab === 'announcements' && (
           <div>
             <div className="admin-create-form">
@@ -399,7 +886,7 @@ export default function HeadConsole() {
           </div>
         )}
 
-        {/* TAB 3: Event Publisher */}
+        {/* TAB 6: Event Publisher */}
         {activeTab === 'events' && (
           <div className="admin-create-form">
             <h3>Publish Club Event</h3>
@@ -460,7 +947,7 @@ export default function HeadConsole() {
           </div>
         )}
 
-        {/* TAB 4: Project Manager */}
+        {/* TAB 7: Project Manager */}
         {activeTab === 'projects' && (
           <div className="admin-create-form">
             <h3>Add Aviation Project</h3>
@@ -521,7 +1008,7 @@ export default function HeadConsole() {
           </div>
         )}
 
-        {/* TAB 5: Feedback Viewer */}
+        {/* TAB 8: Feedback Viewer */}
         {activeTab === 'feedback' && (
           <div>
             <h3 style={{ color: '#ffffff', marginBottom: '1.25rem' }}>
