@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import API from '../../services/api';
 import ProjectCard from "./ProjectCard";
 
-function PreviousProjects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+function PreviousProjects({ projects: propProjects, isHead, onEdit, onDelete }) {
+  const [localProjects, setLocalProjects] = useState([]);
+  const [loading, setLoading] = useState(!propProjects);
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (propProjects) return;
+
     const fetchProjects = async () => {
       try {
         const response = await API.get('/projects');
@@ -17,12 +19,7 @@ function PreviousProjects() {
           throw new Error('Invalid projects response.');
         }
 
-        setProjects(
-          result.data.map((project) => ({
-            ...project,
-            id: project.projectId || project._id,
-          }))
-        );
+        setLocalProjects(result.data);
       } catch (err) {
         setError(err.message || 'Could not connect to the server.');
       } finally {
@@ -31,57 +28,61 @@ function PreviousProjects() {
     };
 
     fetchProjects();
-  }, []);
+  }, [propProjects]);
 
-  // Filter out projects matching the previous projects category
-  const previousProjects = projects.filter(
-    (project) => project.category === "Previous Projects" || project.isCurrent === false
+  const allProjects = propProjects || localProjects;
+  const previousProjects = allProjects.filter(
+    (project) =>
+      project.category === "Previous Projects" ||
+      project.status === "Completed" ||
+      project.isCurrent === false
   );
 
   if (loading) {
-    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px' }}>Loading previous projects...</p></div>;
+    return (
+      <div className="projects-page">
+        <p style={{ textAlign: 'center', padding: '40px' }}>Loading previous projects...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="projects-page"><p style={{ textAlign: 'center', padding: '40px', color: 'red' }}>Error loading projects: {error}</p></div>;
+    return (
+      <div className="projects-page">
+        <p style={{ textAlign: 'center', padding: '40px', color: 'red' }}>Error loading projects: {error}</p>
+      </div>
+    );
   }
 
   return (
     <div className="projects-page">
-
       <section className="page-header">
-
-        <span className="section-label">
-          AVIATION CLUB
-        </span>
-
-        <h1>
-          Previous Projects
-        </h1>
-
+        <span className="section-label">AVIATION CLUB</span>
+        <h1>Previous Projects</h1>
         <p>
-          Explore completed engineering projects developed by
-          Aviation Club members.
+          Explore completed engineering projects developed by Aviation Club members.
         </p>
-
       </section>
-
 
       <section className="projects-section">
-
-        <div className="projects-grid">
-
-          {previousProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-            />
-          ))}
-
-        </div>
-
+        {previousProjects.length === 0 ? (
+          <p style={{ textAlign: 'center', color: '#94a3b8', padding: '24px 0' }}>
+            No previous projects found.
+          </p>
+        ) : (
+          <div className="projects-grid">
+            {previousProjects.map((project) => (
+              <ProjectCard
+                key={project._id || project.projectId || project.id}
+                project={project}
+                isHead={isHead}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
+        )}
       </section>
-
     </div>
   );
 }
