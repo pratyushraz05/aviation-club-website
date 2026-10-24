@@ -1284,3 +1284,109 @@ h3 {
   font-size: 1rem;
   text-decoration: none;
 }
+
+
+/* =========================================================
+   DYNAMIC HOME PAGE ENHANCEMENTS
+   ========================================================= */
+
+.hero-live-badge-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  backdrop-filter: blur(10px);
+  padding: 10px 22px;
+  border-radius: 50px;
+  margin-top: 28px;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.live-pulse {
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.hero-live-link {
+  color: #38bdf8;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hero-live-link:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+/* Dynamic Stats Strip */
+.home-stats-strip {
+  background: linear-gradient(180deg, #0b1329 0%, #111e38 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 48px 0;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  text-align: center;
+}
+
+.stat-item {
+  padding: 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+@media (max-width: 768px) {
+  .stat-item {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+}
+
+.stat-number {
+  font-family: var(--font-display, "Poppins", sans-serif);
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: #38bdf8;
+  line-height: 1.1;
+  margin-bottom: 6px;
+  text-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
