@@ -1,17 +1,19 @@
 const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
+  projectId: { type: String, trim: true },
   title: { type: String, required: true },
-  shortTitle: { type: String },
+  shortTitle: { type: String, default: "" },
   category: { type: String, required: true }, // e.g., "Current Projects", "Previous Projects"
-  status: { type: String, required: true },   // e.g., "Completed", "Ongoing"
+  status: { type: String, default: "Ongoing" },   // e.g., "Completed", "Ongoing"
   description: { type: String, required: true },
-  fullDescription: { type: String, required: true },
+  fullDescription: { type: String, default: "" },
+  image: { type: String, default: "" },
   
   mentor: {
-    name: { type: String },
-    role: { type: String },
-    image: { type: String }, // Cloudinary image URL
+    name: { type: String, default: "" },
+    role: { type: String, default: "" },
+    image: { type: String, default: "" }, // Cloudinary image URL
   },
 
   contributors: [
