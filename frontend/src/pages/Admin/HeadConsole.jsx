@@ -285,6 +285,18 @@ export default function HeadConsole() {
     }
   };
 
+  const handleDeleteFeedback = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this feedback submission?')) return;
+    try {
+      await API.delete(`/feedback/${id}`);
+      await fetchFeedback();
+      setSuccessMsg('Feedback submission deleted');
+      setTimeout(() => setSuccessMsg(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Failed to delete feedback');
+    }
+  };
+
   const memberCount = users.filter((u) => u.role === 'member').length;
   const headCount = users.filter((u) => u.role === 'head' || u.role === 'admin').length;
   const pendingRequests = users.filter((u) => u.role === 'user' && u.membershipRequested).length;
@@ -322,6 +334,10 @@ export default function HeadConsole() {
             <div className="admin-stat-card">
               <div className="number">{galleries.length}</div>
               <div className="label">Albums</div>
+            </div>
+            <div className="admin-stat-card">
+              <div className="number">{feedbacks.length}</div>
+              <div className="label">Feedback</div>
             </div>
             <div className="admin-stat-card" style={{ borderColor: pendingRequests > 0 ? '#ef4444' : undefined }}>
               <div className="number" style={{ color: pendingRequests > 0 ? '#f87171' : undefined }}>
@@ -1011,32 +1027,67 @@ export default function HeadConsole() {
         {/* TAB 8: Feedback Viewer */}
         {activeTab === 'feedback' && (
           <div>
-            <h3 style={{ color: '#ffffff', marginBottom: '1.25rem' }}>
-              Visitor & Student Submissions ({feedbacks.length})
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '10px' }}>
+              <h3 style={{ color: '#ffffff', margin: 0 }}>
+                Visitor &amp; Student Submissions ({feedbacks.length})
+              </h3>
+              <button
+                onClick={fetchFeedback}
+                style={{
+                  background: '#334155',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 14px',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                }}
+              >
+                🔄 Refresh Feedback
+              </button>
+            </div>
             {feedbacks.length === 0 ? (
-              <p style={{ color: '#94a3b8' }}>No feedback submissions recorded yet.</p>
+              <div style={{ padding: '40px', textAlign: 'center', background: 'rgba(30, 41, 59, 0.5)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                <p style={{ color: '#94a3b8', fontSize: '1.05rem', margin: 0 }}>
+                  No feedback submissions recorded yet. New submissions from the Contact page form will appear here in real time.
+                </p>
+              </div>
             ) : (
               <div className="feedback-grid">
                 {feedbacks.map((f) => (
                   <div key={f._id} className="feedback-card-item">
                     <div>
-                      <div className="feedback-stars">
-                        {'★'.repeat(f.rating || 5)}
-                        {'☆'.repeat(Math.max(0, 5 - (f.rating || 5)))}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <div className="feedback-stars">
+                          {'★'.repeat(f.rating || 5)}
+                          {'☆'.repeat(Math.max(0, 5 - (f.rating || 5)))}
+                        </div>
+                        <span style={{ fontSize: '0.75rem', color: '#fbbf24', background: 'rgba(251, 191, 36, 0.1)', border: '1px solid rgba(251, 191, 36, 0.25)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                          {f.rating || 5} / 5 Stars
+                        </span>
                       </div>
-                      <p style={{ color: '#f1f5f9', fontStyle: 'italic', marginBottom: '1rem' }}>
+                      <p style={{ color: '#f1f5f9', fontStyle: 'italic', marginBottom: '1rem', whiteSpace: 'pre-line' }}>
                         "{f.message || f.feedback}"
                       </p>
                     </div>
-                    <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem' }}>
-                      <strong style={{ color: '#38bdf8' }}>{f.name}</strong>
-                      <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-                        {f.email} {f.department ? `• ${f.department}` : ''}
+                    <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '8px' }}>
+                      <div>
+                        <strong style={{ color: '#38bdf8' }}>{f.name}</strong>
+                        <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
+                          {f.email} {f.department ? `• ${f.department}` : ''}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.35rem' }}>
+                          📅 {f.createdAt ? new Date(f.createdAt).toLocaleString() : 'Recent'}
+                        </div>
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.35rem' }}>
-                        {f.createdAt ? new Date(f.createdAt).toLocaleDateString() : 'Recent'}
-                      </div>
+                      <button
+                        className="btn-table-action demote"
+                        onClick={() => handleDeleteFeedback(f._id)}
+                        style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 ))}
