@@ -12,7 +12,7 @@ const isProduction = () => process.env.NODE_ENV === "production";
 // Frontend origin(s) allowed to call this API. FRONTEND_URL may hold several
 // comma-separated origins (e.g. your Vercel URL and a custom domain).
 const allowedOrigins = () => {
-  const raw = process.env.FRONTEND_URL || "http://localhost:5173";
+  const raw = process.env.FRONTEND_URL || "http://localhost:5173,http://localhost:5175";
   return raw
     .split(",")
     .map((o) => o.trim().replace(/\/+$/, ""))

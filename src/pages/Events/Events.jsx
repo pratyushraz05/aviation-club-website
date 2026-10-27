@@ -39,7 +39,7 @@ export default function Events() {
   }, []);
   // Filter out any upcoming events versus past events
   const upcomingEvents = events.filter((e) => e.isUpcoming);
-const pastEvents = events.filter((e) => !e.isUpcoming);
+  const pastEvents = events.filter((e) => !e.isUpcoming);
   if (loading) {
     return <div className="events-page">Loading events...</div>;
   }
@@ -54,8 +54,8 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
   return (
     <div className="events-page">
       <div className="container">
-        
-       {/* 1. CURRENT EVENT HIGHLIGHT CARD (With dynamic image check) */}
+
+        {/* 1. CURRENT EVENT HIGHLIGHT CARD (With dynamic image check) */}
         <section className="current-event-section">
           <div className="section-head reveal fade-up">
             <p className="eyebrow">Active & Upcoming</p>
@@ -74,16 +74,16 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
                   <p className="card-meta">📅 {event.date} • 🕒 {event.duration}</p>
                   <p className="card-meta">📍 {event.venue}</p>
                   <p className="card-desc">{event.description.slice(0, 160)}...</p>
-                  
+
                   {/* Two Clear Buttons as requested */}
                   <div className="card-footer" style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
                     <button className="btn btn-outline" onClick={() => setSelectedEvent(event)}>
                       About Event
                     </button>
-                    <a 
-                      href="https://forms.gle/YOUR_GOOGLE_FORM_LINK" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href="https://forms.gle/YOUR_GOOGLE_FORM_LINK"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="btn btn-primary"
                     >
                       Register for Event
@@ -139,7 +139,7 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
             <div className="modal-card modal-large" onClick={(e) => e.stopPropagation()}>
               <button className="close-btn" onClick={() => setSelectedEvent(null)}>✕</button>
               <img src={selectedEvent.image} alt={selectedEvent.title} className="modal-img" />
-              
+
               <h2 className="modal-title">{selectedEvent.title}</h2>
               <div className="event-details-meta">
                 <p><strong>Date:</strong> {selectedEvent.date}</p>
@@ -155,7 +155,16 @@ const pastEvents = events.filter((e) => !e.isUpcoming);
                   <h4>EVENT PURPOSE</h4>
                   <ul>
                     {selectedEvent.purpose.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li
+                        key={idx}
+                        className={
+                          item === "More specifically, its purpose was to:"
+                            ? "list-none"
+                            : "list-item"
+                        }
+                      >
+                        {item}
+                      </li>
                     ))}
                   </ul>
                 </div>
