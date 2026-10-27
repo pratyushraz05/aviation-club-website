@@ -1,6 +1,9 @@
-require("dotenv").config();
-
 const path = require("path");
+require("dotenv").config({
+  path: path.resolve(__dirname, "../.env"),
+});
+
+
 const { pathToFileURL } = require("url");
 
 const connectDB = require("../src/config/db");
@@ -27,7 +30,6 @@ const mapEvent = (event) => ({
 
 async function main() {
   try {
-    // Read the original frontend data without changing that file.
     const module = await import(pathToFileURL(eventsFile).href);
     const events = module.EVENTS_DATA;
 
@@ -62,9 +64,8 @@ async function main() {
 
     await connectDB();
 
-    console.log(`\nFound ${mappedEvents.length} events in the source file.\n`);
-
     const toInsert = [];
+    const toUpdate = [];
 
     for (const event of mappedEvents) {
       const existing = await Event.findOne({
@@ -72,42 +73,55 @@ async function main() {
       }).select("_id");
 
       if (existing) {
-        console.log(`SKIP (already exists): ${event.eventId}`);
+        toUpdate.push({ ...event, _id: existing._id });
       } else {
-        console.log(`READY TO INSERT: ${event.eventId}`);
         toInsert.push(event);
       }
     }
 
-    if (!process.argv.includes("--insert")) {
-      console.log(`\nPreview complete.`);
-      console.log(`New events that would be inserted: ${toInsert.length}`);
-      console.log("Nothing was inserted. Run with --insert to proceed.");
-      return;
-    }
+    console.log(`\nSource events: ${mappedEvents.length}`);
+    console.log(`Existing events to update: ${toUpdate.length}`);
+    console.log(`New events to insert: ${toInsert.length}`);
 
-    if (toInsert.length === 0) {
-      console.log("\nNo new events to insert.");
-      return;
+    for (const event of toUpdate) {
+      console.log(`UPDATE: ${event.eventId}`);
     }
-
-    let inserted = 0;
 
     for (const event of toInsert) {
-      try {
-        await Event.create(event);
-        inserted++;
-        console.log(`INSERTED: ${event.eventId}`);
-      } catch (error) {
-        if (error.code === 11000) {
-          console.log(`SKIP (duplicate appeared): ${event.eventId}`);
-        } else {
-          throw error;
-        }
-      }
+      console.log(`INSERT: ${event.eventId}`);
     }
 
-    console.log(`\nImport finished. Inserted ${inserted} new events.`);
+    if (!process.argv.includes("--apply")) {
+      console.log("\nPreview only. Database was not modified.");
+      console.log("Run with --apply to apply these changes.");
+      return;
+    }
+
+    let updated = 0;
+    let inserted = 0;
+
+    for (const event of toUpdate) {
+      const { _id, ...fields } = event;
+
+      await Event.updateOne(
+        { _id },
+        { $set: fields },
+        { runValidators: true }
+      );
+
+      updated++;
+      console.log(`UPDATED: ${event.eventId}`);
+    }
+
+    for (const event of toInsert) {
+      await Event.create(event);
+      inserted++;
+      console.log(`INSERTED: ${event.eventId}`);
+    }
+
+    console.log(
+      `\nImport finished. Updated ${updated}; inserted ${inserted}.`
+    );
   } catch (error) {
     console.error("\nImport failed:", error.message);
     process.exitCode = 1;
