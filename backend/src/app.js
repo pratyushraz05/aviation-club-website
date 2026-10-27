@@ -35,19 +35,50 @@ app.use(
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (
-        !origin ||
-        allowedOrigins().includes(origin) ||
-        origin.endsWith(".vercel.app")
-      ) {
-        callback(null, true);
-      } else {
-        callback(null, false);
+      // Allow requests that do not provide an Origin header.
+      if (!origin) {
+        return callback(null, true);
       }
+
+      // Allow origins explicitly configured for the application.
+      if (allowedOrigins().includes(origin)) {
+        return callback(null, true);
+      }
+
+      // Allow local React/Vite development servers.
+      const isLocalDevelopment =
+        /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+      if (isLocalDevelopment) {
+        return callback(null, true);
+      }
+
+      // Allow deployed Vercel frontend domains.
+      try {
+        const parsedOrigin = new URL(origin);
+
+        if (
+          parsedOrigin.protocol === "https:" &&
+          parsedOrigin.hostname.endsWith(".vercel.app")
+        ) {
+          return callback(null, true);
+        }
+      } catch (error) {
+        return callback(new Error("Invalid request origin"));
+      }
+
+      return callback(new Error("Origin not allowed by CORS"));
     },
+
     credentials: true,
+
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "X-CSRF-Token", "Authorization"],
+
+    allowedHeaders: [
+      "Content-Type",
+      "X-CSRF-Token",
+      "Authorization",
+    ],
   })
 );
 
@@ -64,7 +95,7 @@ app.get("/", (req, res) => {
 app.use("/api", apiLimiter);
 app.use("/api", csrfProtection);
 
-// API Routes
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/member", memberRoutes);
 app.use("/api/results", resultRoutes);
