@@ -224,10 +224,38 @@ const isPlaceholderResult = (result) =>
 const isReportResult = (result) =>
   Boolean(result.category && Array.isArray(result.outcomes));
 
+const sortResultsByLatest = (list) => {
+  return [...list].sort((a, b) => {
+    const yearA = parseInt(a.year, 10) || 0;
+    const yearB = parseInt(b.year, 10) || 0;
+    if (yearB !== yearA) return yearB - yearA;
+
+    const parseDate = (d) => {
+      if (!d) return 0;
+      const clean = d.includes("–")
+        ? d.split("–")[1].trim()
+        : d.includes("-")
+        ? d.split("-")[1].trim()
+        : d.trim();
+      const ts = Date.parse(clean);
+      return isNaN(ts) ? 0 : ts;
+    };
+
+    const dateA = parseDate(a.date);
+    const dateB = parseDate(b.date);
+    if (dateA && dateB && dateB !== dateA) return dateB - dateA;
+
+    if (b.createdAt && a.createdAt) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    return 0;
+  });
+};
+
 function Results() {
   const { isHead } = useAuth();
 
-  const [results, setResults] = useState(REPORT_RESULTS);
+  const [results, setResults] = useState(() => sortResultsByLatest(REPORT_RESULTS));
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -263,13 +291,13 @@ function Results() {
           )
       );
 
-      setResults([...REPORT_RESULTS, ...additionalResults]);
+      setResults(sortResultsByLatest([...additionalResults, ...REPORT_RESULTS]));
     } catch (error) {
       console.warn(
         "Could not load additional results. Showing report results.",
         error
       );
-      setResults(REPORT_RESULTS);
+      setResults(sortResultsByLatest(REPORT_RESULTS));
     } finally {
       setLoading(false);
     }
