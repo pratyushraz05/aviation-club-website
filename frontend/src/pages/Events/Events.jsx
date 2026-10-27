@@ -458,7 +458,16 @@ export default function Events() {
                   <h4>EVENT PURPOSE</h4>
                   <ul>
                     {selectedEvent.purpose.map((item, idx) => (
-                      <li key={idx}>{item}</li>
+                      <li
+                        key={idx}
+                        style={
+                          item === "More specifically, its purpose was to:"
+                            ? { listStyleType: "none", fontWeight: "600", marginTop: "6px" }
+                            : {}
+                        }
+                      >
+                        {item}
+                      </li>
                     ))}
                   </ul>
                 </div>

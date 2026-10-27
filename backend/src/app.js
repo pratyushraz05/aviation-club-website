@@ -64,10 +64,10 @@ app.use(
           return callback(null, true);
         }
       } catch (error) {
-        return callback(new Error("Invalid request origin"));
+        return callback(null, false);
       }
 
-      return callback(new Error("Origin not allowed by CORS"));
+      return callback(null, false);
     },
 
     credentials: true,

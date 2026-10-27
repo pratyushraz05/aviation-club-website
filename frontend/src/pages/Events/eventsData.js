@@ -1,24 +1,24 @@
 export const EVENTS_DATA = [
-// {
-//     id: 'current-featured-event',
-//     title: 'Aviation Club Annual Event 2026',
-//     date: 'Upcoming • To Be Announced',
-//     duration: 'Full Day Event',
-//     venue: 'NIT Raipur Campus',
-//     isUpcoming: false,
-//     image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
-//     purpose: [
-//       'Showcase upcoming drone designs and aerodynamic prototypes',
-//       'Provide hands-on platform for student engineers',
-//       'Encourage cross-college collaboration and competitive spirit'
-//     ],
-//     description: `Get ready for our upcoming drone design and aerodynamics challenges. Stay tuned for registration guidelines, problem statements, and exciting technical challenges designed to push the boundaries of student aviation engineering.`,
-//     outcomes: [
-//       'Early access to competition problem statements and guidelines',
-//       'Opportunities for cross-functional team formation',
-//       'Direct interaction with faculty mentors and industry experts'
-//     ]
-//   },
+  // {
+  //     id: 'current-featured-event',
+  //     title: 'Aviation Club Annual Event 2026',
+  //     date: 'Upcoming • To Be Announced',
+  //     duration: 'Full Day Event',
+  //     venue: 'NIT Raipur Campus',
+  //     isUpcoming: false,
+  //     image: 'https://aviationnitrr.tiiny.site/VEGAM.jpg', // 🚀 Added professional aviation placeholder image
+  //     purpose: [
+  //       'Showcase upcoming drone designs and aerodynamic prototypes',
+  //       'Provide hands-on platform for student engineers',
+  //       'Encourage cross-college collaboration and competitive spirit'
+  //     ],
+  //     description: `Get ready for our upcoming drone design and aerodynamics challenges. Stay tuned for registration guidelines, problem statements, and exciting technical challenges designed to push the boundaries of student aviation engineering.`,
+  //     outcomes: [
+  //       'Early access to competition problem statements and guidelines',
+  //       'Opportunities for cross-functional team formation',
+  //       'Direct interaction with faculty mentors and industry experts'
+  //     ]
+  //   },
   {
     id: 'blitz-competition',
     title: 'Blitz Competition',
@@ -28,6 +28,8 @@ export const EVENTS_DATA = [
     isUpcoming: false,
     image: '/images/3.png',
     purpose: [
+      'The purpose of this event was to develop participants’ ability to perform complete engineering workflows—design, analysis, and optimization—using CAD, FEA, and CFD in a time-bound, competitive environment.',
+     
       'Bridge the gap between theory and real-world engineering practice',
       'Enhance practical proficiency in CAD, FEA, and CFD tools',
       'Train participants in end-to-end problem solving',
@@ -35,7 +37,7 @@ export const EVENTS_DATA = [
       'Strengthen analytical thinking and decision-making skills',
       'Expose students to industry-relevant challenges and workflows'
     ],
-    description: `Aviation Club conducted Blitz - a technical, software-led competition centred on the practical application of CAD, FEA, and CFD. The event is designed to provide participants (total 21 in number) with a hands-on experience of the complete engineering workflow, where they will design, analyse, and optimize a model within a competitive and time-bound environment.
+    description: `Aviation Club conducted Blitz - a technical, software-led competition centred on the practical application of CAD, FEA, and CFD. The event is designed to provide participants (total 21 in number) with a hands-on experience of the complete engineering workflow, where they will design, analyse, and optimize a model within a competitive and time-bound environment. It aims to bridge the gap between theoretical knowledge and real-world problem solving by challenging participants to apply their skills efficiently.
 
 The competition was conducted as an individual event, where participants were given a problem statement on the spot and had a total of three hours to complete the task. The evaluation was based on design quality, analytical accuracy, optimization approach, overall performance of the model, and speed of completion.`,
     outcomes: [
@@ -58,6 +60,8 @@ The competition was conducted as an individual event, where participants were gi
     isUpcoming: false,
     image: '/images/2.png',
     purpose: [
+      'The purpose of this event was to celebrate Air Force Day while educating and inspiring participants about aviation, and aerodynamic principles through both knowledge-based and hands-on activities.',
+      
       'Honor Air Force Day and highlight the legacy of the Indian Air Force',
       'Increase awareness and knowledge of aviation technology and history',
       'Provide experiential learning through RC plane and parachute landing activities',
@@ -67,7 +71,7 @@ The competition was conducted as an individual event, where participants were gi
     ],
     description: `The event commenced with a presentation session, followed by a quiz competition designed to assess participants’ knowledge of aviation technology and the history of the Indian Air Force. Dr. N. V. Swamy Naidu graced the occasion as the Chief Guest, providing valuable insights and encouragement to all 50 participants.
 
-Subsequently, an RC Plane Landing Competition was conducted, through which participants developed an understanding of precision, control, and basic aerodynamic principles. In parallel, a Parachute Landing Challenge was organized, demonstrating how minor design variations influence stability, drag, and landing accuracy.`,
+Subsequently, an RC Plane Landing Competition was conducted, through which participants developed an understanding of precision, control, and basic aerodynamic principles. In parallel, a Parachute Landing Challenge was organized, demonstrating how minor design variations influence stability, drag, and landing accuracy. Both activities contributed to a practical and application-oriented learning experience.`,
     outcomes: [
       'Feedback – 63.2% 5-star rating, 26.3% 4-star rating, 10.5% 3-star rating',
       'Enhanced participants’ knowledge of aviation and defence concepts',
@@ -88,6 +92,8 @@ Subsequently, an RC Plane Landing Competition was conducted, through which parti
     isUpcoming: false,
     image: '/images/cad-workshop.jpg',
     purpose: [
+      'The purpose of this event was to introduce students to Computer-Aided Design (CAD) and develop their design, modelling, and problem-solving skills through a combination of guided learning and competitive application.',
+      
       'Teach the fundamentals of CAD using Creo Parametric',
       'Bridge theory and practice by allowing students to apply concepts in a competition',
       'Encourage creativity and innovation in digital design',
@@ -95,13 +101,12 @@ Subsequently, an RC Plane Landing Competition was conducted, through which parti
       'Improve job readiness by exposing students to real-world design workflows',
       'Build confidence, efficiency, and time management skills'
     ],
-    description: `The Aviation Club organized "DIMENSIONS – The CAD Workshop & Competition" to introduce students to the fundamentals of Computer-Aided Design (CAD).
-
-The workshop began with an introductory session where 75 participants were taught the basics of CAD using Creo Parametric software. Demonstrations covered fundamental 3D modelling techniques and engineering applications.
-
-Following the learning session, a CAD design competition was conducted, divided into two categories:
-• Beginner Category: One round focusing on standard design tasks under time limits.
-• Expert Category: Two rounds testing modelling efficiency, creativity, and problem-solving skills.`,
+    description: `The Aviation Club of NIT Raipur organized “DIMENSIONS – The CAD Workshop & Competition”. The event aimed to introduce students to the fundamentals of Computer-Aided Design (CAD) while providing them with an opportunity to explore their creativity through digital modelling.
+The workshop began with a brief introductory session where a total of 75 participants were taught the basics of CAD using Creo Parametric software. The organizers demonstrated fundamental 3D modelling techniques and explained how CAD tools are widely used in engineering design and product development. This session helped students gain a basic understanding of translating ideas into digital models.
+Following the learning session, a CAD design competition was conducted to allow participants to apply their newly acquired knowledge. The competition was divided into two categories – Beginners and Experts to accommodate different levels of experience.
+The Beginner category consisted of one round, where participants were given a design task to complete within a limited time. The Expert category included two rounds, designed to test participants on their modelling efficiency, creativity, and problem-solving skills.
+The event saw enthusiastic participation from students across various branches.
+Overall, DIMENSIONS successfully combined learning with healthy competition, giving students valuable exposure to CAD tools while encouraging innovation and technical creativity.`,
     outcomes: [
       'Feedback – 49.1% 5-star rating, 47.2% 4-star rating, 2.1% 3-star rating, 1.6% 1-star rating',
       'Successfully introduced CAD using Creo Parametric combining learning and competition',
@@ -120,8 +125,10 @@ Following the learning session, a CAD design competition was conducted, divided 
     venue: 'S-11, Academic Building',
     speakerInfo: 'Dr. N. V. Swamy Naidu, Dr. Aruna Rana, and Honumant Nethani',
     isUpcoming: false,
-    image: '/images/3.png',
+    image: '/images/1.png',
     purpose: [
+      'The purpose of this event was to introduce students to the fundamentals of aerodynamics and modern aviation technologies while sparking interest through hands-on learning and expert interaction.',
+     
       'Build foundational understanding of aerodynamics and flight principles',
       'Explain real-world aviation systems such as aircraft and drones',
       'Provide practical exposure through glider-making and live demonstrations',
@@ -151,6 +158,8 @@ Day 2: Industry expert Dr. Aruna Rana delivered a session on drone working princ
     isUpcoming: false,
     image: '/images/4.png',
     purpose: [
+      'The purpose of this event was to provide hands-on experience in drone design, assembly, and operation while integrating theoretical knowledge with real-world UAV applications through a structured competition.',
+      
       'Bridge theory and practice in unmanned aerial vehicle (UAV) systems',
       'Develop practical skills in assembling and operating quadcopters',
       'Enhance understanding of drone components and their integration',
@@ -183,6 +192,8 @@ Phase 2 (Assembly & Flight): Shortlisted teams were provided complete drone kits
     isUpcoming: false,
     image: '/images/6.png',
     purpose: [
+      'The purpose of this event was to develop students’ comprehensive skills in UAV design, analysis, and flight performance through a structured, team-based competition combining theory, design, and real-world testing.',
+      
       'Provide end-to-end exposure to UAV engineering: design, analysis, fabrication, and testing',
       'Apply theoretical concepts like aerodynamics, FEA, and CFD in practical scenarios',
       'Develop hands-on skills in building and flying UAVs',
@@ -191,9 +202,12 @@ Phase 2 (Assembly & Flight): Shortlisted teams were provided complete drone kits
       'Encourage technical documentation and presentation skills',
       'Build confidence and technical competence through structured evaluation'
     ],
-    description: `The UAV Racing Competition combined design, theoretical analysis, fabrication, and flight performance. Beginning two months prior, four mentored teams (MACHX6, Aeroverse, Garud, Vayuveg) underwent training in basic aerodynamics, FEA, CFD, and bill-of-materials planning before building models in the college Makerspace.
-
-On match day, following safety inspections, teams raced on a designated track at the football ground. Evaluation criteria included technical documentation quality, presentation depth, and flight execution. Team Garud achieved 1st place overall, Team MACHX6 took 2nd place, and Lakshmi Sahithi was named Best Mentor.`,
+    description: `The Aviation Club of NIT Raipur successfully organized the UAV Racing Competition. The event was designed to provide students with hands-on experience in unmanned aerial vehicle (UAV) design, aerodynamics, and flight testing, while encouraging teamwork and practical engineering learning.
+The competition began nearly two months prior to the final event with the formation of four teams—MACHX6, Aeroverse, Garud, and Vayuveg—each consisting of five members and guided by a senior mentor from the club (Compromising of total 24 members). A detailed rulebook was provided to all teams, outlining the UAV design guidelines, materials to be provided, report and presentation requirements, competition rules, evaluation criteria, and penalty conditions.
+During the preparation phase, teams underwent a structured training period where mentors introduced them to fundamental concepts such as basic aerodynamics, finite element analysis (FEA), and computational fluid dynamics (CFD). Participants were also given assignments to strengthen their theoretical understanding before beginning the design process. Following the training phase, teams worked on aerodynamic calculations, prepared their technical reports, created bill of materials, and developed presentation slides. The college Makerspace was provided to the teams for manufacturing and assembling their UAV models.
+The final event took place on 8th February and ran throughout the day. The day began with a technical inspection round to verify compliance with the rulebook and ensure flight safety. After final adjustments, the UAV racing round commenced on a specially prepared track at the football ground. Each team was given the opportunity to fly their aircraft, and judges evaluated their performance based on the predefined criteria including technical report quality, presentation, and flight performance.
+At the conclusion of the event, the results were announced by the club’s Overall Coordinator, Honumant Nethani. Team Garud emerged as the winner with the highest overall score due to their strong technical documentation and excellent flying performance. Team MACHX6 secured the second position. Lakshmi Sahithi was awarded the Best Mentor prize. Additionally, individual excellence awards were given to Ravi (Aeroverse), Joshnavi (Vayuveg), Ajay (Garud), and Anmol (MACHX6), as nominated by their mentors.
+`,
     outcomes: [
       'Feedback – 50% 5-star rating, 40% 4-star rating, 10% 3-star rating',
       'Hands-on experience across the entire UAV engineering workflow',
@@ -218,9 +232,11 @@ On match day, following safety inspections, teams raced on a designated track at
       'Integrate complete 3D CAD design, FEA structural analysis, and CFD airflow studies',
       'Gain practical experience with lightweight composite fabrication materials'
     ],
-    description: `During the 2025–26 academic session, the Aviation Club engineered a custom Short Take-Off and Landing (STOL) aircraft. The project followed a full engineering lifecycle: aerodynamic calculations, numerical validation in OpenVSP, 3D CAD modeling in Creo, structural FEA, and CFD simulations.
-
-The physical aircraft was fabricated using lightweight Styrofoam reinforced with carbon fiber tape. Power and control systems included an 1800 KV brushless motor, 9x4.5 propeller, 40A ESC, 11.1V battery, and dedicated landing gear. Testing and iterative tuning verified stable low-speed flight performance.`,
+    description: `During the 2025–26 academic session, the Aviation Club undertook the design, analysis, and development of a Short Take-Off and Landing (STOL) aircraft with the objective of achieving efficient low-speed flight and reduced runway requirements. The project followed a systematic engineering approach, beginning with an extensive literature review to establish the aerodynamic framework and design parameters.
+Preliminary aerodynamic calculations, including lift, drag, thrust requirements, wing loading, and performance estimations, were carried out to define the aircraft configuration. These analytical results were validated using OpenVSP (VSPAERO), ensuring accuracy in aerodynamic behaviour before proceeding to detailed design.
+A complete 3D CAD model of the aircraft was developed using Creo, enabling precise geometric definition and integration of all subsystems. The wing and structural components were further analysed using Finite Element Analysis (FEA) to assess structural integrity, while Computational Fluid Dynamics (CFD) simulations were performed to evaluate airflow characteristics and aerodynamic performance.
+The aircraft was fabricated using lightweight Styrofoam as the primary structural material, reinforced with carbon fibre tape to enhance strength and durability. The propulsion and control system consisted of servo motors, an 1800 KV brushless motor, a 9 × 4.5 propeller, an 11.1 V battery, a 40 A Electronic Speed Controller (ESC), and a landing gear assembly.
+Following fabrication, the aircraft underwent multiple rounds of testing, troubleshooting, and iterative improvements to optimize performance, stability, and reliability.`,
     outcomes: [
       'Successfully designed, built, and flight-tested a functional STOL aircraft',
       'Demonstrated seamless integration of aerodynamic theory with practical manufacturing',
@@ -244,15 +260,20 @@ The physical aircraft was fabricated using lightweight Styrofoam reinforced with
       'Model aircraft dynamic behavior and stability characteristics in MATLAB',
       'Implement Agile project management methodologies for hardware prototyping'
     ],
-    description: `This ongoing research project focuses on developing a Vertical Take-Off and Landing (VTOL) UAV. Initial work explored a tilt-wing transition mechanism before shifting focus to a tilt-rotor configuration to optimize structural weight and power efficiency.
+    description: `The project focuses on designing, analysing, and prototyping a Vertical Take-Off and Landing (VTOL) aircraft. An extensive literature review was conducted to study existing VTOL configurations, control strategies, and transition mechanisms. Initially, a tilt-wing mechanism was conceptualised, with mechanism calculations performed to evaluate its feasibility and understand aerodynamic and structural challenges. Project management evolved from a traditional approach to Agile methods for more flexible, iterative development.
 
-The team utilized Agile management frameworks to iterate through control system designs and kinematic calculations. Current efforts center on MATLAB dynamic simulations to map roll, pitch, yaw, and transition phase stability, paving the way for physical prototype testing aimed at lower power draw and high payload efficiency.`,
+The project later shifted to a tilt-rotor configuration, studying control systems and their role in aircraft stability. Currently, MATLAB-based simulations are used to model dynamic behaviour and generate roll, pitch, yaw, and transition plots to analyse stability and performance during hover, transition, and cruise.
+
+The overall objective is to develop a cost-effective VTOL system with 12–14% reduced power consumption, improved transition stability, and payload-carrying capability through modelling, simulation, design, and prototyping..`,
     outcomes: [
-      'In-depth comparative analysis of tilt-wing vs. tilt-rotor VTOL configurations',
-      'Completed kinematic and structural verification calculations for rotor tilting mechanisms',
-      'Successfully transitioned project execution to Agile iterative methodologies',
-      'Developed MATLAB simulation models mapping transition dynamics and multi-axis stability',
-      'Established a foundation to build a physical prototype targeting 12-14% efficiency gains'
+      'Studied VTOL configurations, mechanisms, advantages, and applications.',
+      'Developed and evaluated a tilt-wing mechanism for flight transition.',
+      'Performed calculations to verify structural and kinematic feasibility.',
+      'Adopted Agile methodology for flexible, iterative development.',
+      'Refined the design toward a tilt-rotor configuration.',
+      'Analysed control systems for stability during hover, transition, and cruise.',
+      'Developed MATLAB simulations to model aircraft dynamics.',
+      'Established a design and simulation foundation for future prototyping and testing.',
     ]
   }
 ];
