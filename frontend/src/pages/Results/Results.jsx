@@ -1,143 +1,38 @@
-
 import React, { useState, useEffect } from "react";
 import "./Results.css";
 import useAuth from "../../context/useAuth";
 import API from "../../services/api";
 
-const REPORT_RESULTS = [
+const DEFAULT_RESULTS = [
   {
-    event: "Air Force Day",
-    year: "2025",
-    date: "8 October 2025",
-    venue: "Hira Hall, NIT Raipur",
-    duration: "10:00 AM – 6:00 PM",
-    position: "Event Highlights",
-    team: "50 Participants",
-    category: "Aviation Awareness",
-    description:
-      "An Air Force Day celebration combining aviation knowledge, a quiz, RC plane landing, and a parachute landing challenge.",
-    purpose:
-      "To celebrate Air Force Day, highlight the legacy of the Indian Air Force, increase awareness of aviation technology and history, and provide hands-on learning experiences.",
-    speakers: [
-      "Dr. N. V. Swamy Naidu, HOD, Mechanical Department, NIT Raipur",
-    ],
-    activities: [
-      "Presentation on aviation and the Indian Air Force.",
-      "Quiz competition on aviation technology and Air Force history.",
-      "RC Plane Landing Competition focusing on precision, control, and aerodynamic principles.",
-      "Parachute Landing Challenge demonstrating stability, drag, and landing accuracy.",
-    ],
-    outcomes: [
-      "Enhanced participants' knowledge of aviation and defence concepts.",
-      "Promoted hands-on learning through practical competitions.",
-      "Encouraged innovation and critical thinking.",
-      "Developed teamwork and collaboration skills.",
-      "Inspired students through the address by Dr. N. V. Swamy Naidu.",
-      "Increased interest in aviation and club activities.",
-    ],
-    feedback:
-      "63.2% rated the event 5 stars, 26.3% rated it 4 stars, and 10.5% rated it 3 stars.",
-  },
-  {
-    event: "DIMENSIONS – CAD Workshop & Competition",
-    year: "2025",
-    date: "8 November 2025",
-    venue: "S-11, Academic Building, NIT Raipur",
-    duration: "2:00 PM – 5:30 PM",
-    position: "Workshop & Competition Highlights",
-    team: "75 Participants",
-    category: "CAD and Engineering Design",
-    description:
-      "A hands-on Computer-Aided Design workshop and competition introducing students to Creo Parametric, 3D modelling, and engineering design.",
-    purpose:
-      "To introduce students to CAD and develop design, modelling, creativity, and problem-solving skills through guided learning and competitive application.",
-    speakers: [
-      "Aniket Singh, 3rd Year, Mechanical Department, NIT Raipur",
-    ],
-    activities: [
-      "Introduction to CAD using Creo Parametric.",
-      "Demonstration of fundamental 3D modelling techniques.",
-      "Beginner category with one design round.",
-      "Expert category with two rounds testing modelling efficiency, creativity, and problem-solving.",
-      "Evaluation based on understanding, accuracy, complexity, optimisation, and innovation.",
-    ],
-    outcomes: [
-      "Introduced participants to CAD using Creo Parametric.",
-      "Helped beginners learn sketching, constraints, and basic 3D modelling.",
-      "Helped experienced participants improve parametric design and modelling practices.",
-      "Developed problem-solving abilities and spatial visualisation.",
-      "Provided exposure to real-world engineering design workflows.",
-      "Supported portfolio building and future job readiness.",
-      "Improved confidence, time management, and technical competence.",
-    ],
-    feedback:
-      "49.1% rated the event 5 stars, 47.2% rated it 4 stars, 2.1% rated it 3 stars, and 1.6% rated it 1 star.",
-  },
-  {
-    event: "Aerodynamics Workshop",
+    event: "Blitz Competition",
     year: "2026",
-    date: "31 January – 1 February 2026",
+    date: "4 April 2026",
     venue: "S-11, Academic Building, NIT Raipur",
-    duration: "10:00 AM – 5:30 PM",
-    position: "Workshop Highlights",
-    team: "95 Participants",
-    category: "Aerodynamics and UAV Technology",
+    duration: "2:00 PM – 6:00 PM",
+    position: "Competition Highlights",
+    team: "21 Participants",
+    category: "CAD, FEA and CFD",
     description:
-      "A two-day workshop introducing fundamental aerodynamics, flight principles, gliders, drones, and modern aviation technologies.",
+      "An individual, time-bound technical competition focused on completing an engineering design, analysis, and optimisation workflow.",
     purpose:
-      "To build foundational knowledge of aerodynamics, explain real-world aircraft and drone systems, and encourage practical learning through expert sessions and demonstrations.",
-    speakers: [
-      "Dr. N. V. Swamy Naidu, HOD, Mechanical Department, NIT Raipur",
-      "Dr. Aruna Rana, Drone Technology Expert, Researcher, and former NCC Officer with over four decades of experience in aeromodelling and UAV systems",
-      "Honumant Nethani, Overall Lead, Aviation Club, NIT Raipur",
-    ],
-    activities: [
-      "Sessions on the principles of flight and aircraft take-off.",
-      "Explanation of lift, drag, thrust, weight, and aircraft components.",
-      "Hands-on glider-making activity followed by a friendly competition.",
-      "Expert session on drone components and flight controllers.",
-      "Air show featuring drones, gliders, and RC planes.",
-    ],
-    outcomes: [
-      "Improved understanding of modern flight technologies.",
-      "Connected theoretical aerodynamics concepts with practical applications.",
-      "Encouraged exploration of aerodynamics and unmanned aerial systems.",
-      "Provided practical exposure through glider-making and live demonstrations.",
-    ],
-    feedback:
-      "52.5% rated the event 5 stars, 41.3% rated it 4 stars, 2.5% rated it 3 stars, 2.5% rated it 2 stars, and 1.3% rated it 1 star.",
-  },
-  {
-    event: "Deliver the Pizza (DTP)",
-    year: "2026",
-    date: "7 February 2026",
-    venue: "Football Ground, NIT Raipur",
-    duration: "10:00 AM – 5:30 PM",
-    position: "🥇 Winner: Team MACHX6 | 🥈 Runner-up: Team Garud",
-    team: "4 Teams · 24 Members",
-    category: "UAV Design and Drone Competition",
-    description:
-      "A drone-based competition designed to provide hands-on experience in UAV design, quadcopter assembly, flight operations, and practical engineering.",
-    purpose:
-      "To bridge theoretical knowledge and real-world UAV applications while developing drone assembly, operation, teamwork, and decision-making skills.",
+      "To bridge the gap between theoretical knowledge and engineering practice while improving proficiency in CAD, FEA, CFD, and time-bound problem-solving.",
     speakers: [],
     activities: [
-      "Four participating teams: MACHX6, Aeroverse, Garud, and Vayuveg.",
-      "First phase: technical reports and presentations covering drone design, components, working mechanisms, and delivery strategy.",
-      "Teams Garud and MACHX6 qualified for the final phase.",
-      "Finalists assembled quadcopters from scratch using frames, brushless motors, propellers, ESCs, flight controllers, and power systems.",
-      "Flight trials evaluated stable take-off, controlled manoeuvring, and overall flight performance.",
+      "Individual participation.",
+      "An on-the-spot problem statement.",
+      "Three hours to complete the assigned task.",
+      "Evaluation based on design quality, analytical accuracy, optimisation, overall model performance, and speed of completion.",
     ],
     outcomes: [
-      "Team MACHX6 secured first place.",
-      "Team Garud secured the runner-up position.",
-      "Participants gained practical experience assembling and operating quadcopters.",
-      "Improved understanding of motors, ESCs, flight controllers, and power systems.",
-      "Applied aerodynamics, control systems, and electronics in a practical setting.",
-      "Developed teamwork, troubleshooting, time management, and technical thinking.",
+      "Enhanced practical skills in CAD, FEA, and CFD.",
+      "Improved end-to-end design, analysis, and optimisation abilities.",
+      "Strengthened problem-solving and analytical thinking under time constraints.",
+      "Improved understanding of engineering workflows.",
+      "Developed time management and decision-making skills.",
+      "Provided exposure to competitive, industry-relevant technical challenges.",
     ],
-    feedback:
-      "54.5% rated the event 5 stars, 22.7% rated it 4 stars, 13.6% rated it 3 stars, and 9.1% rated it 2 stars.",
+    feedback: "72.2% rated the event 5 stars and 27.8% rated it 4 stars.",
   },
   {
     event: "UAV Racing Competition",
@@ -172,57 +67,135 @@ const REPORT_RESULTS = [
       "Improved understanding of Finite Element Analysis (FEA) and Computational Fluid Dynamics (CFD).",
       "Strengthened teamwork, project management, problem-solving, and technical competence.",
     ],
-    feedback:
-      "50% rated the event 5 stars, 40% rated it 4 stars, and 10% rated it 3 stars.",
+    feedback: "50% rated the event 5 stars, 40% rated it 4 stars, and 10% rated it 3 stars.",
   },
   {
-    event: "Blitz Competition",
+    event: "Deliver the Pizza (DTP)",
     year: "2026",
-    date: "4 April 2026",
-    venue: "S-11, Academic Building, NIT Raipur",
-    duration: "2:00 PM – 6:00 PM",
-    position: "Competition Highlights",
-    team: "21 Participants",
-    category: "CAD, FEA and CFD",
+    date: "7 February 2026",
+    venue: "Football Ground, NIT Raipur",
+    duration: "10:00 AM – 5:30 PM",
+    position: "🥇 Winner: Team MACHX6 | 🥈 Runner-up: Team Garud",
+    team: "4 Teams · 24 Members",
+    category: "UAV Design and Drone Competition",
     description:
-      "An individual, time-bound technical competition focused on completing an engineering design, analysis, and optimisation workflow.",
+      "A drone-based competition designed to provide hands-on experience in UAV design, quadcopter assembly, flight operations, and practical engineering.",
     purpose:
-      "To bridge the gap between theoretical knowledge and engineering practice while improving proficiency in CAD, FEA, CFD, and time-bound problem-solving.",
+      "To bridge theoretical knowledge and real-world UAV applications while developing drone assembly, operation, teamwork, and decision-making skills.",
     speakers: [],
     activities: [
-      "Individual participation.",
-      "An on-the-spot problem statement.",
-      "Three hours to complete the assigned task.",
-      "Evaluation based on design quality, analytical accuracy, optimisation, overall model performance, and speed of completion.",
+      "Four participating teams: MACHX6, Aeroverse, Garud, and Vayuveg.",
+      "First phase: technical reports and presentations covering drone design, components, working mechanisms, and delivery strategy.",
+      "Teams Garud and MACHX6 qualified for the final phase.",
+      "Finalists assembled quadcopters from scratch using frames, brushless motors, propellers, ESCs, flight controllers, and power systems.",
+      "Flight trials evaluated stable take-off, controlled manoeuvring, and overall flight performance.",
     ],
     outcomes: [
-      "Enhanced practical skills in CAD, FEA, and CFD.",
-      "Improved end-to-end design, analysis, and optimisation abilities.",
-      "Strengthened problem-solving and analytical thinking under time constraints.",
-      "Improved understanding of engineering workflows.",
-      "Developed time management and decision-making skills.",
-      "Provided exposure to competitive, industry-relevant technical challenges.",
+      "Team MACHX6 secured first place.",
+      "Team Garud secured the runner-up position.",
+      "Participants gained practical experience assembling and operating quadcopters.",
+      "Improved understanding of motors, ESCs, flight controllers, and power systems.",
+      "Applied aerodynamics, control systems, and electronics in a practical setting.",
+      "Developed teamwork, troubleshooting, time management, and technical thinking.",
     ],
-    feedback:
-      "72.2% rated the event 5 stars and 27.8% rated it 4 stars.",
+    feedback: "54.5% rated the event 5 stars, 22.7% rated it 4 stars, 13.6% rated it 3 stars, and 9.1% rated it 2 stars.",
+  },
+  {
+    event: "Aerodynamics Workshop",
+    year: "2026",
+    date: "31 January – 1 February 2026",
+    venue: "S-11, Academic Building, NIT Raipur",
+    duration: "10:00 AM – 5:30 PM",
+    position: "Workshop Highlights",
+    team: "95 Participants",
+    category: "Aerodynamics and UAV Technology",
+    description:
+      "A two-day workshop introducing fundamental aerodynamics, flight principles, gliders, drones, and modern aviation technologies.",
+    purpose:
+      "To build foundational knowledge of aerodynamics, explain real-world aircraft and drone systems, and encourage practical learning through expert sessions and demonstrations.",
+    speakers: [
+      "Dr. N. V. Swamy Naidu, HOD, Mechanical Department, NIT Raipur",
+      "Dr. Aruna Rana, Drone Technology Expert, Researcher, and former NCC Officer with over four decades of experience in aeromodelling and UAV systems",
+      "Honumant Nethani, Overall Lead, Aviation Club, NIT Raipur",
+    ],
+    activities: [
+      "Sessions on the principles of flight and aircraft take-off.",
+      "Explanation of lift, drag, thrust, weight, and aircraft components.",
+      "Hands-on glider-making activity followed by a friendly competition.",
+      "Expert session on drone components and flight controllers.",
+      "Air show featuring drones, gliders, and RC planes.",
+    ],
+    outcomes: [
+      "Improved understanding of modern flight technologies.",
+      "Connected theoretical aerodynamics concepts with practical applications.",
+      "Encouraged exploration of aerodynamics and unmanned aerial systems.",
+      "Provided practical exposure through glider-making and live demonstrations.",
+    ],
+    feedback: "52.5% rated the event 5 stars, 41.3% rated it 4 stars, 2.5% rated it 3 stars, 2.5% rated it 2 stars, and 1.3% rated it 1 star.",
+  },
+  {
+    event: "DIMENSIONS – CAD Workshop & Competition",
+    year: "2025",
+    date: "8 November 2025",
+    venue: "S-11, Academic Building, NIT Raipur",
+    duration: "2:00 PM – 5:30 PM",
+    position: "Workshop & Competition Highlights",
+    team: "75 Participants",
+    category: "CAD and Engineering Design",
+    description:
+      "A hands-on Computer-Aided Design workshop and competition introducing students to Creo Parametric, 3D modelling, and engineering design.",
+    purpose:
+      "To introduce students to CAD and develop design, modelling, creativity, and problem-solving skills through guided learning and competitive application.",
+    speakers: ["Aniket Singh, 3rd Year, Mechanical Department, NIT Raipur"],
+    activities: [
+      "Introduction to CAD using Creo Parametric.",
+      "Demonstration of fundamental 3D modelling techniques.",
+      "Beginner category with one design round.",
+      "Expert category with two rounds testing modelling efficiency, creativity, and problem-solving.",
+      "Evaluation based on understanding, accuracy, complexity, optimisation, and innovation.",
+    ],
+    outcomes: [
+      "Introduced participants to CAD using Creo Parametric.",
+      "Helped beginners learn sketching, constraints, and basic 3D modelling.",
+      "Helped experienced participants improve parametric design and modelling practices.",
+      "Developed problem-solving abilities and spatial visualisation.",
+      "Provided exposure to real-world engineering design workflows.",
+      "Supported portfolio building and future job readiness.",
+      "Improved confidence, time management, and technical competence.",
+    ],
+    feedback: "49.1% rated the event 5 stars, 47.2% rated it 4 stars, 2.1% rated it 3 stars, and 1.6% rated it 1 star.",
+  },
+  {
+    event: "Air Force Day",
+    year: "2025",
+    date: "8 October 2025",
+    venue: "Hira Hall, NIT Raipur",
+    duration: "10:00 AM – 6:00 PM",
+    position: "Event Highlights",
+    team: "50 Participants",
+    category: "Aviation Awareness",
+    description:
+      "An Air Force Day celebration combining aviation knowledge, a quiz, RC plane landing, and a parachute landing challenge.",
+    purpose:
+      "To celebrate Air Force Day, highlight the legacy of the Indian Air Force, increase awareness of aviation technology and history, and provide hands-on learning experiences.",
+    speakers: ["Dr. N. V. Swamy Naidu, HOD, Mechanical Department, NIT Raipur"],
+    activities: [
+      "Presentation on aviation and the Indian Air Force.",
+      "Quiz competition on aviation technology and Air Force history.",
+      "RC Plane Landing Competition focusing on precision, control, and aerodynamic principles.",
+      "Parachute Landing Challenge demonstrating stability, drag, and landing accuracy.",
+    ],
+    outcomes: [
+      "Enhanced participants' knowledge of aviation and defence concepts.",
+      "Promoted hands-on learning through practical competitions.",
+      "Encouraged innovation and critical thinking.",
+      "Developed teamwork and collaboration skills.",
+      "Inspired students through the address by Dr. N. V. Swamy Naidu.",
+      "Increased interest in aviation and club activities.",
+    ],
+    feedback: "63.2% rated the event 5 stars, 26.3% rated it 4 stars, and 10.5% rated it 3 stars.",
   },
 ];
-
-const PLACEHOLDER_EVENTS = [
-  "Inter-College Drone Challenge",
-  "Aero Design Competition",
-  "National Aviation Quiz",
-];
-
-const isPlaceholderResult = (result) =>
-  PLACEHOLDER_EVENTS.some(
-    (name) =>
-      name.toLowerCase() ===
-      String(result.event || "").trim().toLowerCase()
-  );
-
-const isReportResult = (result) =>
-  Boolean(result.category && Array.isArray(result.outcomes));
 
 const sortResultsByLatest = (list) => {
   return [...list].sort((a, b) => {
@@ -252,25 +225,36 @@ const sortResultsByLatest = (list) => {
   });
 };
 
+const initialFormState = {
+  event: "",
+  category: "Club Achievement",
+  year: new Date().getFullYear().toString(),
+  date: "",
+  venue: "",
+  duration: "",
+  position: "Event Highlights",
+  team: "Aviation Club",
+  description: "",
+  purpose: "",
+  speakers: "",
+  activities: "",
+  outcomes: "",
+  feedback: "",
+};
+
 function Results() {
   const { isHead } = useAuth();
 
-  const [results, setResults] = useState(() => sortResultsByLatest(REPORT_RESULTS));
+  const [results, setResults] = useState(() => sortResultsByLatest(DEFAULT_RESULTS));
   const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState(initialFormState);
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState("");
   const [selectedEventName, setSelectedEventName] = useState(() =>
     new URLSearchParams(window.location.search).get("event")
   );
-
-  const [newResult, setNewResult] = useState({
-    event: "",
-    year: "2026",
-    position: "🥇 1st Place",
-    team: "Aviation Club",
-    description: "",
-  });
 
   const fetchResults = async () => {
     try {
@@ -279,25 +263,14 @@ function Results() {
         ? response.data.data
         : [];
 
-      const reportNames = new Set(
-        REPORT_RESULTS.map((result) => result.event.toLowerCase())
-      );
-
-      const additionalResults = apiResults.filter(
-        (result) =>
-          !isPlaceholderResult(result) &&
-          !reportNames.has(
-            String(result.event || "").trim().toLowerCase()
-          )
-      );
-
-      setResults(sortResultsByLatest([...additionalResults, ...REPORT_RESULTS]));
+      if (apiResults.length > 0) {
+        setResults(sortResultsByLatest(apiResults));
+      } else {
+        setResults(sortResultsByLatest(DEFAULT_RESULTS));
+      }
     } catch (error) {
-      console.warn(
-        "Could not load additional results. Showing report results.",
-        error
-      );
-      setResults(sortResultsByLatest(REPORT_RESULTS));
+      console.warn("Could not load results from API, using defaults:", error);
+      setResults(sortResultsByLatest(DEFAULT_RESULTS));
     } finally {
       setLoading(false);
     }
@@ -307,7 +280,7 @@ function Results() {
     fetchResults();
   }, []);
 
-  // Keep browser Back/Forward navigation in sync with the selected event.
+  // Sync browser Back/Forward navigation with selected event
   useEffect(() => {
     const handlePopState = () => {
       setSelectedEventName(
@@ -316,16 +289,12 @@ function Results() {
     };
 
     window.addEventListener("popstate", handlePopState);
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState);
-    };
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   const openResultDetails = (eventName) => {
     const url = new URL(window.location.href);
     url.searchParams.set("event", eventName);
-
     window.history.pushState({}, "", url);
     setSelectedEventName(eventName);
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -334,38 +303,80 @@ function Results() {
   const backToResults = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete("event");
-
     window.history.pushState({}, "", url);
     setSelectedEventName(null);
     window.scrollTo({ top: 0, behavior: "auto" });
   };
 
-  const handleAddResult = async (event) => {
-    event.preventDefault();
+  const openAddModal = () => {
+    setFormData(initialFormState);
+    setEditingId(null);
+    setShowFormModal(true);
+  };
+
+  const openEditModal = (result) => {
+    setFormData({
+      event: result.event || "",
+      category: result.category || "Club Achievement",
+      year: result.year ? String(result.year) : new Date().getFullYear().toString(),
+      date: result.date || "",
+      venue: result.venue || "",
+      duration: result.duration || "",
+      position: result.position || "",
+      team: result.team || "",
+      description: result.description || "",
+      purpose: result.purpose || "",
+      speakers: Array.isArray(result.speakers)
+        ? result.speakers.join("\n")
+        : result.speakers || "",
+      activities: Array.isArray(result.activities)
+        ? result.activities.join("\n")
+        : result.activities || "",
+      outcomes: Array.isArray(result.outcomes)
+        ? result.outcomes.join("\n")
+        : result.outcomes || "",
+      feedback: result.feedback || "",
+    });
+    setEditingId(result._id || null);
+    setShowFormModal(true);
+  };
+
+  const handleSubmitForm = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setMsg("");
 
     try {
-      setSubmitting(true);
-      setMsg("");
+      const payload = {
+        ...formData,
+        speakers: formData.speakers
+          ? formData.speakers.split("\n").map((s) => s.trim()).filter(Boolean)
+          : [],
+        activities: formData.activities
+          ? formData.activities.split("\n").map((s) => s.trim()).filter(Boolean)
+          : [],
+        outcomes: formData.outcomes
+          ? formData.outcomes.split("\n").map((s) => s.trim()).filter(Boolean)
+          : [],
+      };
 
-      await API.post("/results", newResult);
+      if (editingId) {
+        await API.put(`/results/${editingId}`, payload);
+        setMsg(`✓ Updated "${formData.event}" successfully!`);
+      } else {
+        await API.post("/results", payload);
+        setMsg(`✓ Published "${formData.event}" successfully!`);
+      }
 
-      setMsg("✓ Result published successfully!");
-      setNewResult({
-        event: "",
-        year: "2026",
-        position: "🥇 1st Place",
-        team: "Aviation Club",
-        description: "",
-      });
-
-      setShowAddModal(false);
+      setShowFormModal(false);
+      setEditingId(null);
       await fetchResults();
       setTimeout(() => setMsg(""), 4000);
     } catch (error) {
       setMsg(
         error.response?.data?.message ||
           error.message ||
-          "Failed to publish result."
+          "Failed to save result."
       );
     } finally {
       setSubmitting(false);
@@ -373,42 +384,50 @@ function Results() {
   };
 
   const handleDeleteResult = async (id, eventName) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to delete "${eventName}"?`
-      )
-    ) {
+    if (!window.confirm(`Are you sure you want to delete "${eventName}"?`)) {
       return;
     }
 
     try {
       await API.delete(`/results/${id}`);
       await fetchResults();
-      setMsg(`✓ Removed result for ${eventName}`);
+      setMsg(`✓ Deleted "${eventName}"`);
       setTimeout(() => setMsg(""), 3000);
     } catch (error) {
-      setMsg(error.message || "Failed to delete result.");
+      setMsg(error.response?.data?.message || error.message || "Failed to delete result.");
     }
   };
 
   const selectedResult = selectedEventName
     ? results.find(
-        (result) =>
-          String(result.event).toLowerCase() ===
-          selectedEventName.toLowerCase()
+        (r) =>
+          String(r.event).toLowerCase() === selectedEventName.toLowerCase()
       )
     : null;
 
+  // Single Event Detail View
   if (selectedEventName) {
     return (
       <section className="results-section results-detail-page">
-        <button
-          type="button"
-          className="results-back-button"
-          onClick={backToResults}
-        >
-          <span aria-hidden="true">←</span> Back to Results
-        </button>
+        <div className="results-detail-top-nav">
+          <button
+            type="button"
+            className="results-back-button"
+            onClick={backToResults}
+          >
+            <span aria-hidden="true">←</span> Back to Results
+          </button>
+
+          {isHead && selectedResult && (
+            <button
+              type="button"
+              className="results-detail-edit-btn"
+              onClick={() => openEditModal(selectedResult)}
+            >
+              ✏️ Edit This Result
+            </button>
+          )}
+        </div>
 
         {loading ? (
           <p className="results-loading">Loading event details...</p>
@@ -432,7 +451,7 @@ function Results() {
               </span>
               <h2>{selectedResult.event}</h2>
               <p className="results-subtitle">
-                Complete event details and achievements
+                Complete event details, learning outcomes, and achievements
               </p>
             </header>
 
@@ -484,15 +503,17 @@ function Results() {
                 <p>{selectedResult.position}</p>
               </section>
 
-              <section className="results-detail-section">
-                <h3>About the Event</h3>
-                <p>{selectedResult.description}</p>
-              </section>
+              {selectedResult.description && (
+                <section className="results-detail-section">
+                  <h3>About the Event</h3>
+                  <p style={{ whiteSpace: "pre-line" }}>{selectedResult.description}</p>
+                </section>
+              )}
 
               {selectedResult.purpose && (
                 <section className="results-detail-section">
                   <h3>Event Purpose</h3>
-                  <p>{selectedResult.purpose}</p>
+                  <p style={{ whiteSpace: "pre-line" }}>{selectedResult.purpose}</p>
                 </section>
               )}
 
@@ -500,8 +521,8 @@ function Results() {
                 <section className="results-detail-section">
                   <h3>Speakers &amp; Coordinators</h3>
                   <ul>
-                    {selectedResult.speakers.map((speaker) => (
-                      <li key={speaker}>{speaker}</li>
+                    {selectedResult.speakers.map((speaker, idx) => (
+                      <li key={idx}>{speaker}</li>
                     ))}
                   </ul>
                 </section>
@@ -511,8 +532,8 @@ function Results() {
                 <section className="results-detail-section">
                   <h3>Activities &amp; Highlights</h3>
                   <ul>
-                    {selectedResult.activities.map((activity) => (
-                      <li key={activity}>{activity}</li>
+                    {selectedResult.activities.map((activity, idx) => (
+                      <li key={idx}>{activity}</li>
                     ))}
                   </ul>
                 </section>
@@ -522,8 +543,8 @@ function Results() {
                 <section className="results-detail-section">
                   <h3>Results &amp; Outcomes</h3>
                   <ul>
-                    {selectedResult.outcomes.map((outcome) => (
-                      <li key={outcome}>{outcome}</li>
+                    {selectedResult.outcomes.map((outcome, idx) => (
+                      <li key={idx}>{outcome}</li>
                     ))}
                   </ul>
                 </section>
@@ -537,19 +558,31 @@ function Results() {
               )}
             </article>
 
-            <button
-              type="button"
-              className="results-back-button results-bottom-back"
-              onClick={backToResults}
-            >
-              ← Back to All Results
-            </button>
+            <div className="results-detail-bottom-nav">
+              <button
+                type="button"
+                className="results-back-button"
+                onClick={backToResults}
+              >
+                ← Back to All Results
+              </button>
+              {isHead && (
+                <button
+                  type="button"
+                  className="results-detail-edit-btn"
+                  onClick={() => openEditModal(selectedResult)}
+                >
+                  ✏️ Edit This Result
+                </button>
+              )}
+            </div>
           </>
         )}
       </section>
     );
   }
 
+  // All Results Grid View
   return (
     <section className="results-section" id="results">
       <header className="results-header">
@@ -569,7 +602,7 @@ function Results() {
           <button
             type="button"
             className="results-add-button"
-            onClick={() => setShowAddModal(true)}
+            onClick={openAddModal}
           >
             + Publish New Result
           </button>
@@ -587,12 +620,13 @@ function Results() {
         </div>
       )}
 
-      {showAddModal && (
+      {/* Unified Add / Edit Modal */}
+      {showFormModal && (
         <div
           className="results-modal-overlay"
           onClick={(event) => {
             if (event.target === event.currentTarget) {
-              setShowAddModal(false);
+              setShowFormModal(false);
             }
           }}
         >
@@ -602,87 +636,204 @@ function Results() {
             aria-modal="true"
             aria-labelledby="results-modal-title"
           >
-            <h3 id="results-modal-title">Publish Result / Award</h3>
+            <h3 id="results-modal-title">
+              {editingId ? "✏️ Edit Result / Achievement" : "🏆 Publish Result / Award"}
+            </h3>
 
-            <form onSubmit={handleAddResult}>
-              <label htmlFor="result-event">Competition / Event Name</label>
-              <input
-                id="result-event"
-                type="text"
-                required
-                value={newResult.event}
-                onChange={(event) =>
-                  setNewResult({
-                    ...newResult,
-                    event: event.target.value,
-                  })
-                }
-                placeholder="Enter event name"
-              />
-
+            <form onSubmit={handleSubmitForm}>
               <div className="results-form-row">
-                <div>
-                  <label htmlFor="result-year">Year</label>
+                <div style={{ flex: 2 }}>
+                  <label htmlFor="form-event">Competition / Event Name *</label>
                   <input
-                    id="result-year"
+                    id="form-event"
                     type="text"
                     required
-                    value={newResult.year}
-                    onChange={(event) =>
-                      setNewResult({
-                        ...newResult,
-                        year: event.target.value,
-                      })
+                    value={formData.event}
+                    onChange={(e) =>
+                      setFormData({ ...formData, event: e.target.value })
                     }
+                    placeholder="e.g. Blitz Competition"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="result-position">
-                    Position / Standing
-                  </label>
+                <div style={{ flex: 1 }}>
+                  <label htmlFor="form-year">Year *</label>
                   <input
-                    id="result-position"
+                    id="form-year"
                     type="text"
                     required
-                    value={newResult.position}
-                    onChange={(event) =>
-                      setNewResult({
-                        ...newResult,
-                        position: event.target.value,
-                      })
+                    value={formData.year}
+                    onChange={(e) =>
+                      setFormData({ ...formData, year: e.target.value })
                     }
+                    placeholder="e.g. 2026"
                   />
                 </div>
               </div>
 
-              <label htmlFor="result-team">Team / Candidate</label>
-              <input
-                id="result-team"
-                type="text"
-                required
-                value={newResult.team}
-                onChange={(event) =>
-                  setNewResult({
-                    ...newResult,
-                    team: event.target.value,
-                  })
-                }
-              />
+              <div className="results-form-row">
+                <div>
+                  <label htmlFor="form-category">Category</label>
+                  <input
+                    id="form-category"
+                    type="text"
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    placeholder="e.g. CAD, FEA and CFD"
+                  />
+                </div>
 
-              <label htmlFor="result-description">Description</label>
-              <textarea
-                id="result-description"
-                rows="4"
-                value={newResult.description}
-                onChange={(event) =>
-                  setNewResult({
-                    ...newResult,
-                    description: event.target.value,
-                  })
-                }
-                placeholder="Describe the achievement"
-              />
+                <div>
+                  <label htmlFor="form-date">Event Date</label>
+                  <input
+                    id="form-date"
+                    type="text"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                    placeholder="e.g. 4 April 2026"
+                  />
+                </div>
+              </div>
+
+              <div className="results-form-row">
+                <div>
+                  <label htmlFor="form-position">Position / Standing *</label>
+                  <input
+                    id="form-position"
+                    type="text"
+                    required
+                    value={formData.position}
+                    onChange={(e) =>
+                      setFormData({ ...formData, position: e.target.value })
+                    }
+                    placeholder="e.g. 🥇 Winner: Team Garud"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="form-team">Team / Participants *</label>
+                  <input
+                    id="form-team"
+                    type="text"
+                    required
+                    value={formData.team}
+                    onChange={(e) =>
+                      setFormData({ ...formData, team: e.target.value })
+                    }
+                    placeholder="e.g. 4 Teams · 24 Members"
+                  />
+                </div>
+              </div>
+
+              <div className="results-form-row">
+                <div>
+                  <label htmlFor="form-venue">Venue</label>
+                  <input
+                    id="form-venue"
+                    type="text"
+                    value={formData.venue}
+                    onChange={(e) =>
+                      setFormData({ ...formData, venue: e.target.value })
+                    }
+                    placeholder="e.g. S-11, Academic Building, NIT Raipur"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="form-duration">Duration</label>
+                  <input
+                    id="form-duration"
+                    type="text"
+                    value={formData.duration}
+                    onChange={(e) =>
+                      setFormData({ ...formData, duration: e.target.value })
+                    }
+                    placeholder="e.g. 2:00 PM – 6:00 PM"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="form-description">Overview Description</label>
+                <textarea
+                  id="form-description"
+                  rows="3"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Summary of the event, competition, or achievement..."
+                />
+              </div>
+
+              <div>
+                <label htmlFor="form-purpose">Event Purpose &amp; Objectives</label>
+                <textarea
+                  id="form-purpose"
+                  rows="2"
+                  value={formData.purpose}
+                  onChange={(e) =>
+                    setFormData({ ...formData, purpose: e.target.value })
+                  }
+                  placeholder="The goal and learning objectives of the event..."
+                />
+              </div>
+
+              <div>
+                <label htmlFor="form-speakers">Speakers &amp; Coordinators (One per line)</label>
+                <textarea
+                  id="form-speakers"
+                  rows="2"
+                  value={formData.speakers}
+                  onChange={(e) =>
+                    setFormData({ ...formData, speakers: e.target.value })
+                  }
+                  placeholder="Dr. N. V. Swamy Naidu, HOD&#10;Honumant Nethani, Overall Lead"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="form-activities">Key Activities &amp; Highlights (One per line)</label>
+                <textarea
+                  id="form-activities"
+                  rows="3"
+                  value={formData.activities}
+                  onChange={(e) =>
+                    setFormData({ ...formData, activities: e.target.value })
+                  }
+                  placeholder="Individual participation&#10;On-the-spot problem statement&#10;Three-hour CAD modelling round"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="form-outcomes">Results &amp; Key Outcomes (One per line)</label>
+                <textarea
+                  id="form-outcomes"
+                  rows="3"
+                  value={formData.outcomes}
+                  onChange={(e) =>
+                    setFormData({ ...formData, outcomes: e.target.value })
+                  }
+                  placeholder="Enhanced skills in CAD and CFD&#10;Strengthened analytical thinking&#10;Team Garud awarded first place"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="form-feedback">Participant Feedback / Rating Summary</label>
+                <input
+                  id="form-feedback"
+                  type="text"
+                  value={formData.feedback}
+                  onChange={(e) =>
+                    setFormData({ ...formData, feedback: e.target.value })
+                  }
+                  placeholder="e.g. 72.2% rated 5 stars, 27.8% rated 4 stars"
+                />
+              </div>
 
               <div className="results-modal-actions">
                 <button
@@ -690,12 +841,16 @@ function Results() {
                   className="results-publish-button"
                   disabled={submitting}
                 >
-                  {submitting ? "Publishing..." : "Publish Result"}
+                  {submitting
+                    ? "Saving..."
+                    : editingId
+                    ? "✓ Update Result"
+                    : "+ Publish Result"}
                 </button>
                 <button
                   type="button"
                   className="results-cancel-button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => setShowFormModal(false)}
                 >
                   Cancel
                 </button>
@@ -756,16 +911,27 @@ function Results() {
                   </span>
                 </button>
 
-                {isHead && !isReportResult(result) && result._id && (
-                  <button
-                    type="button"
-                    className="result-delete-button"
-                    onClick={() =>
-                      handleDeleteResult(result._id, result.event)
-                    }
-                  >
-                    Delete Result
-                  </button>
+                {isHead && (
+                  <div className="result-admin-actions">
+                    <button
+                      type="button"
+                      className="result-edit-button"
+                      onClick={() => openEditModal(result)}
+                    >
+                      ✏️ Edit
+                    </button>
+                    {result._id && (
+                      <button
+                        type="button"
+                        className="result-delete-button"
+                        onClick={() =>
+                          handleDeleteResult(result._id, result.event)
+                        }
+                      >
+                        🗑️ Delete
+                      </button>
+                    )}
+                  </div>
                 )}
               </article>
             ))
