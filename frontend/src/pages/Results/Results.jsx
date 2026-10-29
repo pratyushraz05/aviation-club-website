@@ -263,11 +263,7 @@ function Results() {
         ? response.data.data
         : [];
 
-      if (apiResults.length > 0) {
-        setResults(sortResultsByLatest(apiResults));
-      } else {
-        setResults(sortResultsByLatest(DEFAULT_RESULTS));
-      }
+      setResults(sortResultsByLatest(apiResults));
     } catch (error) {
       console.warn("Could not load results from API, using defaults:", error);
       setResults(sortResultsByLatest(DEFAULT_RESULTS));
@@ -389,12 +385,15 @@ function Results() {
     }
 
     try {
+      // Optimistically remove from state immediately
+      setResults((prev) => prev.filter((r) => r._id !== id));
       await API.delete(`/results/${id}`);
       await fetchResults();
       setMsg(`✓ Deleted "${eventName}"`);
       setTimeout(() => setMsg(""), 3000);
     } catch (error) {
       setMsg(error.response?.data?.message || error.message || "Failed to delete result.");
+      await fetchResults();
     }
   };
 

@@ -245,33 +245,14 @@ const notFound = () => {
   return err;
 };
 
-// Seed or update the 6 core report events so every result has a real database record and ID
-const ensureSeededResults = async () => {
-  for (const item of defaultResults) {
-    const existing = await Result.findOne({
-      event: { $regex: new RegExp(`^${item.event.trim()}$`, "i") },
-    });
-    if (!existing) {
-      await Result.create(item);
-    } else {
-      // If the existing doc is missing rich details, backfill them
-      const needsBackfill =
-        !existing.category ||
-        !existing.purpose ||
-        !existing.activities?.length ||
-        !existing.outcomes?.length;
-      if (needsBackfill) {
-        await Result.findByIdAndUpdate(existing._id, { $set: item });
-      }
-    }
-  }
-};
-
 const getAllResults = async () => {
-  try {
-    await ensureSeededResults();
-  } catch (err) {
-    console.warn("Auto-seed error for results:", err.message);
+  const count = await Result.countDocuments();
+  if (count === 0) {
+    try {
+      await Result.insertMany(defaultResults);
+    } catch (err) {
+      console.warn("Initial seeding error for results:", err.message);
+    }
   }
   return Result.find().sort({ year: -1, createdAt: -1 });
 };
