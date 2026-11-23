@@ -3,6 +3,117 @@ import API from '../../services/api';
 import useAuth from '../../context/useAuth';
 import './Events.css';
 
+export function getRegistrationState(event) {
+  if (!event || !event.registrationLink) {
+    return {
+      status: 'none',
+      isOpen: false,
+      badgeText: '',
+      btnText: 'Register Soon',
+      isClickable: false,
+      tooltip: 'Registration link will be provided soon.',
+    };
+  }
+
+  const mode = event.registrationStatusMode || 'auto';
+  if (mode === 'open') {
+    return {
+      status: 'open',
+      isOpen: true,
+      badgeText: '🟢 Registration Open',
+      btnText: '🔗 Register for Event',
+      isClickable: true,
+      tooltip: 'Registration is live! Click to register.',
+    };
+  }
+
+  if (mode === 'closed') {
+    return {
+      status: 'closed',
+      isOpen: false,
+      badgeText: '🔴 Registration Closed',
+      btnText: '🚫 Registration Closed',
+      isClickable: false,
+      tooltip: 'Registrations for this event have been closed.',
+    };
+  }
+
+  // AUTO SCHEDULE: based on dates
+  const now = new Date();
+  if (event.registrationStartDate) {
+    const start = new Date(event.registrationStartDate);
+    if (!isNaN(start.getTime()) && now < start) {
+      const formatted = start.toLocaleDateString(undefined, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      return {
+        status: 'upcoming',
+        isOpen: false,
+        badgeText: `⏳ Opens ${formatted}`,
+        btnText: `⏳ Opens on ${formatted}`,
+        isClickable: false,
+        tooltip: `Registrations will open on ${start.toLocaleString()}.`,
+      };
+    }
+  }
+
+  if (event.registrationEndDate) {
+    const end = new Date(event.registrationEndDate);
+    if (!isNaN(end.getTime()) && now > end) {
+      const formatted = end.toLocaleDateString(undefined, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      return {
+        status: 'closed',
+        isOpen: false,
+        badgeText: `🔴 Closed on ${formatted}`,
+        btnText: '🚫 Registration Closed',
+        isClickable: false,
+        tooltip: `Registrations closed on ${end.toLocaleString()}.`,
+      };
+    } else if (!isNaN(end.getTime())) {
+      const diffMs = end.getTime() - now.getTime();
+      const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      const formatted = end.toLocaleDateString(undefined, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      });
+      return {
+        status: 'open',
+        isOpen: true,
+        badgeText: diffDays <= 3 ? `🔥 Ends in ${diffDays} day${diffDays === 1 ? '' : 's'}!` : `🟢 Open until ${formatted}`,
+        btnText: '🔗 Register for Event',
+        isClickable: true,
+        tooltip: `Registrations close on ${end.toLocaleString()}.`,
+      };
+    }
+  }
+
+  return {
+    status: 'open',
+    isOpen: true,
+    badgeText: '🟢 Registration Open',
+    btnText: '🔗 Register for Event',
+    isClickable: true,
+    tooltip: 'Registrations are open now!',
+  };
+}
+
+const defaultPageSettings = {
+  flagshipEyebrow: 'Official Club Flagship',
+  flagshipTitle: 'Featured Flagship Event',
+  upcomingEyebrow: 'Active & Upcoming',
+  upcomingTitle: 'Other Upcoming Competitions & Workshops',
+  pastEyebrow: 'Archives & Reports',
+  pastTitle: 'Past Events & Reports',
+  bannerAnnouncement: 'Registrations are now open for official competitions! Review eligibility and deadlines before registering.',
+};
+
 const emptyFormData = {
   title: '',
   tagline: '',
@@ -14,6 +125,11 @@ const emptyFormData = {
   isFlagship: false,
   flagshipStatus: 'Upcoming',
   registrationLink: '',
+  registrationStartDate: '',
+  registrationEndDate: '',
+  registrationStatusMode: 'auto',
+  teamEligibility: '',
+  registrationFee: '',
   rulebookLink: '',
   prizePool: '',
   contactInfo: '',
@@ -33,6 +149,11 @@ export default function Events() {
   const [error, setError] = useState('');
   const [msg, setMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Page level settings state (Eyebrows, Titles, Announcement)
+  const [pageSettings, setPageSettings] = useState(defaultPageSettings);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [savingSettings, setSavingSettings] = useState(false);
 
   // Form modal state (for Add / Edit)
   const [showFormModal, setShowFormModal] = useState(false);
@@ -65,9 +186,21 @@ export default function Events() {
     }
   }, []);
 
+  const fetchPageSettings = useCallback(async () => {
+    try {
+      const res = await API.get('/events/page-settings');
+      if (res.data?.data) {
+        setPageSettings({ ...defaultPageSettings, ...res.data.data });
+      }
+    } catch {
+      // Use defaults if unavailable
+    }
+  }, []);
+
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+    fetchPageSettings();
+  }, [fetchEvents, fetchPageSettings]);
 
   const openAddModal = (isFlagshipInitial = false) => {
     setEditingId(null);
@@ -92,6 +225,11 @@ export default function Events() {
       isFlagship: Boolean(event.isFlagship),
       flagshipStatus: event.flagshipStatus || 'Upcoming',
       registrationLink: event.registrationLink || '',
+      registrationStartDate: event.registrationStartDate || '',
+      registrationEndDate: event.registrationEndDate || '',
+      registrationStatusMode: event.registrationStatusMode || 'auto',
+      teamEligibility: event.teamEligibility || '',
+      registrationFee: event.registrationFee || '',
       rulebookLink: event.rulebookLink || '',
       prizePool: event.prizePool || '',
       contactInfo: event.contactInfo || '',
@@ -170,6 +308,11 @@ export default function Events() {
         isFlagship: Boolean(formData.isFlagship),
         flagshipStatus: formData.flagshipStatus || 'Upcoming',
         registrationLink: formData.registrationLink.trim(),
+        registrationStartDate: formData.registrationStartDate?.trim() || '',
+        registrationEndDate: formData.registrationEndDate?.trim() || '',
+        registrationStatusMode: formData.registrationStatusMode || 'auto',
+        teamEligibility: formData.teamEligibility.trim(),
+        registrationFee: formData.registrationFee.trim(),
         rulebookLink: formData.rulebookLink.trim(),
         prizePool: formData.prizePool.trim(),
         contactInfo: formData.contactInfo.trim(),
@@ -198,6 +341,22 @@ export default function Events() {
       setMsg(err.response?.data?.message || err.message || 'Operation failed');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleSavePageSettings = async (e) => {
+    e.preventDefault();
+    try {
+      setSavingSettings(true);
+      setMsg('');
+      await API.put('/events/page-settings', pageSettings);
+      setMsg('✓ Event page headings & settings saved successfully!');
+      setShowSettingsModal(false);
+      setTimeout(() => setMsg(''), 4000);
+    } catch (err) {
+      setMsg(err.response?.data?.message || err.message || 'Failed to save page settings');
+    } finally {
+      setSavingSettings(false);
     }
   };
 
@@ -250,10 +409,18 @@ export default function Events() {
             <div>
               <span className="head-admin-badge">👑 Head Edit Mode Active</span>
               <p className="head-admin-sub">
-                Manage flagship event, add new competitions/workshops, update registration and rulebook links.
+                Edit everything on the event page: event details, auto registration schedules, rule books, page headings, and photos.
               </p>
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => setShowSettingsModal(true)}
+                className="btn-head-secondary"
+                title="Edit page titles, eyebrows, and top announcement banner"
+              >
+                ⚙️ Page Headings &amp; Announcement
+              </button>
               <button
                 type="button"
                 onClick={() => setShowSwitchModal(true)}
@@ -272,6 +439,14 @@ export default function Events() {
           </div>
         )}
 
+        {/* Dynamic Top Announcement Banner */}
+        {pageSettings.bannerAnnouncement && (
+          <div className="page-announcement-strip">
+            <span className="announcement-icon">📢</span>
+            <p className="announcement-text">{pageSettings.bannerAnnouncement}</p>
+          </div>
+        )}
+
         {msg && (
           <div className={`status-toast ${msg.startsWith('✓') ? 'toast-success' : 'toast-error'}`}>
             {msg}
@@ -283,9 +458,9 @@ export default function Events() {
         ===================================================== */}
         <section className="flagship-showcase-section">
           <div className="section-head reveal fade-up">
-            <p className="eyebrow">Official Club Flagship</p>
+            <p className="eyebrow">{pageSettings.flagshipEyebrow || 'Official Club Flagship'}</p>
             <h2 className="section-title">
-              {flagshipEvent ? 'Featured Flagship Event' : 'Club Flagship Showcase'}
+              {flagshipEvent ? flagshipEvent.title : (pageSettings.flagshipTitle || 'Featured Flagship Event')}
             </h2>
           </div>
 
@@ -298,9 +473,23 @@ export default function Events() {
                     <span className="live-pulse"></span>
                     {(flagshipEvent.flagshipStatus || 'Upcoming').toUpperCase()}
                   </span>
+                  
+                  {/* Automatic Registration Schedule Status Badge */}
+                  {(() => {
+                    const regState = getRegistrationState(flagshipEvent);
+                    if (regState.badgeText) {
+                      return (
+                        <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} title={regState.tooltip}>
+                          {regState.badgeText}
+                        </span>
+                      );
+                    }
+                    return null;
+                  })()}
+
                   {flagshipEvent.prizePool && (
                     <span className="flagship-prize-badge">
-                      🏆 Prize Pool: {flagshipEvent.prizePool}
+                      🏆 Prize: {flagshipEvent.prizePool}
                     </span>
                   )}
                 </div>
@@ -319,9 +508,9 @@ export default function Events() {
                       type="button"
                       className="btn-head-edit-small"
                       onClick={() => openEditModal(flagshipEvent)}
-                      title="Edit flagship details, links & photos"
+                      title="Edit flagship details, registration schedule & photos"
                     >
-                      ✏️ Edit Flagship
+                      ✏️ Edit Everything
                     </button>
                     <button
                       type="button"
@@ -401,30 +590,56 @@ export default function Events() {
                     )}
                   </div>
 
+                  {/* Highlighted Eligibility & Fee quick info if present */}
+                  {(flagshipEvent.teamEligibility || flagshipEvent.registrationFee) && (
+                    <div className="flagship-quick-highlights">
+                      {flagshipEvent.teamEligibility && (
+                        <div className="highlight-row">
+                          <strong className="hl-label">👥 Team Eligibility:</strong>
+                          <span className="hl-val">{flagshipEvent.teamEligibility}</span>
+                        </div>
+                      )}
+                      {flagshipEvent.registrationFee && (
+                        <div className="highlight-row">
+                          <strong className="hl-label">💳 Registration Fee:</strong>
+                          <span className="hl-val">{flagshipEvent.registrationFee}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   <p className="flagship-hero-desc">
                     {flagshipEvent.description}
                   </p>
 
-                  {/* Flagship CTAs */}
+                  {/* Flagship CTAs with Auto Registration Schedule Logic */}
                   <div className="flagship-cta-group">
-                    {flagshipEvent.registrationLink ? (
-                      <a
-                        href={flagshipEvent.registrationLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary flagship-btn-register"
-                      >
-                        🔗 Register for Event
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        className="btn btn-primary flagship-btn-register"
-                        onClick={() => alert('Registrations for this flagship event will open shortly! Stay tuned.')}
-                      >
-                        🔗 Register Soon
-                      </button>
-                    )}
+                    {(() => {
+                      const regState = getRegistrationState(flagshipEvent);
+                      if (regState.isClickable) {
+                        return (
+                          <a
+                            href={flagshipEvent.registrationLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary flagship-btn-register"
+                            title={regState.tooltip}
+                          >
+                            {regState.btnText}
+                          </a>
+                        );
+                      }
+                      return (
+                        <button
+                          type="button"
+                          className="btn btn-primary flagship-btn-register btn-reg-inactive"
+                          onClick={() => alert(regState.tooltip)}
+                          title={regState.tooltip}
+                        >
+                          {regState.btnText}
+                        </button>
+                      );
+                    })()}
 
                     {flagshipEvent.rulebookLink ? (
                       <a
@@ -450,7 +665,7 @@ export default function Events() {
                       className="btn btn-outline"
                       onClick={() => setSelectedEvent(flagshipEvent)}
                     >
-                      ℹ️ Event Purpose & Outcomes
+                      ℹ️ Full Event Details &amp; Objectives
                     </button>
 
                     {/* Dynamic Custom Links ("More options to create if need") */}
@@ -471,7 +686,7 @@ export default function Events() {
                   {/* Optional Photos Section / Gallery */}
                   {Array.isArray(flagshipEvent.photos) && flagshipEvent.photos.length > 0 && (
                     <div className="flagship-photos-section">
-                      <h4 className="flagship-photos-title">📸 Event Gallery & Highlights</h4>
+                      <h4 className="flagship-photos-title">📸 Event Gallery &amp; Highlights</h4>
                       <div className="flagship-photos-strip">
                         {flagshipEvent.photos.map((photoUrl, pIdx) => (
                           <div
@@ -510,7 +725,7 @@ export default function Events() {
                     onClick={() => openAddModal(true)}
                     className="btn btn-primary"
                   >
-                    ➕ Create & Set Active Flagship Event
+                    ➕ Create &amp; Set Active Flagship Event
                   </button>
                 </div>
               )}
@@ -519,86 +734,113 @@ export default function Events() {
         </section>
 
         {/* =====================================================
-            2. OTHER UPCOMING EVENTS (IF ANY)
+            2. OTHER UPCOMING EVENTS / COMPETITIONS
         ===================================================== */}
         {otherUpcomingEvents.length > 0 && (
           <section className="events-section" style={{ marginTop: '50px' }}>
-            <h2 className="section-title">Other Upcoming Events</h2>
+            <div className="section-head reveal fade-up">
+              <p className="eyebrow">{pageSettings.upcomingEyebrow || 'Active & Upcoming'}</p>
+              <h2 className="section-title">{pageSettings.upcomingTitle || 'Other Upcoming Events'}</h2>
+            </div>
             <div className="events-grid">
-              {otherUpcomingEvents.map((event) => (
-                <div key={event.id} className="event-card">
-                  <img
-                    src={event.image || '/images/3.png'}
-                    alt={event.title}
-                    className="card-img"
-                    onError={(e) => {
-                      e.currentTarget.src = '/images/3.png';
-                    }}
-                  />
-                  <div className="card-body">
-                    <span className="badge">UPCOMING</span>
-                    <h3 className="card-title">{event.title}</h3>
-                    <p className="card-meta">📅 {event.date} | 🕒 {event.duration}</p>
-                    <p className="card-meta">📍 {event.venue}</p>
-                    <p className="card-desc">{event.description?.slice(0, 140)}...</p>
+              {otherUpcomingEvents.map((event) => {
+                const regState = getRegistrationState(event);
+                return (
+                  <div key={event.id} className="event-card">
+                    <img
+                      src={event.image || '/images/3.png'}
+                      alt={event.title}
+                      className="card-img"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/3.png';
+                      }}
+                    />
+                    <div className="card-body">
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '8px' }}>
+                        <span className="badge">UPCOMING</span>
+                        {regState.badgeText && (
+                          <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} style={{ fontSize: '0.72rem' }}>
+                            {regState.badgeText}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <h3 className="card-title">{event.title}</h3>
+                      <p className="card-meta">📅 {event.date} | 🕒 {event.duration}</p>
+                      <p className="card-meta">📍 {event.venue}</p>
+                      <p className="card-desc">{event.description?.slice(0, 150)}...</p>
 
-                    <div style={{ marginTop: 'auto', paddingTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                      <button className="btn btn-outline" style={{ flex: 1 }} onClick={() => setSelectedEvent(event)}>
-                        Details
-                      </button>
-                      {event.registrationLink && (
-                        <a
-                          href={event.registrationLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-primary"
-                          style={{ flex: 1 }}
-                        >
-                          Register
-                        </a>
-                      )}
-                      {isHead && (
-                        <div style={{ display: 'flex', gap: '6px', width: '100%', marginTop: '8px' }}>
+                      <div style={{ marginTop: 'auto', paddingTop: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        <button className="btn btn-outline" style={{ flex: 1 }} onClick={() => setSelectedEvent(event)}>
+                          Details
+                        </button>
+                        
+                        {regState.isClickable ? (
+                          <a
+                            href={event.registrationLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary"
+                            style={{ flex: 1 }}
+                            title={regState.tooltip}
+                          >
+                            Register
+                          </a>
+                        ) : event.registrationLink ? (
                           <button
                             type="button"
-                            onClick={() => handleSetFlagship(event._id || event.id || event.eventId)}
-                            style={{
-                              flex: 1,
-                              background: '#ca8a04',
-                              color: '#fff',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '6px 8px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                            }}
+                            className="btn btn-primary"
+                            style={{ flex: 1, opacity: 0.65, cursor: 'not-allowed' }}
+                            onClick={() => alert(regState.tooltip)}
+                            title={regState.tooltip}
                           >
-                            ⭐ Make Flagship
+                            {regState.status === 'upcoming' ? 'Opens Soon' : 'Closed'}
                           </button>
-                          <button
-                            type="button"
-                            onClick={() => openEditModal(event)}
-                            style={{
-                              flex: 1,
-                              background: '#0284c7',
-                              color: '#fff',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '6px 8px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            ✏️ Edit
-                          </button>
-                        </div>
-                      )}
+                        ) : null}
+
+                        {isHead && (
+                          <div style={{ display: 'flex', gap: '6px', width: '100%', marginTop: '8px' }}>
+                            <button
+                              type="button"
+                              onClick={() => handleSetFlagship(event._id || event.id || event.eventId)}
+                              style={{
+                                flex: 1,
+                                background: '#ca8a04',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '6px 8px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ⭐ Make Flagship
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => openEditModal(event)}
+                              style={{
+                                flex: 1,
+                                background: '#0284c7',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '6px 8px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ✏️ Edit Everything
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}
@@ -607,7 +849,10 @@ export default function Events() {
             3. PAST EVENTS & REPORTS SECTION
         ===================================================== */}
         <section className="events-section" style={{ marginTop: '60px' }}>
-          <h2 className="section-title">Past Events & Reports</h2>
+          <div className="section-head reveal fade-up">
+            <p className="eyebrow">{pageSettings.pastEyebrow || 'Archives & Reports'}</p>
+            <h2 className="section-title">{pageSettings.pastTitle || 'Past Events & Reports'}</h2>
+          </div>
           <div className="events-grid">
             {pastEvents.map((event) => (
               <div key={event.id} className="event-card past-card">
@@ -664,7 +909,7 @@ export default function Events() {
                             cursor: 'pointer',
                           }}
                         >
-                          ✏️ Edit
+                          ✏️ Edit Everything
                         </button>
                         <button
                           type="button"
@@ -716,6 +961,17 @@ export default function Events() {
                     ⭐ ACTIVE FLAGSHIP
                   </span>
                 )}
+                {(() => {
+                  const regState = getRegistrationState(selectedEvent);
+                  if (regState.badgeText) {
+                    return (
+                      <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} style={{ fontSize: '0.75rem' }}>
+                        {regState.badgeText}
+                      </span>
+                    );
+                  }
+                  return null;
+                })()}
                 {selectedEvent.prizePool && (
                   <span className="flagship-prize-badge" style={{ fontSize: '0.75rem' }}>
                     🏆 {selectedEvent.prizePool}
@@ -738,19 +994,66 @@ export default function Events() {
                 {selectedEvent.contactInfo && <p><strong>Contact Info:</strong> {selectedEvent.contactInfo}</p>}
               </div>
 
+              {/* Team Eligibility & Registration Fee block if available */}
+              {(selectedEvent.teamEligibility || selectedEvent.registrationFee) && (
+                <div style={{ background: '#1e293b', border: '1px solid #334155', borderRadius: '10px', padding: '14px 18px', marginBottom: '16px' }}>
+                  {selectedEvent.teamEligibility && (
+                    <div style={{ marginBottom: selectedEvent.registrationFee ? '10px' : '0' }}>
+                      <strong style={{ color: '#38bdf8', fontSize: '0.9rem', display: 'block', marginBottom: '2px' }}>
+                        👥 Team Eligibility:
+                      </strong>
+                      <p style={{ margin: 0, color: '#e2e8f0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                        {selectedEvent.teamEligibility}
+                      </p>
+                    </div>
+                  )}
+                  {selectedEvent.registrationFee && (
+                    <div>
+                      <strong style={{ color: '#facc15', fontSize: '0.9rem', display: 'block', marginBottom: '2px' }}>
+                        💳 Registration Fee:
+                      </strong>
+                      <p style={{ margin: 0, color: '#e2e8f0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                        {selectedEvent.registrationFee}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Action Buttons in Modal */}
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                {selectedEvent.registrationLink && (
-                  <a
-                    href={selectedEvent.registrationLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-primary"
-                    style={{ padding: '8px 18px', fontSize: '0.9rem' }}
-                  >
-                    🔗 Register for Event
-                  </a>
-                )}
+                {(() => {
+                  const regState = getRegistrationState(selectedEvent);
+                  if (regState.isClickable) {
+                    return (
+                      <a
+                        href={selectedEvent.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-primary"
+                        style={{ padding: '8px 18px', fontSize: '0.9rem' }}
+                        title={regState.tooltip}
+                      >
+                        {regState.btnText}
+                      </a>
+                    );
+                  }
+                  if (selectedEvent.registrationLink) {
+                    return (
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        style={{ padding: '8px 18px', fontSize: '0.9rem', opacity: 0.65, cursor: 'not-allowed' }}
+                        onClick={() => alert(regState.tooltip)}
+                        title={regState.tooltip}
+                      >
+                        {regState.btnText}
+                      </button>
+                    );
+                  }
+                  return null;
+                })()}
+
                 {selectedEvent.rulebookLink && (
                   <a
                     href={selectedEvent.rulebookLink}
@@ -817,7 +1120,7 @@ export default function Events() {
                       cursor: 'pointer',
                     }}
                   >
-                    ✏️ Edit Event Details
+                    ✏️ Edit Everything
                   </button>
                   <button
                     type="button"
@@ -839,20 +1142,13 @@ export default function Events() {
 
               <hr className="divider" />
 
-              {/* Event Purpose */}
+              {/* Event Purpose / Objectives */}
               {selectedEvent.purpose?.length > 0 && (
                 <div className="details-block">
-                  <h4>EVENT PURPOSE</h4>
+                  <h4>EVENT OBJECTIVES &amp; PURPOSE</h4>
                   <ul>
                     {selectedEvent.purpose.map((item, idx) => (
-                      <li
-                        key={idx}
-                        style={
-                          item === 'More specifically, its purpose was to:'
-                            ? { listStyleType: 'none', fontWeight: '600', marginTop: '6px' }
-                            : {}
-                        }
-                      >
+                      <li key={idx}>
                         {item}
                       </li>
                     ))}
@@ -868,7 +1164,7 @@ export default function Events() {
 
               {/* Optional Photographs Section */}
               <div className="details-block">
-                <h4>EVENT PHOTOGRAPHS & GALLERY</h4>
+                <h4>EVENT PHOTOGRAPHS &amp; GALLERY</h4>
                 <div className="report-photo-grid">
                   {Array.isArray(selectedEvent.photos) && selectedEvent.photos.length > 0 ? (
                     selectedEvent.photos.map((photoUrl, pIdx) => (
@@ -1059,7 +1355,207 @@ export default function Events() {
         )}
 
         {/* =====================================================
-            6. HEAD MODAL: ADD / EDIT EVENT
+            6. PAGE SETTINGS MODAL (HEADINGS & BANNER)
+        ===================================================== */}
+        {showSettingsModal && (
+          <div className="modal-backdrop" onClick={() => setShowSettingsModal(false)}>
+            <div
+              className="modal-card"
+              style={{ maxWidth: '600px' }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="close-btn" onClick={() => setShowSettingsModal(false)}>✕</button>
+              <h3 style={{ margin: '0 0 6px', color: '#f8fafc', fontSize: '1.4rem' }}>
+                ⚙️ Edit Event Page Headings &amp; Announcement
+              </h3>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '18px' }}>
+                Customize the section titles, subtitles, and announcement banner visible to all visitors.
+              </p>
+
+              <form onSubmit={handleSavePageSettings} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                    📢 Top Page Announcement Banner (leave empty to hide)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={pageSettings.bannerAnnouncement}
+                    onChange={(e) => setPageSettings({ ...pageSettings, bannerAnnouncement: e.target.value })}
+                    placeholder="e.g. Registrations are open! SAE AEROTHON selection announced."
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: '#1e293b',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Flagship Eyebrow
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.flagshipEyebrow}
+                      onChange={(e) => setPageSettings({ ...pageSettings, flagshipEyebrow: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Flagship Section Title
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.flagshipTitle}
+                      onChange={(e) => setPageSettings({ ...pageSettings, flagshipTitle: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Upcoming Events Eyebrow
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.upcomingEyebrow}
+                      onChange={(e) => setPageSettings({ ...pageSettings, upcomingEyebrow: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Upcoming Events Title
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.upcomingTitle}
+                      onChange={(e) => setPageSettings({ ...pageSettings, upcomingTitle: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Past Events Eyebrow
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.pastEyebrow}
+                      onChange={(e) => setPageSettings({ ...pageSettings, pastEyebrow: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Past Events Title
+                    </label>
+                    <input
+                      type="text"
+                      value={pageSettings.pastTitle}
+                      onChange={(e) => setPageSettings({ ...pageSettings, pastTitle: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowSettingsModal(false)}
+                    style={{
+                      padding: '10px 18px',
+                      background: '#334155',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingSettings}
+                    style={{
+                      padding: '10px 22px',
+                      background: '#38bdf8',
+                      color: '#0f172a',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {savingSettings ? 'Saving...' : 'Save Page Settings'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* =====================================================
+            7. HEAD MODAL: EDIT EVERYTHING / ADD EVENT
         ===================================================== */}
         {showFormModal && (
           <div
@@ -1072,7 +1568,7 @@ export default function Events() {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#f8fafc' }}>
-                  {editingId ? '✏️ Edit Event' : '➕ Add New Event'}
+                  {editingId ? '✏️ Edit Everything for Event' : '➕ Add New Event'}
                 </h3>
                 <button
                   type="button"
@@ -1084,7 +1580,8 @@ export default function Events() {
               </div>
 
               <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                {/* FLAGSHIP HIGHLIGHT SETTINGS */}
+                
+                {/* 1. FLAGSHIP HIGHLIGHT SETTINGS */}
                 <div
                   style={{
                     background: 'rgba(234, 179, 8, 0.08)',
@@ -1140,6 +1637,117 @@ export default function Events() {
                   </p>
                 </div>
 
+                {/* 2. AUTOMATIC REGISTRATION ON/OFF SCHEDULE */}
+                <div
+                  style={{
+                    background: '#131e36',
+                    border: '1px solid #0284c7',
+                    borderRadius: '10px',
+                    padding: '16px 18px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <span style={{ color: '#38bdf8', fontWeight: 700, fontSize: '0.95rem' }}>
+                      ⏰ Automatic Registration Schedule &amp; Link
+                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <label style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Mode:</label>
+                      <select
+                        value={formData.registrationStatusMode}
+                        onChange={(e) => setFormData({ ...formData, registrationStatusMode: e.target.value })}
+                        style={{
+                          padding: '6px 10px',
+                          background: '#1e293b',
+                          border: '1px solid #38bdf8',
+                          borderRadius: '6px',
+                          color: '#ffffff',
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <option value="auto">🤖 Auto by Date Schedule</option>
+                        <option value="open">🟢 Force Open (Always Open)</option>
+                        <option value="closed">🔴 Force Closed (Always Closed)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.82rem', color: '#cbd5e1', marginBottom: '4px' }}>
+                      🔗 Registration Link (Google Form / Unstop URL)
+                    </label>
+                    <input
+                      type="url"
+                      value={formData.registrationLink}
+                      onChange={(e) => setFormData({ ...formData, registrationLink: e.target.value })}
+                      placeholder="https://docs.google.com/forms/d/e/.../viewform"
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#0f172a',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.82rem', color: '#cbd5e1', marginBottom: '4px' }}>
+                        ⏳ Registration Start Date &amp; Time (Opens)
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={formData.registrationStartDate}
+                        onChange={(e) => setFormData({ ...formData, registrationStartDate: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '9px 12px',
+                          background: '#0f172a',
+                          border: '1px solid #334155',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          boxSizing: 'border-box',
+                          fontSize: '0.85rem',
+                        }}
+                      />
+                      <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                        Leave empty to open immediately.
+                      </span>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.82rem', color: '#cbd5e1', marginBottom: '4px' }}>
+                        🏁 Registration End Date &amp; Time (Closes / Deadline)
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={formData.registrationEndDate}
+                        onChange={(e) => setFormData({ ...formData, registrationEndDate: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '9px 12px',
+                          background: '#0f172a',
+                          border: '1px solid #334155',
+                          borderRadius: '8px',
+                          color: '#ffffff',
+                          boxSizing: 'border-box',
+                          fontSize: '0.85rem',
+                        }}
+                      />
+                      <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                        When this time passes, registration automatically shuts off!
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. BASIC EVENT INFO */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
                     Event Title *
@@ -1149,7 +1757,7 @@ export default function Events() {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="e.g. AeroTech 2026: Annual UAV Sprint"
+                    placeholder="e.g. UAV Racing Competition"
                     style={{
                       width: '100%',
                       padding: '10px 14px',
@@ -1170,7 +1778,7 @@ export default function Events() {
                     type="text"
                     value={formData.tagline}
                     onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-                    placeholder="e.g. The Premier National Aero-Design & Drone Flight Challenge"
+                    placeholder="e.g. Fixed-Wing UAV Design, Fabrication & High-Speed Flight Challenge"
                     style={{
                       width: '100%',
                       padding: '10px 14px',
@@ -1186,14 +1794,14 @@ export default function Events() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      Date *
+                      Date Display Text *
                     </label>
                     <input
                       type="text"
                       required
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      placeholder="e.g. 15th – 17th November 2026"
+                      placeholder="e.g. 8th February 2026"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1213,7 +1821,7 @@ export default function Events() {
                       type="text"
                       value={formData.duration}
                       onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                      placeholder="e.g. 10:00 AM – 06:00 PM"
+                      placeholder="e.g. 10:00 A.M. – 05:30 P.M."
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1236,7 +1844,7 @@ export default function Events() {
                       type="text"
                       value={formData.venue}
                       onChange={(e) => setFormData({ ...formData, venue: e.target.value })}
-                      placeholder="e.g. Main Ground & S-11, NIT Raipur"
+                      placeholder="e.g. Football Ground, NIT Raipur"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1266,22 +1874,67 @@ export default function Events() {
                       }}
                     >
                       <option value="upcoming">Upcoming / Live Featured</option>
-                      <option value="past">Past Event & Report</option>
+                      <option value="past">Past Event &amp; Report</option>
                     </select>
                   </div>
                 </div>
 
-                {/* PRIZE POOL & CONTACT INFO */}
+                {/* 4. TEAM ELIGIBILITY & REGISTRATION FEE */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                    👥 Team Eligibility
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={formData.teamEligibility}
+                    onChange={(e) => setFormData({ ...formData, teamEligibility: e.target.value })}
+                    placeholder="Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team."
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: '#1e293b',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      boxSizing: 'border-box',
+                      fontFamily: 'inherit',
+                      fontSize: '0.88rem',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                    💳 Registration Fee Structure
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.registrationFee}
+                    onChange={(e) => setFormData({ ...formData, registrationFee: e.target.value })}
+                    placeholder="for club volunteers = Rs. 200 per person | for non volunteers = Rs. 300 per person | for Outsiders = Rs. 500 per person"
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: '#1e293b',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                {/* 5. PRIZE POOL & CONTACT INFO */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      🏆 Prize Pool (Optional)
+                      🏆 Prize Pool &amp; Selection Rewards
                     </label>
                     <input
                       type="text"
                       value={formData.prizePool}
                       onChange={(e) => setFormData({ ...formData, prizePool: e.target.value })}
-                      placeholder="e.g. ₹25,000 Cash + Certificates"
+                      placeholder="e.g. Cash Prizes + SAE AEROTHON 2027 Team Sponsorship"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1295,13 +1948,13 @@ export default function Events() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      📞 Contact / Coordinator Info (Optional)
+                      📞 Contact / Coordinator Info
                     </label>
                     <input
                       type="text"
                       value={formData.contactInfo}
                       onChange={(e) => setFormData({ ...formData, contactInfo: e.target.value })}
-                      placeholder="e.g. Coordinator: +91 98765 43210"
+                      placeholder="e.g. Coordinator: +91 98765 43210 / aviation@nitrr.ac.in"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1315,37 +1968,36 @@ export default function Events() {
                   </div>
                 </div>
 
-                {/* REGISTRATION LINK & RULEBOOK LINK */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      🔗 Registration Link (Google Form / Unstop URL)
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.registrationLink}
-                      onChange={(e) => setFormData({ ...formData, registrationLink: e.target.value })}
-                      placeholder="https://forms.gle/... or https://unstop.com/..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px',
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      📘 Rule Book Link (Drive PDF / Document URL)
+                      📘 Rule Book Link URL (Drive PDF / Notion)
                     </label>
                     <input
                       type="url"
                       value={formData.rulebookLink}
                       onChange={(e) => setFormData({ ...formData, rulebookLink: e.target.value })}
-                      placeholder="https://drive.google.com/file/d/... or PDF link"
+                      placeholder="https://drive.google.com/file/d/..."
+                      style={{
+                        width: '100%',
+                        padding: '10px 14px',
+                        background: '#1e293b',
+                        border: '1px solid #334155',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                      Speaker / In-Charge / Lead Info
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.speakerInfo}
+                      onChange={(e) => setFormData({ ...formData, speakerInfo: e.target.value })}
+                      placeholder="e.g. Lakshmi Sahithi &amp; Flight Crew"
                       style={{
                         width: '100%',
                         padding: '10px 14px',
@@ -1359,7 +2011,28 @@ export default function Events() {
                   </div>
                 </div>
 
-                {/* MORE OPTIONS / DYNAMIC CUSTOM LINKS */}
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
+                    Main Poster / Image Path or URL
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    placeholder="e.g. /images/6.png or https://res.cloudinary.com/..."
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      background: '#1e293b',
+                      border: '1px solid #334155',
+                      borderRadius: '8px',
+                      color: '#ffffff',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                {/* 6. MORE OPTIONS: DYNAMIC CUSTOM LINKS */}
                 <div
                   style={{
                     background: '#131d31',
@@ -1450,50 +2123,7 @@ export default function Events() {
                   )}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      Speaker / In-Charge Info
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.speakerInfo}
-                      onChange={(e) => setFormData({ ...formData, speakerInfo: e.target.value })}
-                      placeholder="e.g. Dr. N.V. Swamy Naidu, HOD Mechanical"
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px',
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                      Main Poster / Image URL
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.image}
-                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      placeholder="e.g. /images/7.png or https://..."
-                      style={{
-                        width: '100%',
-                        padding: '10px 14px',
-                        background: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
-                        color: '#ffffff',
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* OPTIONAL PHOTO GALLERY SECTION */}
+                {/* 7. OPTIONAL PHOTOS SECTION */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
                     📸 Optional Event Photo Section (Gallery URLs, one per line)
@@ -1520,13 +2150,14 @@ export default function Events() {
                   </span>
                 </div>
 
+                {/* 8. DESCRIPTION */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
                     Event Description *
                   </label>
                   <textarea
                     required
-                    rows={4}
+                    rows={6}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     placeholder="Provide a comprehensive summary of the event..."
@@ -1539,19 +2170,21 @@ export default function Events() {
                       color: '#ffffff',
                       boxSizing: 'border-box',
                       fontFamily: 'inherit',
+                      lineHeight: '1.6',
                     }}
                   />
                 </div>
 
+                {/* 9. OBJECTIVES / PURPOSE */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
-                    Purpose (one per line)
+                    Objectives / Purpose (one per line)
                   </label>
                   <textarea
-                    rows={3}
+                    rows={4}
                     value={formData.purpose}
                     onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
-                    placeholder="Bridge theory and real-world drone systems&#10;Develop speed and CAD efficiency under time constraints"
+                    placeholder="To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.&#10;To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems."
                     style={{
                       width: '100%',
                       padding: '10px 14px',
@@ -1565,6 +2198,7 @@ export default function Events() {
                   />
                 </div>
 
+                {/* 10. OUTCOMES */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '4px' }}>
                     Outcomes (one per line)
@@ -1573,7 +2207,7 @@ export default function Events() {
                     rows={3}
                     value={formData.outcomes}
                     onChange={(e) => setFormData({ ...formData, outcomes: e.target.value })}
-                    placeholder="24 participants trained in quadcopter assembly&#10;Feedback – 95% 4+ star rating"
+                    placeholder="Hands-on experience across the entire UAV engineering workflow&#10;Feedback – 50% 5-star rating, 40% 4-star rating"
                     style={{
                       width: '100%',
                       padding: '10px 14px',

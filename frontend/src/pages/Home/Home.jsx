@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import API from "../../services/api";
+import { getRegistrationState } from "../Events/Events";
 import "./Home.css";
 
 import facPhoto from "../../assets/fac.jpg";
@@ -596,6 +597,17 @@ export default function Home() {
                         <span className="live-pulse"></span>
                         {(flagshipEvent.flagshipStatus || "UPCOMING").toUpperCase()} FLAGSHIP
                       </span>
+                      {(() => {
+                        const regState = getRegistrationState(flagshipEvent);
+                        if (regState.badgeText) {
+                          return (
+                            <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} style={{ fontSize: "0.75rem" }}>
+                              {regState.badgeText}
+                            </span>
+                          );
+                        }
+                        return null;
+                      })()}
                       {flagshipEvent.prizePool && (
                         <span className="home-flagship-prize">
                           🏆 {flagshipEvent.prizePool}
@@ -631,20 +643,39 @@ export default function Home() {
 
                   {/* Action Buttons */}
                   <div className="home-flagship-actions">
-                    {flagshipEvent.registrationLink ? (
-                      <a
-                        href={flagshipEvent.registrationLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-primary"
-                      >
-                        Register Now 🚀
-                      </a>
-                    ) : (
-                      <Link to="/events" className="btn btn-primary">
-                        Register on Event Page
-                      </Link>
-                    )}
+                    {(() => {
+                      const regState = getRegistrationState(flagshipEvent);
+                      if (regState.isClickable) {
+                        return (
+                          <a
+                            href={flagshipEvent.registrationLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary"
+                          >
+                            Register Now 🚀
+                          </a>
+                        );
+                      }
+                      if (flagshipEvent.registrationLink) {
+                        return (
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-reg-inactive"
+                            onClick={() => alert(regState.tooltip)}
+                            title={regState.tooltip}
+                            style={{ opacity: 0.65, cursor: "not-allowed" }}
+                          >
+                            {regState.btnText}
+                          </button>
+                        );
+                      }
+                      return (
+                        <Link to="/events" className="btn btn-primary">
+                          Register on Event Page
+                        </Link>
+                      );
+                    })()}
 
                     {flagshipEvent.rulebookLink && (
                       <a
