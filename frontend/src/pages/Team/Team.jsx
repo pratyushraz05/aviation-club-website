@@ -141,7 +141,7 @@ function TeamSection({
     ? "faculty-grid"
     : title === "Mentor"
     ? "mentor-grid"
-    : title === "Core Team"
+    : title === "Core Team" || id === "coreTeam"
     ? "core-grid"
     : "";
 

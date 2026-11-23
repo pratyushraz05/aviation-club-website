@@ -100,14 +100,22 @@
 /* CORE TEAM */
 
 .core-grid {
-  grid-template-columns: repeat(2, 420px);
+  grid-template-columns: repeat(3, minmax(280px, 340px));
   justify-content: center;
   gap: 28px;
 }
 
 .core-grid .member-card {
-  width: 420px;
+  width: 100%;
+  max-width: 350px;
   box-sizing: border-box;
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .core-grid {
+    grid-template-columns: repeat(3, minmax(250px, 300px));
+    gap: 20px;
+  }
 }
 
 /* MEMBER CARD */
