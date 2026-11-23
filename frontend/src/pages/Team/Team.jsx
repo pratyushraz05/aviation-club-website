@@ -205,7 +205,7 @@ export default function Team() {
   const handleOpenEdit = (member) => {
     setModalMode("edit");
     setEditingId(member._id);
-    const standardSections = ["coreTeam", "technicalTeam", "nonTechnicalTeam", "faculty", "mentor"];
+    const standardSections = ["coreTeam", "technicalTeam", "nonTechnicalTeam", "Project Manager", "faculty", "mentor"];
     const isStandard = standardSections.includes(member.section);
     setFormData({
       name: member.name || "",
@@ -412,7 +412,7 @@ export default function Team() {
                   }}
                 />
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginTop: "0.45rem" }}>
-                  {["President", "Vice President", "Core Team", "WEB DEV team", "Core Member", "Faculty In-Charge", "Mentor"].map((preset) => (
+                  {["President", "Vice President", "Project Manager", "Core Team", "WEB DEV team", "Core Member", "Faculty In-Charge", "Mentor"].map((preset) => (
                     <button
                       key={preset}
                       type="button"
@@ -452,6 +452,7 @@ export default function Team() {
                     <option value="coreTeam">Core Team (President / Core)</option>
                     <option value="technicalTeam">WEB DEV team</option>
                     <option value="nonTechnicalTeam">Core Team (General / Non-Tech)</option>
+                    <option value="Project Manager">Project Manager</option>
                     <option value="faculty">Faculty</option>
                     <option value="mentor">Mentor</option>
                     <option value="custom">✨ Custom Status / Section...</option>
@@ -608,6 +609,19 @@ export default function Team() {
             onDelete={handleDeleteMember}
           />
 
+          {/* New / Custom Sections (e.g. Project Manager) placed above Core and WEB dev team */}
+          {customSections &&
+            Object.entries(customSections).map(([secTitle, secMembers]) => (
+              <TeamSection
+                key={secTitle}
+                title={secTitle}
+                members={secMembers}
+                isHead={isHead}
+                onEdit={handleOpenEdit}
+                onDelete={handleDeleteMember}
+              />
+            ))}
+
           <TeamSection
             title="Core Team"
             members={teamData.coreTeam}
@@ -631,19 +645,6 @@ export default function Team() {
             onEdit={handleOpenEdit}
             onDelete={handleDeleteMember}
           />
-
-          {/* Dynamic Custom Sections (created via Custom Status option) */}
-          {customSections &&
-            Object.entries(customSections).map(([secTitle, secMembers]) => (
-              <TeamSection
-                key={secTitle}
-                title={secTitle}
-                members={secMembers}
-                isHead={isHead}
-                onEdit={handleOpenEdit}
-                onDelete={handleDeleteMember}
-              />
-            ))}
         </>
       )}
     </main>
