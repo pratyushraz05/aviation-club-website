@@ -12,6 +12,15 @@ const DEFAULT_SECTION_ORDER = [
   "nonTechnicalTeam",
 ];
 
+const DEFAULT_SECTION_COLUMNS = {
+  faculty: 1,
+  mentor: 2,
+  coreTeam: 3,
+  "Project Manager": 2,
+  technicalTeam: 3,
+  nonTechnicalTeam: 3,
+};
+
 const SECTION_DISPLAY_LABELS = {
   faculty: "Faculty In-Charge",
   mentor: "Mentor",
@@ -132,67 +141,107 @@ function TeamSection({
   canMoveUp = false,
   canMoveDown = false,
   onMoveSection,
+  columns = 3,
+  onChangeColumns,
 }) {
   if (!members || members.length === 0) return null;
 
   const sortedMembers = [...members].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-  const gridClass = featured
-    ? "faculty-grid"
-    : title === "Mentor"
-    ? "mentor-grid"
-    : title === "Core Team" || id === "coreTeam"
-    ? "core-grid"
-    : "";
+  const colClass = `cols-${columns || 3}`;
 
   return (
     <section className="team-section">
       <div className="section-title">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.6rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.75rem", flexWrap: "wrap" }}>
           <h2>{title}</h2>
-          {isHead && onMoveSection && (
-            <div style={{ display: "inline-flex", gap: "4px", marginLeft: "4px" }}>
-              <button
-                type="button"
-                disabled={!canMoveUp}
-                onClick={() => onMoveSection(id, -1)}
-                title="Move section heading up"
-                style={{
-                  background: canMoveUp ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
-                  color: canMoveUp ? "#38bdf8" : "#475569",
-                  border: "1px solid rgba(14, 165, 233, 0.3)",
-                  borderRadius: "6px",
-                  padding: "2px 8px",
-                  fontSize: "0.75rem",
-                  cursor: canMoveUp ? "pointer" : "default",
-                }}
-              >
-                ▲
-              </button>
-              <button
-                type="button"
-                disabled={!canMoveDown}
-                onClick={() => onMoveSection(id, 1)}
-                title="Move section heading down"
-                style={{
-                  background: canMoveDown ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
-                  color: canMoveDown ? "#38bdf8" : "#475569",
-                  border: "1px solid rgba(14, 165, 233, 0.3)",
-                  borderRadius: "6px",
-                  padding: "2px 8px",
-                  fontSize: "0.75rem",
-                  cursor: canMoveDown ? "pointer" : "default",
-                }}
-              >
-                ▼
-              </button>
+
+          {isHead && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(15, 23, 42, 0.75)",
+                border: "1px solid rgba(56, 189, 248, 0.28)",
+                borderRadius: "10px",
+                padding: "3px 8px",
+              }}
+            >
+              {/* Order Move Buttons */}
+              {onMoveSection && (
+                <div style={{ display: "inline-flex", gap: "2px" }}>
+                  <button
+                    type="button"
+                    disabled={!canMoveUp}
+                    onClick={() => onMoveSection(id, -1)}
+                    title="Move section heading up"
+                    style={{
+                      background: canMoveUp ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                      color: canMoveUp ? "#38bdf8" : "#475569",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "2px 6px",
+                      fontSize: "0.75rem",
+                      cursor: canMoveUp ? "pointer" : "default",
+                    }}
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!canMoveDown}
+                    onClick={() => onMoveSection(id, 1)}
+                    title="Move section heading down"
+                    style={{
+                      background: canMoveDown ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                      color: canMoveDown ? "#38bdf8" : "#475569",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "2px 6px",
+                      fontSize: "0.75rem",
+                      cursor: canMoveDown ? "pointer" : "default",
+                    }}
+                  >
+                    ▼
+                  </button>
+                </div>
+              )}
+
+              <span style={{ width: "1px", height: "14px", background: "#334155" }} />
+
+              {/* Number of persons to display at a time */}
+              <div style={{ display: "inline-flex", alignItems: "center", gap: "3px" }}>
+                <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>Persons/Row:</span>
+                {[1, 2, 3, 4].map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => onChangeColumns && onChangeColumns(id, num)}
+                    style={{
+                      background: columns === num ? "#0284c7" : "transparent",
+                      color: columns === num ? "#ffffff" : "#94a3b8",
+                      border: "none",
+                      borderRadius: "4px",
+                      padding: "2px 6px",
+                      fontSize: "0.72rem",
+                      fontWeight: columns === num ? 700 : 500,
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                    title={`Display ${num} person${num > 1 ? "s" : ""} at a time in this section`}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
         <span />
       </div>
 
-      <div className={`members-grid ${gridClass}`}>
+      <div className={`members-grid ${colClass}`}>
         {sortedMembers.map((member) => (
           <MemberCard
             key={member._id || member.name}
@@ -219,6 +268,7 @@ export default function Team() {
   });
   const [customSections, setCustomSections] = useState({});
   const [sectionOrder, setSectionOrder] = useState(DEFAULT_SECTION_ORDER);
+  const [sectionColumns, setSectionColumns] = useState(DEFAULT_SECTION_COLUMNS);
   const [loading, setLoading] = useState(true);
 
   // Unified Add / Edit Member Modal State
@@ -235,9 +285,10 @@ export default function Team() {
     image: "",
   });
 
-  // Reorder Headings Modal State
+  // Reorder Headings & Layout Modal State
   const [orderModalOpen, setOrderModalOpen] = useState(false);
   const [orderList, setOrderList] = useState([]);
+  const [modalColumns, setModalColumns] = useState({});
   const [savingOrder, setSavingOrder] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
@@ -254,6 +305,9 @@ export default function Team() {
       }
       if (res.data?.sectionOrder && Array.isArray(res.data.sectionOrder) && res.data.sectionOrder.length > 0) {
         setSectionOrder(res.data.sectionOrder);
+      }
+      if (res.data?.sectionColumns && typeof res.data.sectionColumns === "object") {
+        setSectionColumns((prev) => ({ ...prev, ...res.data.sectionColumns }));
       }
     } catch (err) {
       console.warn("Failed to fetch team from backend:", err);
@@ -391,9 +445,27 @@ export default function Team() {
     }
   };
 
-  // Heading Reorder Modal Controls
+  // Inline Persons per Row Change (1 | 2 | 3 | 4)
+  const handleChangeColumns = async (id, cols) => {
+    const updated = {
+      ...sectionColumns,
+      [id]: cols,
+    };
+    setSectionColumns(updated);
+
+    try {
+      await API.put("/team/section-columns", { columns: updated });
+      setMsg(`✓ Showing ${cols} person${cols > 1 ? "s" : ""} at a time`);
+      setTimeout(() => setMsg(""), 3000);
+    } catch (err) {
+      console.warn("Could not save section columns:", err);
+    }
+  };
+
+  // Heading Reorder & Layout Modal Controls
   const handleOpenOrderModal = () => {
     setOrderList(getEffectiveSectionOrder());
+    setModalColumns({ ...sectionColumns });
     setOrderModalOpen(true);
   };
 
@@ -406,16 +478,24 @@ export default function Team() {
     setOrderList(nextList);
   };
 
-  const handleSaveSectionOrder = async () => {
+  const handleModalSetCols = (id, num) => {
+    setModalColumns((prev) => ({ ...prev, [id]: num }));
+  };
+
+  const handleSaveSectionOrderAndLayout = async () => {
     try {
       setSavingOrder(true);
-      await API.put("/team/section-order", { order: orderList });
+      await Promise.all([
+        API.put("/team/section-order", { order: orderList }),
+        API.put("/team/section-columns", { columns: modalColumns }),
+      ]);
       setSectionOrder(orderList);
+      setSectionColumns(modalColumns);
       setOrderModalOpen(false);
-      setMsg("✓ Section heading order saved successfully!");
+      setMsg("✓ Section heading order and layout saved successfully!");
       setTimeout(() => setMsg(""), 4000);
     } catch (err) {
-      setMsg(err.response?.data?.message || err.message || "Failed to save heading order");
+      setMsg(err.response?.data?.message || err.message || "Failed to save settings");
     } finally {
       setSavingOrder(false);
     }
@@ -523,7 +603,7 @@ export default function Team() {
             </button>
             <button
               onClick={handleOpenOrderModal}
-              title="Change heading and section display order"
+              title="Change heading order and persons displayed per row"
               style={{
                 background: "rgba(14, 165, 233, 0.25)",
                 color: "#38bdf8",
@@ -535,7 +615,7 @@ export default function Team() {
                 cursor: "pointer",
               }}
             >
-              ↕️ Reorder Headings
+              ⚙️ Heading Order & Layout
             </button>
           </div>
         )}
@@ -554,7 +634,7 @@ export default function Team() {
         )}
       </header>
 
-      {/* Reorder Headings Modal */}
+      {/* Reorder Headings & Columns Modal */}
       {orderModalOpen && (
         <div
           style={{
@@ -578,15 +658,15 @@ export default function Team() {
               border: "1px solid rgba(56, 189, 248, 0.35)",
               borderRadius: "16px",
               padding: "1.75rem",
-              maxWidth: "520px",
+              maxWidth: "580px",
               width: "100%",
               color: "#ffffff",
               maxHeight: "90vh",
               overflowY: "auto",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <h3 style={{ margin: 0, color: "#38bdf8" }}>↕️ Place Heading Order</h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+              <h3 style={{ margin: 0, color: "#38bdf8" }}>⚙️ Heading Order & Cards Per Row</h3>
               <button
                 type="button"
                 onClick={() => setOrderModalOpen(false)}
@@ -596,12 +676,13 @@ export default function Team() {
               </button>
             </div>
             <p style={{ fontSize: "0.82rem", color: "#94a3b8", marginBottom: "1.25rem", lineHeight: 1.5 }}>
-              Use the <b>▲ Up</b> and <b>▼ Down</b> buttons to arrange the sections in your preferred sequence.
+              Arrange the section sequence using <b>▲/▼</b>, and choose how many persons (cards) to display at a time in each row:
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
               {orderList.map((secId, idx) => {
                 const label = SECTION_DISPLAY_LABELS[secId] || secId;
+                const currentCols = modalColumns[secId] || (secId === "faculty" ? 1 : 3);
                 return (
                   <div
                     key={secId}
@@ -613,6 +694,8 @@ export default function Team() {
                       border: "1px solid #334155",
                       borderRadius: "10px",
                       padding: "0.65rem 1rem",
+                      flexWrap: "wrap",
+                      gap: "0.5rem",
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
@@ -635,39 +718,67 @@ export default function Team() {
                       <span style={{ fontWeight: 600, fontSize: "0.9rem", color: "#f8fafc" }}>{label}</span>
                     </div>
 
-                    <div style={{ display: "flex", gap: "4px" }}>
-                      <button
-                        type="button"
-                        disabled={idx === 0}
-                        onClick={() => handleMoveOrderItem(idx, -1)}
-                        style={{
-                          background: idx === 0 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
-                          color: idx === 0 ? "#475569" : "#38bdf8",
-                          border: "1px solid rgba(14, 165, 233, 0.3)",
-                          borderRadius: "6px",
-                          padding: "3px 9px",
-                          fontSize: "0.8rem",
-                          cursor: idx === 0 ? "default" : "pointer",
-                        }}
-                      >
-                        ▲
-                      </button>
-                      <button
-                        type="button"
-                        disabled={idx === orderList.length - 1}
-                        onClick={() => handleMoveOrderItem(idx, 1)}
-                        style={{
-                          background: idx === orderList.length - 1 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
-                          color: idx === orderList.length - 1 ? "#475569" : "#38bdf8",
-                          border: "1px solid rgba(14, 165, 233, 0.3)",
-                          borderRadius: "6px",
-                          padding: "3px 9px",
-                          fontSize: "0.8rem",
-                          cursor: idx === orderList.length - 1 ? "default" : "pointer",
-                        }}
-                      >
-                        ▼
-                      </button>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      {/* Persons at a time selector */}
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "2px", background: "rgba(15, 23, 42, 0.6)", borderRadius: "6px", padding: "2px" }}>
+                        <span style={{ fontSize: "0.7rem", color: "#94a3b8", padding: "0 4px" }}>Show:</span>
+                        {[1, 2, 3, 4].map((num) => (
+                          <button
+                            key={num}
+                            type="button"
+                            onClick={() => handleModalSetCols(secId, num)}
+                            style={{
+                              background: currentCols === num ? "#0284c7" : "transparent",
+                              color: currentCols === num ? "#ffffff" : "#94a3b8",
+                              border: "none",
+                              borderRadius: "4px",
+                              padding: "2px 6px",
+                              fontSize: "0.72rem",
+                              fontWeight: currentCols === num ? 700 : 500,
+                              cursor: "pointer",
+                            }}
+                            title={`Display ${num} person${num > 1 ? "s" : ""} at a time`}
+                          >
+                            {num}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Move Up/Down buttons */}
+                      <div style={{ display: "flex", gap: "3px" }}>
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => handleMoveOrderItem(idx, -1)}
+                          style={{
+                            background: idx === 0 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
+                            color: idx === 0 ? "#475569" : "#38bdf8",
+                            border: "1px solid rgba(14, 165, 233, 0.3)",
+                            borderRadius: "6px",
+                            padding: "3px 8px",
+                            fontSize: "0.8rem",
+                            cursor: idx === 0 ? "default" : "pointer",
+                          }}
+                        >
+                          ▲
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === orderList.length - 1}
+                          onClick={() => handleMoveOrderItem(idx, 1)}
+                          style={{
+                            background: idx === orderList.length - 1 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
+                            color: idx === orderList.length - 1 ? "#475569" : "#38bdf8",
+                            border: "1px solid rgba(14, 165, 233, 0.3)",
+                            borderRadius: "6px",
+                            padding: "3px 8px",
+                            fontSize: "0.8rem",
+                            cursor: idx === orderList.length - 1 ? "default" : "pointer",
+                          }}
+                        >
+                          ▼
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );
@@ -678,7 +789,7 @@ export default function Team() {
               <button
                 type="button"
                 disabled={savingOrder}
-                onClick={handleSaveSectionOrder}
+                onClick={handleSaveSectionOrderAndLayout}
                 style={{
                   flex: 1,
                   padding: "0.75rem",
@@ -690,11 +801,14 @@ export default function Team() {
                   cursor: "pointer",
                 }}
               >
-                {savingOrder ? "Saving Order..." : "Save Heading Order"}
+                {savingOrder ? "Saving..." : "Save Order & Layout"}
               </button>
               <button
                 type="button"
-                onClick={() => setOrderList(DEFAULT_SECTION_ORDER)}
+                onClick={() => {
+                  setOrderList(DEFAULT_SECTION_ORDER);
+                  setModalColumns({ ...DEFAULT_SECTION_COLUMNS });
+                }}
                 style={{
                   padding: "0.75rem 1rem",
                   background: "transparent",
@@ -830,7 +944,7 @@ export default function Team() {
                         padding: 0,
                       }}
                     >
-                      ↕️ Reorder headings
+                      ⚙️ Layout settings
                     </button>
                   </div>
                   <select
@@ -1002,6 +1116,8 @@ export default function Team() {
               canMoveUp={idx > 0}
               canMoveDown={idx < sectionsToRender.length - 1}
               onMoveSection={handleMoveSection}
+              columns={sectionColumns[sec.id] || (sec.featured ? 1 : 3)}
+              onChangeColumns={handleChangeColumns}
             />
           ))}
         </>
