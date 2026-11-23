@@ -12,6 +12,15 @@ const DEFAULT_SECTION_ORDER = [
   "nonTechnicalTeam",
 ];
 
+const DEFAULT_SECTION_COLUMNS = {
+  faculty: 1,
+  mentor: 2,
+  coreTeam: 3,
+  "Project Manager": 2,
+  technicalTeam: 3,
+  nonTechnicalTeam: 3,
+};
+
 const defaultTeamMembers = [
   // Faculty
   {
@@ -230,12 +239,15 @@ const getTeam = async (req, res, next) => {
     });
 
     let orderSetting = null;
+    let columnsSetting = null;
     try {
       orderSetting = await TeamSetting.findOne({ key: "team_section_order" });
+      columnsSetting = await TeamSetting.findOne({ key: "team_section_columns" });
     } catch (e) {
-      console.warn("Could not load team_section_order setting:", e.message);
+      console.warn("Could not load team settings:", e.message);
     }
     const sectionOrder = orderSetting?.value || DEFAULT_SECTION_ORDER;
+    const sectionColumns = { ...DEFAULT_SECTION_COLUMNS, ...(columnsSetting?.value || {}) };
 
     res.status(200).json({
       success: true,
@@ -243,6 +255,7 @@ const getTeam = async (req, res, next) => {
       data: grouped,
       customSections,
       sectionOrder,
+      sectionColumns,
       allMembers: members,
     });
   } catch (error) {
@@ -383,6 +396,44 @@ const updateSectionOrder = async (req, res, next) => {
   }
 };
 
+const getSectionColumns = async (req, res, next) => {
+  try {
+    const setting = await TeamSetting.findOne({ key: "team_section_columns" });
+    res.status(200).json({
+      success: true,
+      data: { ...DEFAULT_SECTION_COLUMNS, ...(setting?.value || {}) },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateSectionColumns = async (req, res, next) => {
+  try {
+    const { columns } = req.body;
+    if (!columns || typeof columns !== "object") {
+      return res.status(400).json({
+        success: false,
+        message: "Columns must be an object mapping section IDs to column counts",
+      });
+    }
+
+    const setting = await TeamSetting.findOneAndUpdate(
+      { key: "team_section_columns" },
+      { value: columns },
+      { upsert: true, new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Section columns updated successfully",
+      data: setting.value,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getTeam,
   addTeamMember,
@@ -390,6 +441,9 @@ module.exports = {
   deleteTeamMember,
   getSectionOrder,
   updateSectionOrder,
+  getSectionColumns,
+  updateSectionColumns,
   DEFAULT_SECTION_ORDER,
+  DEFAULT_SECTION_COLUMNS,
 };
 
