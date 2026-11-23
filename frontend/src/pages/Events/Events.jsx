@@ -139,6 +139,7 @@ const emptyFormData = {
   purpose: '',
   description: '',
   outcomes: '',
+  tracks: [],
 };
 
 export default function Events() {
@@ -149,6 +150,10 @@ export default function Events() {
   const [error, setError] = useState('');
   const [msg, setMsg] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Active track tabs
+  const [flagshipTrackTab, setFlagshipTrackTab] = useState('uav-racing');
+  const [modalTrackTab, setModalTrackTab] = useState('uav-racing');
 
   // Page level settings state (Eyebrows, Titles, Announcement)
   const [pageSettings, setPageSettings] = useState(defaultPageSettings);
@@ -208,6 +213,7 @@ export default function Events() {
       ...emptyFormData,
       isFlagship: isFlagshipInitial,
       isUpcoming: isFlagshipInitial,
+      tracks: [],
     });
     setShowFormModal(true);
   };
@@ -241,6 +247,7 @@ export default function Events() {
       purpose: Array.isArray(event.purpose) ? event.purpose.join('\n') : (event.purpose || ''),
       description: event.description || '',
       outcomes: Array.isArray(event.outcomes) ? event.outcomes.join('\n') : (event.outcomes || ''),
+      tracks: Array.isArray(event.tracks) ? JSON.parse(JSON.stringify(event.tracks)) : [],
     });
     setShowFormModal(true);
   };
@@ -274,6 +281,7 @@ export default function Events() {
       purpose: Array.isArray(event.purpose) ? event.purpose.join('\n') : (event.purpose || ''),
       description: event.description || '',
       outcomes: Array.isArray(event.outcomes) ? event.outcomes.join('\n') : (event.outcomes || ''),
+      tracks: Array.isArray(event.tracks) ? JSON.parse(JSON.stringify(event.tracks)) : [],
     });
     setShowFormModal(true);
   };
@@ -297,6 +305,50 @@ export default function Events() {
     setFormData((prev) => ({
       ...prev,
       customLinks: (prev.customLinks || []).filter((_, i) => i !== index),
+    }));
+  };
+
+  const updateTrackField = (index, field, value) => {
+    setFormData((prev) => {
+      const list = [...(prev.tracks || [])];
+      list[index] = { ...list[index], [field]: value };
+      return { ...prev, tracks: list };
+    });
+  };
+
+  const updateTrackObjectives = (index, textValue) => {
+    setFormData((prev) => {
+      const list = [...(prev.tracks || [])];
+      list[index] = {
+        ...list[index],
+        objectives: textValue.split('\n').map((s) => s.trim()).filter(Boolean),
+      };
+      return { ...prev, tracks: list };
+    });
+  };
+
+  const addTrack = () => {
+    setFormData((prev) => ({
+      ...prev,
+      tracks: [
+        ...(prev.tracks || []),
+        {
+          id: `track-${(prev.tracks?.length || 0) + 1}`,
+          title: `Track ${(prev.tracks?.length || 0) + 1}: New Competition`,
+          badge: 'Competition Challenge',
+          tagline: '',
+          description: '',
+          objectives: [],
+          image: '',
+        },
+      ],
+    }));
+  };
+
+  const removeTrack = (index) => {
+    setFormData((prev) => ({
+      ...prev,
+      tracks: (prev.tracks || []).filter((_, i) => i !== index),
     }));
   };
 
@@ -355,6 +407,19 @@ export default function Events() {
         purpose: formData.purpose.split('\n').map((s) => s.trim()).filter(Boolean),
         description: formData.description.trim(),
         outcomes: formData.outcomes.split('\n').map((s) => s.trim()).filter(Boolean),
+        tracks: (formData.tracks || []).map((t) => ({
+          id: t.id || '',
+          title: t.title?.trim() || '',
+          badge: t.badge?.trim() || '',
+          tagline: t.tagline?.trim() || '',
+          description: t.description?.trim() || '',
+          objectives: Array.isArray(t.objectives)
+            ? t.objectives
+            : typeof t.objectives === 'string'
+            ? t.objectives.split('\n').map((s) => s.trim()).filter(Boolean)
+            : [],
+          image: t.image?.trim() || '',
+        })),
       };
 
       if (editingId) {
@@ -640,27 +705,170 @@ export default function Events() {
                     )}
                   </div>
 
-                  {/* Highlighted Eligibility & Fee quick info if present */}
-                  {(flagshipEvent.teamEligibility || flagshipEvent.registrationFee) && (
-                    <div className="flagship-quick-highlights">
-                      {flagshipEvent.teamEligibility && (
-                        <div className="highlight-row">
-                          <strong className="hl-label">👥 Team Eligibility:</strong>
-                          <span className="hl-val">{flagshipEvent.teamEligibility}</span>
-                        </div>
-                      )}
-                      {flagshipEvent.registrationFee && (
-                        <div className="highlight-row">
-                          <strong className="hl-label">💳 Registration Fee:</strong>
-                          <span className="hl-val">{flagshipEvent.registrationFee}</span>
+                  {/* Highlighted Eligibility & Fee quick info if present (if not using track view) */}
+                  {(!flagshipEvent.tracks || flagshipEvent.tracks.length === 0) &&
+                    (flagshipEvent.teamEligibility || flagshipEvent.registrationFee) && (
+                      <div className="flagship-quick-highlights">
+                        {flagshipEvent.teamEligibility && (
+                          <div className="highlight-row">
+                            <strong className="hl-label">👥 Team Eligibility:</strong>
+                            <span className="hl-val">{flagshipEvent.teamEligibility}</span>
+                          </div>
+                        )}
+                        {flagshipEvent.registrationFee && (
+                          <div className="highlight-row">
+                            <strong className="hl-label">💳 Registration Fee:</strong>
+                            <span className="hl-val">{flagshipEvent.registrationFee}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                  {/* DEDICATED TRACKS SECTION (When event has dual / multiple competition tracks) */}
+                  {Array.isArray(flagshipEvent.tracks) && flagshipEvent.tracks.length > 0 ? (
+                    <div className="flagship-tracks-wrapper">
+                      {/* Interactive Track Navigation Bar */}
+                      <div className="flagship-track-nav">
+                        {flagshipEvent.tracks.map((track, tIdx) => {
+                          const tabId = track.id || `track-${tIdx}`;
+                          const isUav = tabId.includes('uav') || track.title.toLowerCase().includes('uav');
+                          return (
+                            <button
+                              key={tabId}
+                              type="button"
+                              className={`track-nav-btn ${flagshipTrackTab === tabId ? 'active' : ''}`}
+                              onClick={() => setFlagshipTrackTab(tabId)}
+                            >
+                              <span>{isUav ? '🏁' : '🍕'}</span> {track.title}
+                            </button>
+                          );
+                        })}
+                        <button
+                          type="button"
+                          className={`track-nav-btn ${flagshipTrackTab === 'rules' ? 'active' : ''}`}
+                          onClick={() => setFlagshipTrackTab('rules')}
+                        >
+                          <span>📋</span> Eligibility, Fees &amp; Selection
+                        </button>
+                        <button
+                          type="button"
+                          className={`track-nav-btn ${flagshipTrackTab === 'all' ? 'active' : ''}`}
+                          onClick={() => setFlagshipTrackTab('all')}
+                        >
+                          <span>🌐</span> Dual-Track Overview
+                        </button>
+                      </div>
+
+                      {/* Track Details Content */}
+                      {flagshipEvent.tracks.map((track, tIdx) => {
+                        const tabId = track.id || `track-${tIdx}`;
+                        const isVisible = flagshipTrackTab === tabId || flagshipTrackTab === 'all';
+                        if (!isVisible || flagshipTrackTab === 'rules') return null;
+
+                        return (
+                          <div key={tabId} className="flagship-track-card fade-in">
+                            <div className="track-card-header">
+                              <div className="track-header-left">
+                                <span className="track-badge-pill">{track.badge || `Track ${tIdx + 1}`}</span>
+                                <h4 className="track-card-title">{track.title}</h4>
+                              </div>
+                              {track.tagline && <span className="track-tagline-text">{track.tagline}</span>}
+                            </div>
+
+                            <div className="track-card-grid">
+                              {track.image && (
+                                <div className="track-media-box">
+                                  <img
+                                    src={track.image}
+                                    alt={track.title}
+                                    onError={(e) => {
+                                      e.currentTarget.src = '/images/6.png';
+                                    }}
+                                  />
+                                  <span className="track-media-label">{track.badge || 'Track Poster'}</span>
+                                </div>
+                              )}
+
+                              <div className="track-info-pane">
+                                <p className="track-description-text">{track.description}</p>
+
+                                {Array.isArray(track.objectives) && track.objectives.length > 0 && (
+                                  <div className="track-objectives-box">
+                                    <h5 className="objectives-heading">
+                                      🎯 {track.title} – Objectives
+                                    </h5>
+                                    <ul className="track-objectives-list">
+                                      {track.objectives.map((obj, oIdx) => (
+                                        <li key={oIdx}>
+                                          <span className="obj-number">{oIdx + 1}</span>
+                                          <span className="obj-text">{obj}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      {/* Rules & Eligibility Section */}
+                      {(flagshipTrackTab === 'rules' || flagshipTrackTab === 'all') && (
+                        <div className="flagship-rules-card fade-in">
+                          <h4 className="rules-section-title">📋 Championship Regulations, Eligibility &amp; Selection</h4>
+
+                          <div className="rules-grid">
+                            <div className="rule-item-box">
+                              <div className="rule-icon">👥</div>
+                              <div className="rule-content">
+                                <strong>1. Team Eligibility</strong>
+                                <p>
+                                  {flagshipEvent.teamEligibility ||
+                                    'Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.'}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="rule-item-box">
+                              <div className="rule-icon">💳</div>
+                              <div className="rule-content">
+                                <strong>2. Registration Fee Structure</strong>
+                                <p>
+                                  {flagshipEvent.registrationFee ||
+                                    '• for club volunteers = Rs. 200 per person\n• for non volunteers = Rs. 300 per person\n• for Outsiders (from other institutes) = Rs. 500 per person'}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="rule-item-box">
+                              <div className="rule-icon">⚠️</div>
+                              <div className="rule-content">
+                                <strong>Fabrication &amp; Component Expenditure</strong>
+                                <p>
+                                  For the fabrication part of the competition, Component&apos;s expenditure will be completely bear by the Team itself.
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="rule-item-box highlight-selection">
+                              <div className="rule-icon">🏆</div>
+                              <div className="rule-content">
+                                <strong>SAE AEROTHON 2027 Official Selection</strong>
+                                <p>
+                                  Note: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur, Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
+                  ) : (
+                    <p className="flagship-hero-desc">
+                      {flagshipEvent.description}
+                    </p>
                   )}
-
-                  <p className="flagship-hero-desc">
-                    {flagshipEvent.description}
-                  </p>
 
                   {/* Flagship CTAs with Auto Registration Schedule Logic */}
                   <div className="flagship-cta-group">
@@ -1248,25 +1456,149 @@ export default function Events() {
 
               <hr className="divider" />
 
-              {/* Event Purpose / Objectives */}
-              {selectedEvent.purpose?.length > 0 && (
+              {/* Multi-Track Dedicated Sections (when event has tracks) */}
+              {Array.isArray(selectedEvent.tracks) && selectedEvent.tracks.length > 0 ? (
                 <div className="details-block">
-                  <h4>EVENT OBJECTIVES &amp; PURPOSE</h4>
-                  <ul>
-                    {selectedEvent.purpose.map((item, idx) => (
-                      <li key={idx}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                  <h4>DUAL COMPETITION TRACKS &amp; REGULATIONS</h4>
 
-              {/* Event Description */}
-              <div className="details-block">
-                <h4>EVENT DESCRIPTION</h4>
-                <p style={{ whiteSpace: 'pre-line' }}>{selectedEvent.description}</p>
-              </div>
+                  <div className="flagship-track-nav" style={{ marginBottom: '18px' }}>
+                    {selectedEvent.tracks.map((track, tIdx) => {
+                      const tabId = track.id || `track-${tIdx}`;
+                      const isUav = tabId.includes('uav') || track.title.toLowerCase().includes('uav');
+                      return (
+                        <button
+                          key={tabId}
+                          type="button"
+                          className={`track-nav-btn ${modalTrackTab === tabId ? 'active' : ''}`}
+                          onClick={() => setModalTrackTab(tabId)}
+                        >
+                          <span>{isUav ? '🏁' : '🍕'}</span> {track.title}
+                        </button>
+                      );
+                    })}
+                    <button
+                      type="button"
+                      className={`track-nav-btn ${modalTrackTab === 'rules' ? 'active' : ''}`}
+                      onClick={() => setModalTrackTab('rules')}
+                    >
+                      <span>📋</span> Eligibility &amp; Selection
+                    </button>
+                    <button
+                      type="button"
+                      className={`track-nav-btn ${modalTrackTab === 'all' ? 'active' : ''}`}
+                      onClick={() => setModalTrackTab('all')}
+                    >
+                      <span>🌐</span> Both Tracks Overview
+                    </button>
+                  </div>
+
+                  {selectedEvent.tracks.map((track, tIdx) => {
+                    const tabId = track.id || `track-${tIdx}`;
+                    const isVisible = modalTrackTab === tabId || modalTrackTab === 'all';
+                    if (!isVisible || modalTrackTab === 'rules') return null;
+
+                    return (
+                      <div key={tabId} className="modal-track-detail-card" style={{ marginBottom: '16px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                          <span className="track-badge-pill">{track.badge || `Track ${tIdx + 1}`}</span>
+                          <h4 style={{ margin: 0, color: '#f8fafc', fontSize: '1.15rem' }}>{track.title}</h4>
+                        </div>
+                        {track.tagline && (
+                          <p style={{ fontStyle: 'italic', color: '#94a3b8', margin: '0 0 12px', fontSize: '0.9rem' }}>
+                            {track.tagline}
+                          </p>
+                        )}
+
+                        <div style={{ display: 'grid', gridTemplateColumns: track.image ? '160px 1fr' : '1fr', gap: '16px', alignItems: 'start' }}>
+                          {track.image && (
+                            <img
+                              src={track.image}
+                              alt={track.title}
+                              style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '10px', border: '1px solid #334155' }}
+                              onError={(e) => {
+                                e.currentTarget.src = '/images/6.png';
+                              }}
+                            />
+                          )}
+                          <div>
+                            <p style={{ margin: '0 0 12px', color: '#cbd5e1', fontSize: '0.92rem', lineHeight: '1.6' }}>
+                              {track.description}
+                            </p>
+                            {Array.isArray(track.objectives) && track.objectives.length > 0 && (
+                              <div style={{ background: '#0f172a', padding: '12px 16px', borderRadius: '8px', border: '1px solid #1e293b' }}>
+                                <strong style={{ color: '#38bdf8', fontSize: '0.88rem', display: 'block', marginBottom: '8px' }}>
+                                  🎯 {track.title} – Objectives:
+                                </strong>
+                                <ul style={{ margin: 0, paddingLeft: '20px', color: '#cbd5e1', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                                  {track.objectives.map((obj, oIdx) => (
+                                    <li key={oIdx} style={{ marginBottom: '6px' }}>{obj}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {(modalTrackTab === 'rules' || modalTrackTab === 'all') && (
+                    <div className="flagship-rules-card" style={{ marginTop: '16px' }}>
+                      <h4 className="rules-section-title" style={{ fontSize: '1.05rem', margin: '0 0 12px' }}>
+                        📋 Championship Rules, Eligibility &amp; Selection
+                      </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div>
+                          <strong style={{ color: '#38bdf8', fontSize: '0.9rem' }}>👥 Team Eligibility:</strong>
+                          <p style={{ margin: '4px 0 0', color: '#e2e8f0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                            {selectedEvent.teamEligibility || 'Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.'}
+                          </p>
+                        </div>
+                        <div>
+                          <strong style={{ color: '#facc15', fontSize: '0.9rem' }}>💳 Registration Fee:</strong>
+                          <p style={{ margin: '4px 0 0', color: '#e2e8f0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                            {selectedEvent.registrationFee || 'for club volunteers = Rs. 200 per person | for non volunteers = Rs. 300 per person | for Outsiders (from other institutes) = Rs. 500 per person'}
+                          </p>
+                        </div>
+                        <div>
+                          <strong style={{ color: '#fb923c', fontSize: '0.9rem' }}>⚠️ Fabrication &amp; Component Expenditure:</strong>
+                          <p style={{ margin: '4px 0 0', color: '#e2e8f0', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                            For the fabrication part of the competition, Component&apos;s expenditure will be completely bear by the Team itself.
+                          </p>
+                        </div>
+                        <div style={{ background: 'rgba(234, 179, 8, 0.15)', border: '1px solid #facc15', padding: '12px 14px', borderRadius: '8px' }}>
+                          <strong style={{ color: '#fde047', fontSize: '0.9rem' }}>🏆 SAE AEROTHON 2027 Selection:</strong>
+                          <p style={{ margin: '4px 0 0', color: '#fef08a', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                            Note: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur, Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  {/* Event Purpose / Objectives */}
+                  {selectedEvent.purpose?.length > 0 && (
+                    <div className="details-block">
+                      <h4>EVENT OBJECTIVES &amp; PURPOSE</h4>
+                      <ul>
+                        {selectedEvent.purpose.map((item, idx) => (
+                          <li key={idx}>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Event Description */}
+                  <div className="details-block">
+                    <h4>EVENT DESCRIPTION</h4>
+                    <p style={{ whiteSpace: 'pre-line' }}>{selectedEvent.description}</p>
+                  </div>
+                </>
+              )}
 
               {/* Optional Photographs Section */}
               <div className="details-block">
@@ -2223,6 +2555,228 @@ export default function Events() {
                           >
                             🗑️
                           </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* 6B. DUAL COMPETITION TRACKS (FOR FLAGSHIP / COMBINED EVENTS) */}
+                <div
+                  style={{
+                    background: '#0d1829',
+                    border: '1px solid #0284c7',
+                    borderRadius: '8px',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                    <div>
+                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#38bdf8' }}>
+                        🏁 Dual Competition Tracks (Separate Dedicated Sections)
+                      </span>
+                      <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                        Configure dedicated sections, titles, posters, descriptions, and 4 objectives for each track (e.g. UAV Racing &amp; Deliver the Pizza).
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addTrack}
+                      style={{
+                        background: '#0284c7',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '6px',
+                        padding: '6px 14px',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      + Add Track
+                    </button>
+                  </div>
+
+                  {formData.tracks?.length === 0 ? (
+                    <p style={{ margin: 0, fontSize: '0.82rem', color: '#64748b' }}>
+                      No competition tracks created for this event. Click &ldquo;+ Add Track&rdquo; if this is a dual/multi-track competition.
+                    </p>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      {formData.tracks.map((track, tIdx) => (
+                        <div
+                          key={tIdx}
+                          style={{
+                            background: '#1e293b',
+                            border: '1px solid #334155',
+                            borderRadius: '8px',
+                            padding: '14px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px',
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <strong style={{ color: '#facc15', fontSize: '0.92rem' }}>
+                              Track {tIdx + 1}: {track.title || 'Untitled Track'}
+                            </strong>
+                            <button
+                              type="button"
+                              onClick={() => removeTrack(tIdx)}
+                              style={{
+                                background: '#dc2626',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '4px 8px',
+                                fontSize: '0.75rem',
+                                cursor: 'pointer',
+                              }}
+                            >
+                              🗑️ Remove Track
+                            </button>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                                Track Title
+                              </label>
+                              <input
+                                type="text"
+                                value={track.title}
+                                onChange={(e) => updateTrackField(tIdx, 'title', e.target.value)}
+                                placeholder="e.g. Track 1: UAV Racing Competition"
+                                style={{
+                                  width: '100%',
+                                  padding: '8px 10px',
+                                  background: '#0f172a',
+                                  border: '1px solid #334155',
+                                  borderRadius: '6px',
+                                  color: '#fff',
+                                  fontSize: '0.85rem',
+                                  boxSizing: 'border-box',
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                                Track Badge / Category
+                              </label>
+                              <input
+                                type="text"
+                                value={track.badge}
+                                onChange={(e) => updateTrackField(tIdx, 'badge', e.target.value)}
+                                placeholder="e.g. Fixed-Wing Challenge"
+                                style={{
+                                  width: '100%',
+                                  padding: '8px 10px',
+                                  background: '#0f172a',
+                                  border: '1px solid #334155',
+                                  borderRadius: '6px',
+                                  color: '#fff',
+                                  fontSize: '0.85rem',
+                                  boxSizing: 'border-box',
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                                Track Tagline
+                              </label>
+                              <input
+                                type="text"
+                                value={track.tagline}
+                                onChange={(e) => updateTrackField(tIdx, 'tagline', e.target.value)}
+                                placeholder="e.g. High-Speed Fixed-Wing Aerodynamic Design & Piloting"
+                                style={{
+                                  width: '100%',
+                                  padding: '8px 10px',
+                                  background: '#0f172a',
+                                  border: '1px solid #334155',
+                                  borderRadius: '6px',
+                                  color: '#fff',
+                                  fontSize: '0.85rem',
+                                  boxSizing: 'border-box',
+                                }}
+                              />
+                            </div>
+
+                            <div>
+                              <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                                Track Poster / Image URL
+                              </label>
+                              <input
+                                type="text"
+                                value={track.image}
+                                onChange={(e) => updateTrackField(tIdx, 'image', e.target.value)}
+                                placeholder="e.g. /images/6.png"
+                                style={{
+                                  width: '100%',
+                                  padding: '8px 10px',
+                                  background: '#0f172a',
+                                  border: '1px solid #334155',
+                                  borderRadius: '6px',
+                                  color: '#fff',
+                                  fontSize: '0.85rem',
+                                  boxSizing: 'border-box',
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                              Track Description
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={track.description}
+                              onChange={(e) => updateTrackField(tIdx, 'description', e.target.value)}
+                              placeholder="Provide description for this specific competition track..."
+                              style={{
+                                width: '100%',
+                                padding: '8px 10px',
+                                background: '#0f172a',
+                                border: '1px solid #334155',
+                                borderRadius: '6px',
+                                color: '#fff',
+                                fontSize: '0.85rem',
+                                fontFamily: 'inherit',
+                                boxSizing: 'border-box',
+                              }}
+                            />
+                          </div>
+
+                          <div>
+                            <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '2px' }}>
+                              Track Objectives (one per line)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={Array.isArray(track.objectives) ? track.objectives.join('\n') : (track.objectives || '')}
+                              onChange={(e) => updateTrackObjectives(tIdx, e.target.value)}
+                              placeholder="Objective 1&#10;Objective 2&#10;Objective 3&#10;Objective 4"
+                              style={{
+                                width: '100%',
+                                padding: '8px 10px',
+                                background: '#0f172a',
+                                border: '1px solid #334155',
+                                borderRadius: '6px',
+                                color: '#fff',
+                                fontSize: '0.85rem',
+                                fontFamily: 'inherit',
+                                boxSizing: 'border-box',
+                              }}
+                            />
+                          </div>
                         </div>
                       ))}
                     </div>
