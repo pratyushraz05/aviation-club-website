@@ -24,7 +24,7 @@ const defaultTeamMembers = [
   // Core Team
   {
     name: "Sivaratri Lakshmi Sahithi",
-    role: "Core Team",
+    role: "President",
     section: "coreTeam",
     branch: "4th Year",
     image: "",
@@ -32,7 +32,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Kritika Tripathi",
-    role: "Core Team",
+    role: "Vice President",
     section: "coreTeam",
     branch: "4th Year",
     image: "",
