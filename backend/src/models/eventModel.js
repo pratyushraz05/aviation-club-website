@@ -57,6 +57,31 @@ const eventSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
+    registrationStartDate: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    registrationEndDate: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    registrationStatusMode: {
+      type: String,
+      enum: ["auto", "open", "closed"],
+      default: "auto",
+    },
+    teamEligibility: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    registrationFee: {
+      type: String,
+      default: "",
+      trim: true,
+    },
     rulebookLink: {
       type: String,
       default: "",
