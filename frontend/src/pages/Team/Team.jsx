@@ -5,10 +5,11 @@ import API from "../../services/api";
 
 function MemberCard({ member, featured = false, noPhoto = false, isHead = false, onDelete }) {
   const displayRole =
-    member.role === "Technical Team" ||
-    member.role === "Non-Technical Team" ||
-    member.role === "Technical Member" ||
-    member.role === "Non-Technical Member"
+    member.role === "Technical Team"
+      ? "WEB dev team"
+      : member.role === "Non-Technical Team" ||
+        member.role === "Technical Member" ||
+        member.role === "Non-Technical Member"
       ? "Core Member"
       : member.role;
 
@@ -107,7 +108,7 @@ export default function Team() {
   const [newMember, setNewMember] = useState({
     name: "",
     role: "",
-    section: "CoreTeam",
+    section: "coreTeam",
     branch: "CSE",
     image: "",
   });
@@ -141,7 +142,7 @@ export default function Team() {
       setNewMember({
         name: "",
         role: "",
-        section: "CoreTeam",
+        section: "coreTeam",
         branch: "CSE",
         image: "",
       });
@@ -296,7 +297,9 @@ export default function Team() {
                     onChange={(e) => setNewMember({ ...newMember, section: e.target.value })}
                     style={{ width: "100%", padding: "0.6rem", borderRadius: "8px", background: "#1e293b", border: "1px solid #334155", color: "#fff", marginTop: "0.25rem" }}
                   >
-                    <option value="CoreTeam">Core Team</option>
+                    <option value="coreTeam">Core Team</option>
+                    <option value="technicalTeam">WEB dev team</option>
+                    <option value="nonTechnicalTeam">Core Member</option>
                     <option value="faculty">Faculty</option>
                     <option value="mentor">Mentor</option>
                   </select>
@@ -375,8 +378,15 @@ export default function Team() {
           />
 
           <TeamSection
+            title="WEB dev team"
+            members={teamData.technicalTeam}
+            isHead={isHead}
+            onDelete={handleDeleteMember}
+          />
+
+          <TeamSection
             title="Core Member"
-            members={[...(teamData.technicalTeam || []), ...(teamData.nonTechnicalTeam || [])]}
+            members={teamData.nonTechnicalTeam}
             isHead={isHead}
             onDelete={handleDeleteMember}
           />
