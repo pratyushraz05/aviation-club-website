@@ -1,6 +1,16 @@
 const TeamMember = require("../models/teamMemberModel");
+const TeamSetting = require("../models/teamSettingModel");
 const cloudinary = require("../config/cloudinary");
 const streamifier = require("streamifier");
+
+const DEFAULT_SECTION_ORDER = [
+  "faculty",
+  "mentor",
+  "coreTeam",
+  "Project Manager",
+  "technicalTeam",
+  "nonTechnicalTeam",
+];
 
 const defaultTeamMembers = [
   // Faculty
@@ -219,11 +229,20 @@ const getTeam = async (req, res, next) => {
       }
     });
 
+    let orderSetting = null;
+    try {
+      orderSetting = await TeamSetting.findOne({ key: "team_section_order" });
+    } catch (e) {
+      console.warn("Could not load team_section_order setting:", e.message);
+    }
+    const sectionOrder = orderSetting?.value || DEFAULT_SECTION_ORDER;
+
     res.status(200).json({
       success: true,
       count: members.length,
       data: grouped,
       customSections,
+      sectionOrder,
       allMembers: members,
     });
   } catch (error) {
@@ -326,10 +345,51 @@ const deleteTeamMember = async (req, res, next) => {
   }
 };
 
+const getSectionOrder = async (req, res, next) => {
+  try {
+    const setting = await TeamSetting.findOne({ key: "team_section_order" });
+    res.status(200).json({
+      success: true,
+      data: setting?.value || DEFAULT_SECTION_ORDER,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateSectionOrder = async (req, res, next) => {
+  try {
+    const { order } = req.body;
+    if (!Array.isArray(order) || order.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Order must be a non-empty array of section identifiers",
+      });
+    }
+
+    const setting = await TeamSetting.findOneAndUpdate(
+      { key: "team_section_order" },
+      { value: order },
+      { upsert: true, new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Section order updated successfully",
+      data: setting.value,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getTeam,
   addTeamMember,
   updateTeamMember,
   deleteTeamMember,
+  getSectionOrder,
+  updateSectionOrder,
+  DEFAULT_SECTION_ORDER,
 };
 
