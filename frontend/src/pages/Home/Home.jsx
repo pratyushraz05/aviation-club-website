@@ -194,6 +194,7 @@ export default function Home() {
   const [notifications, setNotifications] = useState(defaultNotificationsData);
   const [upcomingEvent, setUpcomingEvent] = useState(null);
   const [flagshipEvent, setFlagshipEvent] = useState(null);
+  const [homeTrackIdx, setHomeTrackIdx] = useState(0);
   const [timelineItems, setTimelineItems] = useState(defaultMilestones);
   const [faculty, setFaculty] = useState(null);
   const [stats, setStats] = useState({
@@ -569,168 +570,221 @@ export default function Home() {
       {/* =====================================================
           FEATURED FLAGSHIP EVENT SHOWCASE SECTION
       ===================================================== */}
-      {flagshipEvent && (
-        <section className="home-flagship-section" aria-label="Official Club Flagship Event">
-          <div className="container">
-            <div className="home-flagship-card reveal fade-up">
-              <div className="home-flagship-glow" aria-hidden="true"></div>
-              <div className="home-flagship-inner">
-                {flagshipEvent.image && (
-                  <div className="home-flagship-media">
-                    <img
-                      src={flagshipEvent.image}
-                      alt={flagshipEvent.title}
-                      onError={(e) => {
-                        e.currentTarget.src = "/images/7.png";
-                      }}
-                    />
-                    <div className="home-flagship-media-badge">
-                      {flagshipEvent.flagshipStatus === "Ongoing" ? "🔴 LIVE NOW" : "⭐ CLUB FLAGSHIP"}
-                    </div>
-                  </div>
-                )}
+      {flagshipEvent && (() => {
+        const hasTracks = Array.isArray(flagshipEvent.tracks) && flagshipEvent.tracks.length > 0;
+        const currentTrack = hasTracks ? (flagshipEvent.tracks[homeTrackIdx] || flagshipEvent.tracks[0]) : null;
+        const displayImage = currentTrack?.image || flagshipEvent.image;
 
-                <div className="home-flagship-content">
-                  <div className="home-flagship-header">
-                    <div className="home-flagship-pills">
-                      <span className="home-flagship-pill">
-                        <span className="live-pulse"></span>
-                        {(flagshipEvent.flagshipStatus || "UPCOMING").toUpperCase()} FLAGSHIP
-                      </span>
-                      {(() => {
-                        const regState = getRegistrationState(flagshipEvent);
-                        if (regState.badgeText) {
-                          return (
-                            <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} style={{ fontSize: "0.75rem" }}>
-                              {regState.badgeText}
-                            </span>
-                          );
-                        }
-                        return null;
-                      })()}
-                      {flagshipEvent.prizePool && (
-                        <span className="home-flagship-prize">
-                          🏆 {flagshipEvent.prizePool}
-                        </span>
-                      )}
-                    </div>
-                    {isHead && (
-                      <Link
-                        to="/events"
-                        className="home-flagship-head-edit"
-                        title="Edit or switch flagship in Events page"
-                      >
-                        ✏️ Manage Flagship
-                      </Link>
-                    )}
-                  </div>
-
-                  <h2 className="home-flagship-title">{flagshipEvent.title}</h2>
-                  {flagshipEvent.tagline && (
-                    <p className="home-flagship-tagline">{flagshipEvent.tagline}</p>
-                  )}
-
-                  <div className="home-flagship-meta">
-                    <span>📅 {flagshipEvent.date}</span>
-                    {flagshipEvent.duration && <span>🕒 {flagshipEvent.duration}</span>}
-                    {flagshipEvent.venue && <span>📍 {flagshipEvent.venue}</span>}
-                    {flagshipEvent.speakerInfo && <span>🎙️ {flagshipEvent.speakerInfo}</span>}
-                  </div>
-
-                  <p className="home-flagship-desc">
-                    {flagshipEvent.description?.slice(0, 240)}...
-                  </p>
-
-                  {/* Action Buttons */}
-                  <div className="home-flagship-actions">
-                    {(() => {
-                      const regState = getRegistrationState(flagshipEvent);
-                      if (regState.isClickable) {
-                        return (
-                          <a
-                            href={flagshipEvent.registrationLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-primary"
-                          >
-                            Register Now 🚀
-                          </a>
-                        );
-                      }
-                      if (flagshipEvent.registrationLink) {
-                        return (
-                          <button
-                            type="button"
-                            className="btn btn-primary btn-reg-inactive"
-                            onClick={() => alert(regState.tooltip)}
-                            title={regState.tooltip}
-                            style={{ opacity: 0.65, cursor: "not-allowed" }}
-                          >
-                            {regState.btnText}
-                          </button>
-                        );
-                      }
-                      return (
-                        <Link to="/events" className="btn btn-primary">
-                          Register on Event Page
-                        </Link>
-                      );
-                    })()}
-
-                    {flagshipEvent.rulebookLink && (
-                      <a
-                        href={flagshipEvent.rulebookLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn-outline home-rulebook-btn"
-                      >
-                        📘 Rule Book
-                      </a>
-                    )}
-
-                    <Link to="/events" className="btn btn-secondary">
-                      Full Event Details &rarr;
-                    </Link>
-
-                    {/* Dynamic custom links */}
-                    {Array.isArray(flagshipEvent.customLinks) &&
-                      flagshipEvent.customLinks.map((link, idx) => (
-                        <a
-                          key={idx}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="btn btn-custom-pill"
-                        >
-                          🔗 {link.label}
-                        </a>
-                      ))}
-                  </div>
-
-                  {/* Optional photo strip preview */}
-                  {Array.isArray(flagshipEvent.photos) && flagshipEvent.photos.length > 0 && (
-                    <div className="home-flagship-gallery-preview">
-                      <p className="gallery-label">📸 Event Highlights &amp; Gallery Preview:</p>
-                      <div className="gallery-strip">
-                        {flagshipEvent.photos.slice(0, 4).map((pUrl, pIdx) => (
-                          <img
-                            key={pIdx}
-                            src={pUrl}
-                            alt={`Flagship highlight ${pIdx + 1}`}
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                            }}
-                          />
-                        ))}
+        return (
+          <section className="home-flagship-section" aria-label="Official Club Flagship Event">
+            <div className="container">
+              <div className="home-flagship-card reveal fade-up">
+                <div className="home-flagship-glow" aria-hidden="true"></div>
+                <div className="home-flagship-inner">
+                  {displayImage && (
+                    <div className="home-flagship-media">
+                      <img
+                        src={displayImage}
+                        alt={currentTrack ? currentTrack.title : flagshipEvent.title}
+                        onError={(e) => {
+                          e.currentTarget.src = "/images/7.png";
+                        }}
+                      />
+                      <div className="home-flagship-media-badge">
+                        {currentTrack ? currentTrack.badge : (flagshipEvent.flagshipStatus === "Ongoing" ? "🔴 LIVE NOW" : "⭐ CLUB FLAGSHIP")}
                       </div>
                     </div>
                   )}
+
+                  <div className="home-flagship-content">
+                    <div className="home-flagship-header">
+                      <div className="home-flagship-pills">
+                        <span className="home-flagship-pill">
+                          <span className="live-pulse"></span>
+                          {(flagshipEvent.flagshipStatus || "UPCOMING").toUpperCase()} FLAGSHIP
+                        </span>
+                        {(() => {
+                          const regState = getRegistrationState(flagshipEvent);
+                          if (regState.badgeText) {
+                            return (
+                              <span className={`flagship-reg-status-pill reg-pill-${regState.status}`} style={{ fontSize: "0.75rem" }}>
+                                {regState.badgeText}
+                              </span>
+                            );
+                          }
+                          return null;
+                        })()}
+                        {flagshipEvent.prizePool && (
+                          <span className="home-flagship-prize">
+                            🏆 {flagshipEvent.prizePool}
+                          </span>
+                        )}
+                      </div>
+                      {isHead && (
+                        <Link
+                          to="/events"
+                          className="home-flagship-head-edit"
+                          title="Edit or switch flagship in Events page"
+                        >
+                          ✏️ Manage Flagship
+                        </Link>
+                      )}
+                    </div>
+
+                    <h2 className="home-flagship-title">{flagshipEvent.title}</h2>
+
+                    {/* DUAL TRACK SWITCHER TABS ON HOME CARD */}
+                    {hasTracks && (
+                      <div className="home-flagship-track-switcher">
+                        {flagshipEvent.tracks.map((track, tIdx) => {
+                          const isUav = track.id?.includes('uav') || track.title.toLowerCase().includes('uav');
+                          return (
+                            <button
+                              key={track.id || tIdx}
+                              type="button"
+                              className={`home-track-btn ${homeTrackIdx === tIdx ? 'active' : ''}`}
+                              onClick={() => setHomeTrackIdx(tIdx)}
+                            >
+                              <span>{isUav ? '🏁' : '🍕'}</span> {track.title}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {currentTrack ? (
+                      <div className="home-active-track-box">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                          <span className="track-badge-pill" style={{ fontSize: '0.72rem' }}>{currentTrack.badge}</span>
+                          <span style={{ color: '#94a3b8', fontSize: '0.85rem', fontStyle: 'italic' }}>{currentTrack.tagline}</span>
+                        </div>
+                        <p className="home-flagship-desc">
+                          {currentTrack.description}
+                        </p>
+                        {Array.isArray(currentTrack.objectives) && currentTrack.objectives.length > 0 && (
+                          <div className="home-track-objectives-preview">
+                            <strong style={{ color: '#38bdf8', fontSize: '0.82rem', display: 'block', marginBottom: '6px' }}>
+                              🎯 Key Track Objectives:
+                            </strong>
+                            <div className="home-track-obj-chips">
+                              {currentTrack.objectives.map((obj, oIdx) => (
+                                <span key={oIdx} className="home-obj-chip">
+                                  <span className="obj-dot">✓</span> {obj}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <>
+                        {flagshipEvent.tagline && (
+                          <p className="home-flagship-tagline">{flagshipEvent.tagline}</p>
+                        )}
+                        <p className="home-flagship-desc">
+                          {flagshipEvent.description?.slice(0, 240)}...
+                        </p>
+                      </>
+                    )}
+
+                    <div className="home-flagship-meta">
+                      <span>📅 {flagshipEvent.date}</span>
+                      {flagshipEvent.duration && <span>🕒 {flagshipEvent.duration}</span>}
+                      {flagshipEvent.venue && <span>📍 {flagshipEvent.venue}</span>}
+                      {flagshipEvent.speakerInfo && <span>🎙️ {flagshipEvent.speakerInfo}</span>}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="home-flagship-actions">
+                      {(() => {
+                        const regState = getRegistrationState(flagshipEvent);
+                        if (regState.isClickable) {
+                          return (
+                            <a
+                              href={flagshipEvent.registrationLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-primary"
+                            >
+                              Register Now 🚀
+                            </a>
+                          );
+                        }
+                        if (flagshipEvent.registrationLink) {
+                          return (
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-reg-inactive"
+                              onClick={() => alert(regState.tooltip)}
+                              title={regState.tooltip}
+                              style={{ opacity: 0.65, cursor: "not-allowed" }}
+                            >
+                              {regState.btnText}
+                            </button>
+                          );
+                        }
+                        return (
+                          <Link to="/events" className="btn btn-primary">
+                            Register on Event Page
+                          </Link>
+                        );
+                      })()}
+
+                      {flagshipEvent.rulebookLink && (
+                        <a
+                          href={flagshipEvent.rulebookLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-outline home-rulebook-btn"
+                        >
+                          📘 Rule Book
+                        </a>
+                      )}
+
+                      <Link to="/events" className="btn btn-secondary">
+                        Full Dual-Track Details &rarr;
+                      </Link>
+
+                      {/* Dynamic custom links */}
+                      {Array.isArray(flagshipEvent.customLinks) &&
+                        flagshipEvent.customLinks.map((link, idx) => (
+                          <a
+                            key={idx}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-custom-pill"
+                          >
+                            🔗 {link.label}
+                          </a>
+                        ))}
+                    </div>
+
+                    {/* Optional photo strip preview */}
+                    {Array.isArray(flagshipEvent.photos) && flagshipEvent.photos.length > 0 && (
+                      <div className="home-flagship-gallery-preview">
+                        <p className="gallery-label">📸 Event Highlights &amp; Gallery Preview:</p>
+                        <div className="gallery-strip">
+                          {flagshipEvent.photos.slice(0, 4).map((pUrl, pIdx) => (
+                            <img
+                              key={pIdx}
+                              src={pUrl}
+                              alt={`Flagship highlight ${pIdx + 1}`}
+                              onError={(e) => {
+                                e.currentTarget.style.display = "none";
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        );
+      })()}
 
       {/* =====================================================
           ABOUT

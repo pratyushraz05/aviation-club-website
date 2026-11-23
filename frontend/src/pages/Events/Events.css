@@ -755,3 +755,304 @@
   70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
   100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
 }
+
+/* =========================================================
+   DUAL COMPETITION TRACKS STYLES
+   ========================================================= */
+.flagship-tracks-wrapper {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.flagship-track-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 6px;
+}
+
+.track-nav-btn {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.track-nav-btn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.track-nav-btn.active {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(202, 138, 4, 0.3) 100%);
+  border: 1.5px solid #facc15;
+  color: #fef08a;
+  box-shadow: 0 0 16px rgba(250, 204, 21, 0.2);
+}
+
+.flagship-track-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 16px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s;
+}
+
+.flagship-track-card:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+}
+
+.track-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+  padding-bottom: 12px;
+}
+
+.track-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.track-badge-pill {
+  background: rgba(2, 132, 199, 0.25);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+.track-card-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.track-tagline-text {
+  font-style: italic;
+  color: #94a3b8;
+  font-size: 0.88rem;
+}
+
+.track-card-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .track-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.track-media-box {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #334155;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.track-media-box img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.track-media-box:hover img {
+  transform: scale(1.05);
+}
+
+.track-media-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(4px);
+  color: #facc15;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(250, 204, 21, 0.4);
+}
+
+.track-info-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.track-description-text {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.track-objectives-box {
+  background: rgba(2, 6, 23, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.objectives-heading {
+  margin: 0 0 10px 0;
+  font-size: 0.92rem;
+  color: #38bdf8;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.track-objectives-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track-objectives-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.obj-number {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.obj-text {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Regulations & Rules Card */
+.flagship-rules-card {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.rules-section-title {
+  margin: 0 0 16px 0;
+  font-size: 1.15rem;
+  color: #facc15;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(234, 179, 8, 0.25);
+  padding-bottom: 10px;
+}
+
+.rules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .rules-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rule-item-box {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+}
+
+.rule-item-box.highlight-selection {
+  background: linear-gradient(135deg, rgba(202, 138, 4, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid #eab308;
+  grid-column: 1 / -1;
+}
+
+.rule-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rule-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rule-content strong {
+  color: #f8fafc;
+  font-size: 0.92rem;
+}
+
+.rule-content p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.modal-track-detail-card {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

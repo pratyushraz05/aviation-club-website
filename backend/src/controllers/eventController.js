@@ -196,13 +196,13 @@ const defaultEvents = [
     ]
   },
   {
-    eventId: "uav-racing-competition-2027",
-    title: "UAV Racing Competition",
-    tagline: "Fixed-Wing UAV Design, Fabrication & High-Speed Flight Challenge",
+    eventId: "aerosprint-annual-flagship-2027",
+    title: "AeroSprint: UAV Racing & Deliver the Pizza (DTP)",
+    tagline: "NIT Raipur's Premier Dual-Track Aviation Championship: Fixed-Wing UAV Racing & Multirotor Payload Delivery",
     date: "Upcoming 2026 – 2027 Academic Session",
-    duration: "Full Day Aeromodelling Challenge",
+    duration: "Full Day Aeromodelling & Multirotor Championship",
     venue: "Football Ground, NIT Raipur",
-    speakerInfo: "Aviation Club Aero Team & Mentors",
+    speakerInfo: "Aviation Club Executive Team & Mentors",
     isUpcoming: true,
     isFlagship: true,
     flagshipStatus: "Upcoming",
@@ -213,48 +213,48 @@ const defaultEvents = [
     prizePool: "Cash Prizes + SAE AEROTHON 2027 Team Sponsorship",
     contactInfo: "Coordinator: +91 98765 43210 / aviation@nitrr.ac.in",
     image: "/images/6.png",
-    purpose: [
-      "To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.",
-      "To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.",
-      "To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.",
-      "To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency."
+    tracks: [
+      {
+        id: "uav-racing",
+        title: "Track 1: UAV Racing Competition",
+        badge: "Fixed-Wing Challenge",
+        tagline: "High-Speed Fixed-Wing Aerodynamic Design, Fabrication & Piloting",
+        description: "**UAV Racing** is a hands-on aerospace challenge where innovation meets speed and precision. Participants will design, fabricate, and fly their own fixed-wing UAVs, putting their aerodynamic knowledge, engineering skills, and piloting abilities to the ultimate test. Build your aircraft, push the limits of performance, and race towards victory!",
+        objectives: [
+          "To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.",
+          "To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.",
+          "To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.",
+          "To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency."
+        ],
+        image: "/images/6.png"
+      },
+      {
+        id: "deliver-the-pizza",
+        title: "Track 2: Deliver the Pizza (DTP)",
+        badge: "Multirotor Challenge",
+        tagline: "Autonomous / Manual Multirotor Drone Payload Delivery & Precision Flight",
+        description: "**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!",
+        objectives: [
+          "To encourage the design and development of multirotor drones with payload-carrying capabilities.",
+          "To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.",
+          "To challenge students to achieve accurate and reliable payload transportation and delivery.",
+          "To promote innovation, teamwork, and problem-solving through real-world UAV applications."
+        ],
+        image: "/images/4.png"
+      }
     ],
-    description: "**UAV Racing** is a hands-on aerospace challenge where innovation meets speed and precision. Participants will design, fabricate, and fly their own fixed-wing UAVs, putting their aerodynamic knowledge, engineering skills, and piloting abilities to the ultimate test. Build your aircraft, push the limits of performance, and race towards victory!\n\n1. Team Eligibilty:\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n2. Registration fee:\n- for club volunteers = Rs. 200 per person\n- for non volunteers = Rs. 300 per person\n- for Outsiders (from other institutes) = Rs. 500 per person\n\nUAV Racing – Objectives\n1. To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.\n2. To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.\n3. To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.\n4. To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency.\n\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\nNote: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur , Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.",
-    outcomes: [
-      "Hands-on experience in fixed-wing aircraft manufacturing and flight testing",
-      "Direct opportunity to represent NIT Raipur at SAE AEROTHON 2027",
-      "Cash rewards, certificates, and flight telemetry analysis"
-    ]
-  },
-  {
-    eventId: "deliver-the-pizza-2027",
-    title: "Deliver the Pizza (DTP)",
-    tagline: "Multirotor Drone Payload Delivery & Precision Flight Competition",
-    date: "Upcoming 2026 – 2027 Academic Session",
-    duration: "Full Day Drone Engineering Challenge",
-    venue: "Football Ground, NIT Raipur",
-    speakerInfo: "Senior Mentors & Aeromodelling Team",
-    isUpcoming: true,
-    isFlagship: false,
-    flagshipStatus: "Upcoming",
-    registrationLink: "https://docs.google.com/forms/d/e/1FAIpQLSepdVSIlzd3tuBHCDPkJ6t4WjY3rvN9TY_S3_fhc8kTWq_MHw/viewform?usp=publish-editor",
-    registrationStatusMode: "auto",
-    teamEligibility: "Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.",
-    registrationFee: "For club volunteers = Rs. 200 per person | For non volunteers = Rs. 300 per person | For Outsiders (from other institutes) = Rs. 500 per person",
-    prizePool: "Cash Prizes + SAE AEROTHON 2027 Team Sponsorship",
-    contactInfo: "Coordinator: +91 98765 43210 / aviation@nitrr.ac.in",
-    image: "/images/4.png",
     purpose: [
-      "To encourage the design and development of multirotor drones with payload-carrying capabilities.",
-      "To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.",
-      "To challenge students to achieve accurate and reliable payload transportation and delivery.",
-      "To promote innovation, teamwork, and problem-solving through real-world UAV applications."
+      "Track 1 (UAV Racing): Encourage design & fabrication of high-performance fixed-wing UAVs.",
+      "Track 1 (UAV Racing): Develop practical skills in aerodynamics, structures, propulsion, and flight control.",
+      "Track 2 (Deliver the Pizza): Encourage design & development of multirotor drones with payload capabilities.",
+      "Track 2 (Deliver the Pizza): Master flight stability, weight distribution, and precision payload delivery.",
+      "Champion Selection: Winning NIT Raipur team & top performers selected for SAE AEROTHON 2027 representation."
     ],
-    description: "**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!\n\n1. Team Eligibilty:\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n2. Registration fee:\n- for club volunteers = Rs. 200 per person\n- for non volunteers = Rs. 300 per person\n- for Outsiders (from other institutes) = Rs. 500 per person\n\nDeliver the Pizza – Objectives\n1. To encourage the design and development of multirotor drones with payload-carrying capabilities.\n2. To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.\n3. To challenge students to achieve accurate and reliable payload transportation and delivery.\n4. To promote innovation, teamwork, and problem-solving through real-world UAV applications.\n\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\nNote: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur , Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.",
+    description: "Welcome to **AeroSprint 2027**, the flagship aeromodelling championship of the Aviation Club, NIT Raipur! This year's championship combines two premier tracks under one unified event:\n\n### 🏁 Track 1: UAV Racing Competition\n**UAV Racing** is a hands-on aerospace challenge where innovation meets speed and precision. Participants will design, fabricate, and fly their own fixed-wing UAVs, putting their aerodynamic knowledge, engineering skills, and piloting abilities to the ultimate test. Build your aircraft, push the limits of performance, and race towards victory!\n\n**UAV Racing – Objectives:**\n1. To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.\n2. To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.\n3. To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.\n4. To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency.\n\n---\n\n### 🍕 Track 2: Deliver the Pizza (DTP)\n**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!\n\n**Deliver the Pizza – Objectives:**\n1. To encourage the design and development of multirotor drones with payload-carrying capabilities.\n2. To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.\n3. To challenge students to achieve accurate and reliable payload transportation and delivery.\n4. To promote innovation, teamwork, and problem-solving through real-world UAV applications.\n\n---\n\n### 👥 1. Team Eligibility\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n### 💳 2. Registration Fee\n- **For club volunteers:** Rs. 200 per person\n- **For non volunteers:** Rs. 300 per person\n- **For Outsiders (from other institutes):** Rs. 500 per person\n\n### ⚠️ Fabrication & Component Expenditure\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\n> 🏆 **Note:** The team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur, will be selected to participate in **SAE AEROTHON 2027** on the behalf of Aviation Club.",
     outcomes: [
-      "Hands-on multirotor payload delivery assembly and piloting",
-      "Direct opportunity to represent NIT Raipur at SAE AEROTHON 2027",
-      "Cash awards and advanced flight controller calibration training"
+      "End-to-end fixed-wing & multirotor engineering, testing, and competitive flying experience",
+      "Official selection & sponsorship for SAE AEROTHON 2027 representation on behalf of Aviation Club",
+      "Cash prizes, merit certificates, and mentorship from senior aeromodellers"
     ]
   },
   {
@@ -393,6 +393,20 @@ const parseCustomLinks = (field) => {
   return [];
 };
 
+const parseTracksField = (field) => {
+  if (!field) return [];
+  if (Array.isArray(field)) return field;
+  if (typeof field === "string") {
+    try {
+      const parsed = JSON.parse(field);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
+
 const createEvent = async (req, res) => {
   try {
     const eventData = { ...req.body };
@@ -421,6 +435,9 @@ const createEvent = async (req, res) => {
     }
     if (eventData.customLinks !== undefined) {
       eventData.customLinks = parseCustomLinks(eventData.customLinks);
+    }
+    if (eventData.tracks !== undefined) {
+      eventData.tracks = parseTracksField(eventData.tracks);
     }
     if (typeof eventData.isUpcoming === "string") {
       eventData.isUpcoming = eventData.isUpcoming === "true" || eventData.isUpcoming === "1";
@@ -466,6 +483,9 @@ const updateEvent = async (req, res) => {
     }
     if (updateData.customLinks !== undefined) {
       updateData.customLinks = parseCustomLinks(updateData.customLinks);
+    }
+    if (updateData.tracks !== undefined) {
+      updateData.tracks = parseTracksField(updateData.tracks);
     }
     if (typeof updateData.isUpcoming === "string") {
       updateData.isUpcoming = updateData.isUpcoming === "true" || updateData.isUpcoming === "1";

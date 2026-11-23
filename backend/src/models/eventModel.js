@@ -103,6 +103,17 @@ const eventSchema = new mongoose.Schema(
         url: { type: String, default: "", trim: true },
       },
     ],
+    tracks: [
+      {
+        id: { type: String, default: "" },
+        title: { type: String, default: "", trim: true },
+        badge: { type: String, default: "", trim: true },
+        tagline: { type: String, default: "", trim: true },
+        description: { type: String, default: "", trim: true },
+        objectives: { type: [String], default: [] },
+        image: { type: String, default: "", trim: true },
+      },
+    ],
     photos: {
       type: [String],
       default: [],
