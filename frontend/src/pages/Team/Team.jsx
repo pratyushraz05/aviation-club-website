@@ -4,6 +4,14 @@ import useAuth from "../../context/useAuth";
 import API from "../../services/api";
 
 function MemberCard({ member, featured = false, noPhoto = false, isHead = false, onDelete }) {
+  const displayRole =
+    member.role === "Technical Team" ||
+    member.role === "Non-Technical Team" ||
+    member.role === "Technical Member" ||
+    member.role === "Non-Technical Member"
+      ? "Core Member"
+      : member.role;
+
   return (
     <div className={`member-card ${featured ? "featured" : ""} ${noPhoto ? "no-photo" : ""}`}>
       {!noPhoto && (
@@ -22,7 +30,7 @@ function MemberCard({ member, featured = false, noPhoto = false, isHead = false,
       <div className="member-info">
         <h3>{member.name}</h3>
 
-        {!noPhoto && <p>{member.role}</p>}
+        {!noPhoto && <p>{displayRole}</p>}
 
         {member.branch && (
           <span className="branch">
@@ -91,6 +99,8 @@ export default function Team() {
     faculty: [],
     mentor: [],
     coreTeam: [],
+    technicalTeam: [],
+    nonTechnicalTeam: [],
   });
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -365,15 +375,8 @@ export default function Team() {
           />
 
           <TeamSection
-            title="Technical Team"
-            members={teamData.technicalTeam}
-            isHead={isHead}
-            onDelete={handleDeleteMember}
-          />
-
-          <TeamSection
-            title="Core Team"
-            members={teamData.nonTechnicalTeam}
+            title="Core Member"
+            members={[...(teamData.technicalTeam || []), ...(teamData.nonTechnicalTeam || [])]}
             isHead={isHead}
             onDelete={handleDeleteMember}
           />
