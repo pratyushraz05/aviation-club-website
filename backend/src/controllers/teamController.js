@@ -208,10 +208,22 @@ const getTeam = async (req, res, next) => {
       nonTechnicalTeam: members.filter((m) => m.section === "nonTechnicalTeam"),
     };
 
+    const standardKeys = new Set(["faculty", "mentor", "coreTeam", "technicalTeam", "nonTechnicalTeam"]);
+    const customSections = {};
+    members.forEach((m) => {
+      if (m.section && !standardKeys.has(m.section)) {
+        if (!customSections[m.section]) {
+          customSections[m.section] = [];
+        }
+        customSections[m.section].push(m);
+      }
+    });
+
     res.status(200).json({
       success: true,
       count: members.length,
       data: grouped,
+      customSections,
       allMembers: members,
     });
   } catch (error) {
@@ -221,7 +233,7 @@ const getTeam = async (req, res, next) => {
 
 const addTeamMember = async (req, res, next) => {
   try {
-    const { name, role, section, branch, image: imageUrlInput } = req.body;
+    const { name, role, section, branch, image: imageUrlInput, order } = req.body;
 
     if (!name || !role || !section) {
       return res.status(400).json({
@@ -243,9 +255,10 @@ const addTeamMember = async (req, res, next) => {
     const member = await TeamMember.create({
       name: name.trim(),
       role: role.trim(),
-      section,
+      section: section.trim(),
       branch: branch ? branch.trim() : "",
       image: finalImageUrl,
+      order: order !== undefined && order !== "" ? Number(order) : 0,
     });
 
     res.status(201).json({
@@ -269,6 +282,14 @@ const updateTeamMember = async (req, res, next) => {
         updateData.image = await uploadToCloudinary(req.file.buffer);
       }
     }
+
+    if (updateData.order !== undefined && updateData.order !== "") {
+      updateData.order = Number(updateData.order);
+    }
+    if (updateData.name) updateData.name = updateData.name.trim();
+    if (updateData.role) updateData.role = updateData.role.trim();
+    if (updateData.section) updateData.section = updateData.section.trim();
+    if (updateData.branch) updateData.branch = updateData.branch.trim();
 
     const member = await TeamMember.findByIdAndUpdate(req.params.id, updateData, {
       new: true,

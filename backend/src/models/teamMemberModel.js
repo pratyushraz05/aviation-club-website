@@ -6,9 +6,9 @@ const teamMemberSchema = new mongoose.Schema(
     role: { type: String, required: true, trim: true },
     section: {
       type: String,
-      enum: ["faculty", "mentor", "coreTeam", "technicalTeam", "nonTechnicalTeam"],
       required: true,
-      default: "technicalTeam",
+      default: "coreTeam",
+      trim: true,
     },
     branch: { type: String, trim: true, default: "" },
     image: { type: String, default: "" },
