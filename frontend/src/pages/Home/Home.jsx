@@ -71,120 +71,61 @@ const defaultNotificationsData = [
 
 // ===================== DEFAULT CLUB HISTORY =====================
 
+function getFirstParagraph(text) {
+  if (!text) return "";
+  const paragraphs = text.split(/\r?\n\s*\r?\n/);
+  if (paragraphs.length > 0 && paragraphs[0].trim()) {
+    return paragraphs[0].trim();
+  }
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (line.trim()) return line.trim();
+  }
+  return text.trim();
+}
+
 const defaultMilestones = [
   {
     icon: "✈",
     date: "8 October 2025",
     title: "Air Force Day Celebration & Quiz",
-    venue: "Hira Hall, NIT Raipur",
-    duration: "10:00 A.M. – 06:00 P.M.",
-    speakerInfo: "Dr. N.V. Swamy Naidu, HOD Mechanical Department",
-    image: "/images/2.png",
     desc: "Aviation quiz, RC plane landing and parachute landing challenges honoring the Indian Air Force, with 50 participants at Hira Hall.",
-    fullDesc: "The event commenced with a presentation session, followed by a quiz competition assessing participants' knowledge of aviation technology and IAF history. Following the address by Chief Guest Dr. N.V. Swamy Naidu, an RC Plane Landing Competition and Parachute Landing Challenge were conducted, demonstrating key aerodynamic principles, precision control, and drag variations.",
-    purpose: [
-      "Increase awareness and knowledge of aviation technology and IAF legacy",
-      "Experiential learning through precision RC plane and parachute landing activities",
-      "Build teamwork, critical thinking, and student engagement in aerospace"
-    ],
-    outcomes: [
-      "Feedback – 63.2% 5-star rating, 26.3% 4-star rating across 50 participants"
-    ],
+    firstParagraph: "The event commenced with a presentation session, followed by a quiz competition designed to assess participants' knowledge of aviation technology and the history of the Indian Air Force. Dr. N. V. Swamy Naidu graced the occasion as the Chief Guest, providing valuable insights and encouragement to all 50 participants, followed by an RC Plane Landing Competition and Parachute Landing Challenge.",
   },
   {
     icon: "◧",
     date: "8 November 2025",
     title: "DIMENSIONS: CAD Workshop & Competition",
-    venue: "S-11, Academic Building, NIT Raipur",
-    duration: "02:00 P.M. – 05:30 P.M.",
-    speakerInfo: "Aniket Singh, 3rd year Mechanical",
-    image: "/images/cad-workshop.jpg",
     desc: "Creo Parametric training followed by a two-tier CAD design competition for 75 beginner and expert participants.",
-    fullDesc: "A hands-on workshop introducing 75 participants to the fundamentals of Computer-Aided Design (CAD) using Creo Parametric software. The learning session was followed by a 2-tier design contest (Beginner and Expert tiers) evaluating sketching precision, 3D modelling speed, and parametric optimization.",
-    purpose: [
-      "Teach CAD fundamentals using Creo Parametric with industry-standard workflows",
-      "Two-tier competition catering to both beginner and expert designers",
-      "Improve design thinking, spatial visualization, and modeling efficiency"
-    ],
-    outcomes: [
-      "Feedback – 49.1% 5-star rating, 47.2% 4-star rating across 75 students"
-    ],
+    firstParagraph: "The Aviation Club organized \"DIMENSIONS – The CAD Workshop & Competition\" to introduce 75 participants to the fundamentals of Computer-Aided Design (CAD). The workshop began with an introductory session teaching the basics of CAD using Creo Parametric software, covering fundamental 3D modelling techniques and engineering applications, followed by beginner and expert design challenges.",
   },
   {
     icon: "〜",
     date: "31 Jan – 1 Feb 2026",
     title: "Aerodynamics Workshop & Air Show",
-    venue: "S-11, Academic Building & Flying Grounds",
-    duration: "10:00 A.M. – 05:30 P.M.",
-    speakerInfo: "Dr. N.V. Swamy Naidu, Dr. Aruna Rana & Honumant Nethani",
-    image: "/images/3.png",
     desc: "Two-day session on flight principles and drone systems with glider-building and a live air show, for 95 participants.",
-    fullDesc: "A two-day aeromodelling intensive for 95 students. Day 1 covered key principles of flight, forces (lift, drag, thrust, weight), and control mechanisms, concluding with glider-making and flying. Day 2 featured industry expert Dr. Aruna Rana on drone principles and flight controllers, followed by a live air show featuring drones, gliders, and RC planes.",
-    purpose: [
-      "Build foundational understanding of aerodynamics and aircraft take-off mechanisms",
-      "Hands-on glider-making and live flight competitions",
-      "Demonstrate multirotor drone working principles and telemetry"
-    ],
-    outcomes: [
-      "Feedback – 52.5% 5-star rating, 41.3% 4-star rating across 95 participants"
-    ],
+    firstParagraph: "A two-day Aerodynamics Workshop organized for 95 participants covering key principles of flight, aircraft take-off mechanisms, forces (lift, drag, thrust, weight), and control mechanisms. The event featured hands-on glider-making, a flying competition, and sessions on drone flight controllers by Dr. Aruna Rana, concluding with a live air show featuring drones, gliders, and RC planes.",
   },
   {
     icon: "◆",
     date: "7 February 2026",
     title: "Deliver the Pizza (DTP)",
-    venue: "Football Ground, NIT Raipur",
-    duration: "10:00 A.M. – 05:30 P.M.",
-    speakerInfo: "Senior Mentors & Aeromodelling Team",
-    image: "/images/4.png",
     desc: "Drone design and assembly competition across four teams; Team MACHX6 won, Team Garud finished as runner-up.",
-    fullDesc: "Four mentored teams (MACHX6, Aeroverse, Garud, Vayuveg) competed across two phases. Phase 1 evaluated technical design documentation, motor/ESC calculations, and delivery strategy. Phase 2 provided complete drone kits for assembly from scratch and payload delivery flight trials under strict time limits.",
-    purpose: [
-      "Bridge theory and practice in quadcopter drone systems",
-      "Assemble, wire, and calibrate flight controllers from scratch",
-      "Test payload delivery precision, stability, and real-time decision making"
-    ],
-    outcomes: [
-      "Feedback – 54.5% 5-star rating; Team MACHX6 1st place, Team Garud runner-up"
-    ],
+    firstParagraph: "The Aviation Club of NIT Raipur organized the \"Deliver the Pizza (DTP)\" Competition, an interactive, hands-on drone-based event designed to provide students with real-world exposure to drone design, assembly, and flight operations. Four teams participated—MACHX6, Aeroverse, Garud, and Vayuveg—comprising 24 members total, each guided by a senior mentor across design presentations and flight trials.",
   },
   {
     icon: "🏁",
     date: "8 February 2026",
     title: "UAV Racing Competition",
-    venue: "Football Ground, NIT Raipur",
-    duration: "10:00 A.M. – 05:30 P.M.",
-    speakerInfo: "Lakshmi Sahithi & Aviation Club Flight Crew",
-    image: "/images/6.png",
     desc: "End-to-end UAV design, FEA/CFD analysis and a live racing round; Team Garud took first place, MACHX6 second.",
-    fullDesc: "Following two months of aeromodelling and structural analysis training in the Makerspace, mentored teams built custom fixed-wing UAVs. Match day featured strict safety inspections, flight telemetry evaluations, and dynamic obstacle racing on the football ground. Team Garud won 1st place overall.",
-    purpose: [
-      "End-to-end exposure across fixed-wing UAV design, FEA/CFD, and fabrication",
-      "Hands-on high-speed flight piloting and obstacle track maneuvering",
-      "Evaluate aerodynamic efficiency, speed, stability, and team coordination"
-    ],
-    outcomes: [
-      "Feedback – 50% 5-star rating; Team Garud 1st place, Team MACHX6 2nd place"
-    ],
+    firstParagraph: "The UAV Racing Competition combined design, theoretical analysis, fabrication, and flight performance. Beginning two months prior, four mentored teams (MACHX6, Aeroverse, Garud, Vayuveg) underwent training in basic aerodynamics, FEA, CFD, and bill-of-materials planning before building models in the college Makerspace and competing on a dynamic obstacle track on match day.",
   },
   {
     icon: "⚡",
     date: "4 April 2026",
     title: "Blitz Competition",
-    venue: "S-11, Academic Building, NIT Raipur",
-    duration: "02:00 P.M. – 6:00 P.M.",
-    speakerInfo: "Aviation Club Technical Team",
-    image: "/images/3.png",
     desc: "A three-hour, individual CAD-FEA-CFD sprint testing 21 participants on design, analysis and optimization speed.",
-    fullDesc: "An individual software-led competition centered on end-to-end engineering workflows. Participants received on-the-spot problem statements and had 3 hours to design, run FEA stress simulations, analyze CFD airflow, and optimize models under strict time pressure.",
-    purpose: [
-      "Bridge the gap between theoretical knowledge and real-world engineering software",
-      "Test proficiency in Creo CAD, ANSYS FEA, and CFD airflow optimization",
-      "Strengthen analytical thinking and fast decision-making under strict time limits"
-    ],
-    outcomes: [
-      "Feedback – 72.2% 5-star rating, 27.8% 4-star rating across 21 participants"
-    ],
+    firstParagraph: "Aviation Club conducted Blitz - a technical, software-led competition centred on the practical application of CAD, FEA, and CFD. The event is designed to provide participants (total 21 in number) with a hands-on experience of the complete engineering workflow, where they will design, analyse, and optimize a model within a competitive and time-bound environment.",
   },
 ];
 
@@ -324,20 +265,17 @@ export default function Home() {
         const pastEvents = allEvents.filter((e) => !e.isUpcoming);
         if (pastEvents.length > 0) {
           const iconList = ["✈", "◧", "〜", "◆", "🏁", "⚡"];
-          const dynamicMilestones = pastEvents.map((e, idx) => ({
-            icon: iconList[idx % iconList.length],
-            date: e.date,
-            title: e.title,
-            desc: e.description?.slice(0, 140) + (e.description?.length > 140 ? "..." : ""),
-            fullDesc: e.description || "",
-            venue: e.venue || "",
-            duration: e.duration || "",
-            speakerInfo: e.speakerInfo || "",
-            image: e.image || "",
-            purpose: Array.isArray(e.purpose) ? e.purpose : [],
-            outcomes: Array.isArray(e.outcomes) ? e.outcomes : [],
-            eventId: e._id || e.id || e.eventId,
-          }));
+          const dynamicMilestones = pastEvents.map((e, idx) => {
+            const firstPara = getFirstParagraph(e.description) || e.description || "";
+            return {
+              icon: iconList[idx % iconList.length],
+              date: e.date,
+              title: e.title,
+              desc: firstPara.length > 130 ? firstPara.slice(0, 130) + "..." : firstPara,
+              firstParagraph: firstPara,
+              eventId: e._id || e.id || e.eventId,
+            };
+          });
           setTimelineItems(dynamicMilestones);
         }
 
@@ -965,85 +903,29 @@ export default function Home() {
                   <div
                     className={`timeline-card ${isExpanded ? "expanded" : ""}`}
                     onClick={() => setExpandedTimelineIdx(isExpanded ? null : index)}
-                    title="Hover or click to view full event details"
+                    title="Hover or tap to view details"
                   >
                     <div className="timeline-card-header">
                       <span className="timeline-date">{item.date}</span>
                       <span className="timeline-hover-cue">
-                        <span className="cue-icon">🔍</span>
-                        <span className="cue-text">Hover for Full Details</span>
+                        <span className="cue-icon">✨</span>
+                        <span className="cue-text">Hover to read</span>
                       </span>
                     </div>
 
                     <h3 className="timeline-title">{item.title}</h3>
 
-                    {/* Short summary snippet always visible */}
+                    {/* Short preview snippet shown initially */}
                     <p className="timeline-short-desc">{item.desc}</p>
 
-                    {/* Full details revealed smoothly on hover and click */}
+                    {/* Only the first paragraph is displayed on hover - NO IMAGES */}
                     <div className="timeline-full-details">
-                      {item.image && (
-                        <div className="timeline-detail-media">
-                          <img
-                            src={item.image}
-                            alt={item.title}
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                            }}
-                          />
-                        </div>
-                      )}
-
-                      {item.fullDesc && item.fullDesc !== item.desc && (
-                        <div className="timeline-full-desc-block">
-                          <p className="timeline-full-desc">{item.fullDesc}</p>
-                        </div>
-                      )}
-
-                      {(item.venue || item.duration || item.speakerInfo) && (
-                        <div className="timeline-meta-tags">
-                          {item.venue && (
-                            <div className="timeline-tag">
-                              <span className="tag-icon">📍</span>
-                              <span><strong>Venue:</strong> {item.venue}</span>
-                            </div>
-                          )}
-                          {item.duration && (
-                            <div className="timeline-tag">
-                              <span className="tag-icon">🕒</span>
-                              <span><strong>Timing:</strong> {item.duration}</span>
-                            </div>
-                          )}
-                          {item.speakerInfo && (
-                            <div className="timeline-tag">
-                              <span className="tag-icon">🎙️</span>
-                              <span><strong>Lead / Mentor:</strong> {item.speakerInfo}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {Array.isArray(item.purpose) && item.purpose.length > 0 && (
-                        <div className="timeline-purpose-box">
-                          <strong className="purpose-box-title">🎯 Key Objectives &amp; Highlights:</strong>
-                          <ul className="timeline-purpose-list">
-                            {item.purpose.slice(0, 3).map((p, pIdx) => (
-                              <li key={pIdx}>{p}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {Array.isArray(item.outcomes) && item.outcomes.length > 0 && (
-                        <div className="timeline-outcomes-box">
-                          <strong className="outcomes-box-title">🏆 Outcomes &amp; Feedback:</strong>
-                          <p className="outcomes-box-text">{item.outcomes[0]}</p>
-                        </div>
-                      )}
-
+                      <p className="timeline-first-paragraph">
+                        {item.firstParagraph || item.fullDesc || item.desc}
+                      </p>
                       <div className="timeline-action-strip">
                         <Link to="/events" className="btn-timeline-explore">
-                          View Full Report on Events Page &rarr;
+                          Full Event Report &rarr;
                         </Link>
                       </div>
                     </div>
