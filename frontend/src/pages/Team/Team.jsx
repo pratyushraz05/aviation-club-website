@@ -3,6 +3,24 @@ import "./Team.css";
 import useAuth from "../../context/useAuth";
 import API from "../../services/api";
 
+const DEFAULT_SECTION_ORDER = [
+  "faculty",
+  "mentor",
+  "coreTeam",
+  "Project Manager",
+  "technicalTeam",
+  "nonTechnicalTeam",
+];
+
+const SECTION_DISPLAY_LABELS = {
+  faculty: "Faculty In-Charge",
+  mentor: "Mentor",
+  coreTeam: "Core Team (Leadership / Presidents)",
+  "Project Manager": "Project Manager",
+  technicalTeam: "WEB dev team",
+  nonTechnicalTeam: "Core Team (Members)",
+};
+
 function MemberCard({ member, featured = false, noPhoto = false, isHead = false, onEdit, onDelete }) {
   let displayRole = member.role;
   if (member.name === "Sivaratri Lakshmi Sahithi" && (!member.role || member.role === "Core Team")) {
@@ -103,7 +121,18 @@ function MemberCard({ member, featured = false, noPhoto = false, isHead = false,
   );
 }
 
-function TeamSection({ title, members = [], featured = false, isHead = false, onEdit, onDelete }) {
+function TeamSection({
+  id,
+  title,
+  members = [],
+  featured = false,
+  isHead = false,
+  onEdit,
+  onDelete,
+  canMoveUp = false,
+  canMoveDown = false,
+  onMoveSection,
+}) {
   if (!members || members.length === 0) return null;
 
   const sortedMembers = [...members].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -119,7 +148,47 @@ function TeamSection({ title, members = [], featured = false, isHead = false, on
   return (
     <section className="team-section">
       <div className="section-title">
-        <h2>{title}</h2>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.6rem" }}>
+          <h2>{title}</h2>
+          {isHead && onMoveSection && (
+            <div style={{ display: "inline-flex", gap: "4px", marginLeft: "4px" }}>
+              <button
+                type="button"
+                disabled={!canMoveUp}
+                onClick={() => onMoveSection(id, -1)}
+                title="Move section heading up"
+                style={{
+                  background: canMoveUp ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                  color: canMoveUp ? "#38bdf8" : "#475569",
+                  border: "1px solid rgba(14, 165, 233, 0.3)",
+                  borderRadius: "6px",
+                  padding: "2px 8px",
+                  fontSize: "0.75rem",
+                  cursor: canMoveUp ? "pointer" : "default",
+                }}
+              >
+                ▲
+              </button>
+              <button
+                type="button"
+                disabled={!canMoveDown}
+                onClick={() => onMoveSection(id, 1)}
+                title="Move section heading down"
+                style={{
+                  background: canMoveDown ? "rgba(14, 165, 233, 0.2)" : "rgba(255, 255, 255, 0.05)",
+                  color: canMoveDown ? "#38bdf8" : "#475569",
+                  border: "1px solid rgba(14, 165, 233, 0.3)",
+                  borderRadius: "6px",
+                  padding: "2px 8px",
+                  fontSize: "0.75rem",
+                  cursor: canMoveDown ? "pointer" : "default",
+                }}
+              >
+                ▼
+              </button>
+            </div>
+          )}
+        </div>
         <span />
       </div>
 
@@ -149,6 +218,7 @@ export default function Team() {
     nonTechnicalTeam: [],
   });
   const [customSections, setCustomSections] = useState({});
+  const [sectionOrder, setSectionOrder] = useState(DEFAULT_SECTION_ORDER);
   const [loading, setLoading] = useState(true);
 
   // Unified Add / Edit Member Modal State
@@ -164,6 +234,12 @@ export default function Team() {
     branch: "CSE",
     image: "",
   });
+
+  // Reorder Headings Modal State
+  const [orderModalOpen, setOrderModalOpen] = useState(false);
+  const [orderList, setOrderList] = useState([]);
+  const [savingOrder, setSavingOrder] = useState(false);
+
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -176,6 +252,9 @@ export default function Team() {
       if (res.data?.customSections) {
         setCustomSections(res.data.customSections);
       }
+      if (res.data?.sectionOrder && Array.isArray(res.data.sectionOrder) && res.data.sectionOrder.length > 0) {
+        setSectionOrder(res.data.sectionOrder);
+      }
     } catch (err) {
       console.warn("Failed to fetch team from backend:", err);
     } finally {
@@ -186,6 +265,26 @@ export default function Team() {
   useEffect(() => {
     fetchTeam();
   }, []);
+
+  // Compute the active effective order including any custom sections
+  const getEffectiveSectionOrder = () => {
+    const knownKeys = [
+      "faculty",
+      "mentor",
+      "coreTeam",
+      "technicalTeam",
+      "nonTechnicalTeam",
+      ...Object.keys(customSections || {}),
+    ];
+
+    const effective = [...sectionOrder];
+    knownKeys.forEach((key) => {
+      if (!effective.includes(key)) {
+        effective.push(key);
+      }
+    });
+    return effective;
+  };
 
   const handleOpenAdd = () => {
     setModalMode("add");
@@ -269,6 +368,108 @@ export default function Team() {
     }
   };
 
+  // Inline Section Move (▲ / ▼)
+  const handleMoveSection = async (id, direction) => {
+    const activeOrder = getEffectiveSectionOrder();
+    const currIdx = activeOrder.indexOf(id);
+    if (currIdx < 0) return;
+    const targetIdx = currIdx + direction;
+    if (targetIdx < 0 || targetIdx >= activeOrder.length) return;
+
+    const newOrder = [...activeOrder];
+    const [moved] = newOrder.splice(currIdx, 1);
+    newOrder.splice(targetIdx, 0, moved);
+
+    setSectionOrder(newOrder);
+
+    try {
+      await API.put("/team/section-order", { order: newOrder });
+      setMsg(`✓ Heading order updated!`);
+      setTimeout(() => setMsg(""), 3000);
+    } catch (err) {
+      console.warn("Could not persist section order:", err);
+    }
+  };
+
+  // Heading Reorder Modal Controls
+  const handleOpenOrderModal = () => {
+    setOrderList(getEffectiveSectionOrder());
+    setOrderModalOpen(true);
+  };
+
+  const handleMoveOrderItem = (idx, direction) => {
+    const targetIdx = idx + direction;
+    if (targetIdx < 0 || targetIdx >= orderList.length) return;
+    const nextList = [...orderList];
+    const [moved] = nextList.splice(idx, 1);
+    nextList.splice(targetIdx, 0, moved);
+    setOrderList(nextList);
+  };
+
+  const handleSaveSectionOrder = async () => {
+    try {
+      setSavingOrder(true);
+      await API.put("/team/section-order", { order: orderList });
+      setSectionOrder(orderList);
+      setOrderModalOpen(false);
+      setMsg("✓ Section heading order saved successfully!");
+      setTimeout(() => setMsg(""), 4000);
+    } catch (err) {
+      setMsg(err.response?.data?.message || err.message || "Failed to save heading order");
+    } finally {
+      setSavingOrder(false);
+    }
+  };
+
+  // Build the list of sections to render in exact configured order
+  const allSectionsMap = {
+    faculty: {
+      id: "faculty",
+      title: "Faculty",
+      members: teamData.faculty || [],
+      featured: true,
+    },
+    mentor: {
+      id: "mentor",
+      title: "Mentor",
+      members: teamData.mentor || [],
+      featured: false,
+    },
+    coreTeam: {
+      id: "coreTeam",
+      title: "Core Team",
+      members: teamData.coreTeam || [],
+      featured: false,
+    },
+    technicalTeam: {
+      id: "technicalTeam",
+      title: "WEB dev team",
+      members: teamData.technicalTeam || [],
+      featured: false,
+    },
+    nonTechnicalTeam: {
+      id: "nonTechnicalTeam",
+      title: "Core Team",
+      members: teamData.nonTechnicalTeam || [],
+      featured: false,
+    },
+  };
+
+  // Add any custom sections
+  Object.entries(customSections || {}).forEach(([secTitle, secMembers]) => {
+    allSectionsMap[secTitle] = {
+      id: secTitle,
+      title: secTitle,
+      members: secMembers || [],
+      featured: false,
+    };
+  });
+
+  const effectiveOrder = getEffectiveSectionOrder();
+  const sectionsToRender = effectiveOrder
+    .map((id) => allSectionsMap[id])
+    .filter((sec) => sec && sec.members && sec.members.length > 0);
+
   return (
     <main className="team-page">
       <header className="team-header">
@@ -297,7 +498,9 @@ export default function Team() {
               borderRadius: "12px",
               display: "inline-flex",
               alignItems: "center",
-              gap: "1rem",
+              gap: "0.85rem",
+              flexWrap: "wrap",
+              justifyContent: "center",
             }}
           >
             <span style={{ color: "#facc15", fontWeight: 700, fontSize: "0.85rem" }}>
@@ -318,6 +521,22 @@ export default function Team() {
             >
               ➕ Add Team Member
             </button>
+            <button
+              onClick={handleOpenOrderModal}
+              title="Change heading and section display order"
+              style={{
+                background: "rgba(14, 165, 233, 0.25)",
+                color: "#38bdf8",
+                border: "1px solid rgba(14, 165, 233, 0.5)",
+                borderRadius: "8px",
+                padding: "6px 14px",
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+              }}
+            >
+              ↕️ Reorder Headings
+            </button>
           </div>
         )}
 
@@ -334,6 +553,164 @@ export default function Team() {
           </div>
         )}
       </header>
+
+      {/* Reorder Headings Modal */}
+      {orderModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.75)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            padding: "1rem",
+          }}
+        >
+          <div
+            style={{
+              background: "#0f172a",
+              border: "1px solid rgba(56, 189, 248, 0.35)",
+              borderRadius: "16px",
+              padding: "1.75rem",
+              maxWidth: "520px",
+              width: "100%",
+              color: "#ffffff",
+              maxHeight: "90vh",
+              overflowY: "auto",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+              <h3 style={{ margin: 0, color: "#38bdf8" }}>↕️ Place Heading Order</h3>
+              <button
+                type="button"
+                onClick={() => setOrderModalOpen(false)}
+                style={{ background: "transparent", border: "none", color: "#94a3b8", fontSize: "1.2rem", cursor: "pointer" }}
+              >
+                ✕
+              </button>
+            </div>
+            <p style={{ fontSize: "0.82rem", color: "#94a3b8", marginBottom: "1.25rem", lineHeight: 1.5 }}>
+              Use the <b>▲ Up</b> and <b>▼ Down</b> buttons to arrange the sections in your preferred sequence.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem", marginBottom: "1.5rem" }}>
+              {orderList.map((secId, idx) => {
+                const label = SECTION_DISPLAY_LABELS[secId] || secId;
+                return (
+                  <div
+                    key={secId}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      background: "#1e293b",
+                      border: "1px solid #334155",
+                      borderRadius: "10px",
+                      padding: "0.65rem 1rem",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                      <span
+                        style={{
+                          background: "#0284c7",
+                          color: "#fff",
+                          fontWeight: 700,
+                          fontSize: "0.75rem",
+                          width: "22px",
+                          height: "22px",
+                          borderRadius: "50%",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {idx + 1}
+                      </span>
+                      <span style={{ fontWeight: 600, fontSize: "0.9rem", color: "#f8fafc" }}>{label}</span>
+                    </div>
+
+                    <div style={{ display: "flex", gap: "4px" }}>
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => handleMoveOrderItem(idx, -1)}
+                        style={{
+                          background: idx === 0 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
+                          color: idx === 0 ? "#475569" : "#38bdf8",
+                          border: "1px solid rgba(14, 165, 233, 0.3)",
+                          borderRadius: "6px",
+                          padding: "3px 9px",
+                          fontSize: "0.8rem",
+                          cursor: idx === 0 ? "default" : "pointer",
+                        }}
+                      >
+                        ▲
+                      </button>
+                      <button
+                        type="button"
+                        disabled={idx === orderList.length - 1}
+                        onClick={() => handleMoveOrderItem(idx, 1)}
+                        style={{
+                          background: idx === orderList.length - 1 ? "rgba(255,255,255,0.05)" : "rgba(14, 165, 233, 0.2)",
+                          color: idx === orderList.length - 1 ? "#475569" : "#38bdf8",
+                          border: "1px solid rgba(14, 165, 233, 0.3)",
+                          borderRadius: "6px",
+                          padding: "3px 9px",
+                          fontSize: "0.8rem",
+                          cursor: idx === orderList.length - 1 ? "default" : "pointer",
+                        }}
+                      >
+                        ▼
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <button
+                type="button"
+                disabled={savingOrder}
+                onClick={handleSaveSectionOrder}
+                style={{
+                  flex: 1,
+                  padding: "0.75rem",
+                  background: "#0284c7",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {savingOrder ? "Saving Order..." : "Save Heading Order"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrderList(DEFAULT_SECTION_ORDER)}
+                style={{
+                  padding: "0.75rem 1rem",
+                  background: "transparent",
+                  border: "1px solid #475569",
+                  color: "#94a3b8",
+                  borderRadius: "8px",
+                  fontSize: "0.8rem",
+                  cursor: "pointer",
+                }}
+              >
+                Reset Default
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Unified Modal for Adding & Updating Member */}
       {modalOpen && (
@@ -435,7 +812,27 @@ export default function Team() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                 <div>
-                  <label style={{ fontSize: "0.85rem", color: "#94a3b8" }}>Status / Section *</label>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <label style={{ fontSize: "0.85rem", color: "#94a3b8" }}>Status / Section *</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModalOpen(false);
+                        handleOpenOrderModal();
+                      }}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "#38bdf8",
+                        fontSize: "0.72rem",
+                        cursor: "pointer",
+                        textDecoration: "underline",
+                        padding: 0,
+                      }}
+                    >
+                      ↕️ Reorder headings
+                    </button>
+                  </div>
                   <select
                     value={formData.sectionSelect}
                     onChange={(e) => setFormData({ ...formData, sectionSelect: e.target.value })}
@@ -592,59 +989,21 @@ export default function Team() {
         </div>
       ) : (
         <>
-          <TeamSection
-            title="Faculty"
-            members={teamData.faculty}
-            featured
-            isHead={isHead}
-            onEdit={handleOpenEdit}
-            onDelete={handleDeleteMember}
-          />
-
-          <TeamSection
-            title="Mentor"
-            members={teamData.mentor}
-            isHead={isHead}
-            onEdit={handleOpenEdit}
-            onDelete={handleDeleteMember}
-          />
-
-          {/* New / Custom Sections (e.g. Project Manager) placed above Core and WEB dev team */}
-          {customSections &&
-            Object.entries(customSections).map(([secTitle, secMembers]) => (
-              <TeamSection
-                key={secTitle}
-                title={secTitle}
-                members={secMembers}
-                isHead={isHead}
-                onEdit={handleOpenEdit}
-                onDelete={handleDeleteMember}
-              />
-            ))}
-
-          <TeamSection
-            title="Core Team"
-            members={teamData.coreTeam}
-            isHead={isHead}
-            onEdit={handleOpenEdit}
-            onDelete={handleDeleteMember}
-          />
-
-          <TeamSection
-            title="WEB dev team"
-            members={teamData.technicalTeam}
-            isHead={isHead}
-            onEdit={handleOpenEdit}
-            onDelete={handleDeleteMember}
-          />
-
-          <TeamSection
-            title="Core Team"
-            members={teamData.nonTechnicalTeam}
-            isHead={isHead}
-            onEdit={handleOpenEdit}
-            onDelete={handleDeleteMember}
-          />
+          {sectionsToRender.map((sec, idx) => (
+            <TeamSection
+              key={sec.id}
+              id={sec.id}
+              title={sec.title}
+              members={sec.members}
+              featured={sec.featured}
+              isHead={isHead}
+              onEdit={handleOpenEdit}
+              onDelete={handleDeleteMember}
+              canMoveUp={idx > 0}
+              canMoveDown={idx < sectionsToRender.length - 1}
+              onMoveSection={handleMoveSection}
+            />
+          ))}
         </>
       )}
     </main>
