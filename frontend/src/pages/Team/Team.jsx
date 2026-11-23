@@ -61,8 +61,6 @@ function TeamSection({ title, members = [], featured = false, isHead = false, on
     ? "mentor-grid"
     : title === "Core Team"
     ? "core-grid"
-    : title === "Non-Technical Team"
-    ? "non-technical-grid"
     : "";
 
   return (
@@ -93,15 +91,13 @@ export default function Team() {
     faculty: [],
     mentor: [],
     coreTeam: [],
-    technicalTeam: [],
-    nonTechnicalTeam: [],
   });
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newMember, setNewMember] = useState({
     name: "",
     role: "",
-    section: "technicalTeam",
+    section: "CoreTeam",
     branch: "CSE",
     image: "",
   });
@@ -135,7 +131,7 @@ export default function Team() {
       setNewMember({
         name: "",
         role: "",
-        section: "technicalTeam",
+        section: "CoreTeam",
         branch: "CSE",
         image: "",
       });
@@ -290,9 +286,7 @@ export default function Team() {
                     onChange={(e) => setNewMember({ ...newMember, section: e.target.value })}
                     style={{ width: "100%", padding: "0.6rem", borderRadius: "8px", background: "#1e293b", border: "1px solid #334155", color: "#fff", marginTop: "0.25rem" }}
                   >
-                    <option value="technicalTeam">Technical Team</option>
-                    <option value="nonTechnicalTeam">Non-Technical Team</option>
-                    <option value="coreTeam">Core Team</option>
+                    <option value="CoreTeam">Core Team</option>
                     <option value="faculty">Faculty</option>
                     <option value="mentor">Mentor</option>
                   </select>
@@ -378,7 +372,7 @@ export default function Team() {
           />
 
           <TeamSection
-            title="Non-Technical Team"
+            title="Core Team"
             members={teamData.nonTechnicalTeam}
             isHead={isHead}
             onDelete={handleDeleteMember}

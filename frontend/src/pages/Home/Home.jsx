@@ -455,10 +455,10 @@ export default function Home() {
           </h1>
 
           <p className="hero-sub">
-            From glider builds and CAD workshops to STOL and VTOL
-            aircraft development, the Aviation Club turns aerodynamic
-            theory into flight-tested engineering — one competition,
-            one prototype at a time.
+            Where curiosity takes flight and engineering knows no boundaries.
+            Aviation Club, NIT Raipur, is a community of innovators exploring aviation, aerospace, and UAV technology through hands-on projects, technical challenges, and collaborative learning.
+            <br></br>
+            **Dream. Design. Develop. Fly.**
           </p>
 
           <div className="hero-buttons">
@@ -565,11 +565,18 @@ export default function Home() {
       <section className="about" id="about" aria-labelledby="about-heading">
         <div className="container about-grid">
           <div className="about-image reveal fade-left">
-            <img
-              src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=1000&auto=format&fit=crop"
-              alt="Aviation Club members working on a UAV assembly"
-              loading="lazy"
-            />
+            
+          <img
+            src="https://res.cloudinary.com/gftc80co/image/upload/v1795444549/WhatsApp_Image_2026-11-23_at_19.59.38.jpg"
+            alt="Aviation Club members working on a UAV assembly"
+            style={{
+              width: "100%",
+              height: "500px",
+              objectFit: "cover",
+            }}
+            loading="lazy"
+          />
+
           </div>
 
           <div className="about-content reveal fade-right">
