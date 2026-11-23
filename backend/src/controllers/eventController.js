@@ -145,21 +145,18 @@ const defaultEvents = [
     duration: "10:00 A.M. – 05:30 P.M.",
     venue: "Football Ground, NIT Raipur",
     speakerInfo: "Senior Mentors & Aeromodelling Team",
-    isUpcoming: true,
-    registrationLink: "https://docs.google.com/forms/d/e/1FAIpQLSepdVSIlzd3tuBHCDPkJ6t4WjY3rvN9TY_S3_fhc8kTWq_MHw/viewform?usp=publish-editor",
-    registrationStatusMode: "auto",
-    teamEligibility: "Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.",
-    registrationFee: "For club volunteers = Rs. 200 per person | For non volunteers = Rs. 300 per person | For Outsiders (from other institutes) = Rs. 500 per person",
-    prizePool: "Cash Prizes + SAE AEROTHON 2027 Team Sponsorship",
-    contactInfo: "Coordinator: +91 98765 43210 / aviation@nitrr.ac.in",
+    isUpcoming: false,
     image: "/images/4.png",
     purpose: [
-      "To encourage the design and development of multirotor drones with payload-carrying capabilities.",
-      "To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.",
-      "To challenge students to achieve accurate and reliable payload transportation and delivery.",
-      "To promote innovation, teamwork, and problem-solving through real-world UAV applications."
+      "Bridge theory and practice in unmanned aerial vehicle (UAV) systems",
+      "Develop practical skills in assembling and operating quadcopters",
+      "Enhance understanding of drone components and their integration",
+      "Evaluate both conceptual and technical abilities through a two-phase competition",
+      "Promote teamwork, coordination, and time management under real constraints",
+      "Encourage problem-solving and real-time decision-making",
+      "Foster innovation and technical thinking in UAV design and delivery applications"
     ],
-    description: "**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!\n\n1. Team Eligibilty:\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n2. Registration fee:\n- for club volunteers = Rs. 200 per person\n- for non volunteers = Rs. 300 per person\n- for Outsiders (from other institutes) = Rs. 500 per person\n\nDeliver the Pizza – Objectives\n1. To encourage the design and development of multirotor drones with payload-carrying capabilities.\n2. To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.\n3. To challenge students to achieve accurate and reliable payload transportation and delivery.\n4. To promote innovation, teamwork, and problem-solving through real-world UAV applications.\n\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\nNote: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur , Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.",
+    description: "The Aviation Club of NIT Raipur organized the \"Deliver the Pizza (DTP)\" Competition, an interactive, hands-on drone-based event designed to provide students with real-world exposure to drone design, assembly, and flight operations. Four teams participated—MACHX6, Aeroverse, Garud, and Vayuveg—comprising 24 members total, each guided by a senior mentor.\n\nPhase 1 (Design & Strategy): Teams submitted technical reports and presented their drone designs, working mechanisms, component choices, and delivery strategies. Team Garud and Team MACHX6 were shortlisted for the final phase.\n\nPhase 2 (Assembly & Flight): Shortlisted teams were provided complete drone kits to assemble quadcopters from scratch (frames, motors, ESCs, flight controllers, power systems). Both teams conducted flight trials demonstrating stable take-off and controlled maneuvering. Team MACHX6 won first place, with Team Garud securing runner-up.",
     outcomes: [
       "Feedback – 54.5% 5-star rating, 22.7% 4-star rating, 13.6% 3-star rating, 9.1% 2-star rating",
       "Gained hands-on experience in assembling and operating quadcopter drones",
@@ -177,7 +174,38 @@ const defaultEvents = [
     duration: "10:00 A.M. – 05:30 P.M.",
     venue: "Football Ground, NIT Raipur",
     speakerInfo: "Lakshmi Sahithi & Aviation Club Flight Crew",
+    isUpcoming: false,
+    image: "/images/6.png",
+    purpose: [
+      "Provide end-to-end exposure to UAV engineering: design, analysis, fabrication, and testing",
+      "Apply theoretical concepts like aerodynamics, FEA, and CFD in practical scenarios",
+      "Develop hands-on skills in building and flying UAVs",
+      "Promote teamwork, mentorship, and project management",
+      "Enhance problem-solving and innovation under real-time performance challenges",
+      "Encourage technical documentation and presentation skills",
+      "Build confidence and technical competence through structured evaluation"
+    ],
+    description: "The UAV Racing Competition combined design, theoretical analysis, fabrication, and flight performance. Beginning two months prior, four mentored teams (MACHX6, Aeroverse, Garud, Vayuveg) underwent training in basic aerodynamics, FEA, CFD, and bill-of-materials planning before building models in the college Makerspace.\n\nOn match day, following safety inspections, teams raced on a designated track at the football ground. Evaluation criteria included technical documentation quality, presentation depth, and flight execution. Team Garud achieved 1st place overall, Team MACHX6 took 2nd place, and Lakshmi Sahithi was named Best Mentor.",
+    outcomes: [
+      "Feedback – 50% 5-star rating, 40% 4-star rating, 10% 3-star rating",
+      "Hands-on experience across the entire UAV engineering workflow",
+      "Practical validation of FEA and CFD theoretical concepts",
+      "Enhanced teamwork, leadership, and project execution skills",
+      "Strengthened problem-solving abilities addressing dynamic flight challenges",
+      "Improved technical presentation and documentation skills"
+    ]
+  },
+  {
+    eventId: "uav-racing-competition-2027",
+    title: "UAV Racing Competition",
+    tagline: "Fixed-Wing UAV Design, Fabrication & High-Speed Flight Challenge",
+    date: "Upcoming 2026 – 2027 Academic Session",
+    duration: "Full Day Aeromodelling Challenge",
+    venue: "Football Ground, NIT Raipur",
+    speakerInfo: "Aviation Club Aero Team & Mentors",
     isUpcoming: true,
+    isFlagship: true,
+    flagshipStatus: "Upcoming",
     registrationLink: "https://docs.google.com/forms/d/e/1FAIpQLSepdVSIlzd3tuBHCDPkJ6t4WjY3rvN9TY_S3_fhc8kTWq_MHw/viewform?usp=publish-editor",
     registrationStatusMode: "auto",
     teamEligibility: "Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.",
@@ -193,12 +221,40 @@ const defaultEvents = [
     ],
     description: "**UAV Racing** is a hands-on aerospace challenge where innovation meets speed and precision. Participants will design, fabricate, and fly their own fixed-wing UAVs, putting their aerodynamic knowledge, engineering skills, and piloting abilities to the ultimate test. Build your aircraft, push the limits of performance, and race towards victory!\n\n1. Team Eligibilty:\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n2. Registration fee:\n- for club volunteers = Rs. 200 per person\n- for non volunteers = Rs. 300 per person\n- for Outsiders (from other institutes) = Rs. 500 per person\n\nUAV Racing – Objectives\n1. To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.\n2. To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.\n3. To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.\n4. To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency.\n\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\nNote: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur , Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.",
     outcomes: [
-      "Feedback – 50% 5-star rating, 40% 4-star rating, 10% 3-star rating",
-      "Hands-on experience across the entire UAV engineering workflow",
-      "Practical validation of FEA and CFD theoretical concepts",
-      "Enhanced teamwork, leadership, and project execution skills",
-      "Strengthened problem-solving abilities addressing dynamic flight challenges",
-      "Improved technical presentation and documentation skills"
+      "Hands-on experience in fixed-wing aircraft manufacturing and flight testing",
+      "Direct opportunity to represent NIT Raipur at SAE AEROTHON 2027",
+      "Cash rewards, certificates, and flight telemetry analysis"
+    ]
+  },
+  {
+    eventId: "deliver-the-pizza-2027",
+    title: "Deliver the Pizza (DTP)",
+    tagline: "Multirotor Drone Payload Delivery & Precision Flight Competition",
+    date: "Upcoming 2026 – 2027 Academic Session",
+    duration: "Full Day Drone Engineering Challenge",
+    venue: "Football Ground, NIT Raipur",
+    speakerInfo: "Senior Mentors & Aeromodelling Team",
+    isUpcoming: true,
+    isFlagship: false,
+    flagshipStatus: "Upcoming",
+    registrationLink: "https://docs.google.com/forms/d/e/1FAIpQLSepdVSIlzd3tuBHCDPkJ6t4WjY3rvN9TY_S3_fhc8kTWq_MHw/viewform?usp=publish-editor",
+    registrationStatusMode: "auto",
+    teamEligibility: "Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.",
+    registrationFee: "For club volunteers = Rs. 200 per person | For non volunteers = Rs. 300 per person | For Outsiders (from other institutes) = Rs. 500 per person",
+    prizePool: "Cash Prizes + SAE AEROTHON 2027 Team Sponsorship",
+    contactInfo: "Coordinator: +91 98765 43210 / aviation@nitrr.ac.in",
+    image: "/images/4.png",
+    purpose: [
+      "To encourage the design and development of multirotor drones with payload-carrying capabilities.",
+      "To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.",
+      "To challenge students to achieve accurate and reliable payload transportation and delivery.",
+      "To promote innovation, teamwork, and problem-solving through real-world UAV applications."
+    ],
+    description: "**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!\n\n1. Team Eligibilty:\nMembers of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.\n\n2. Registration fee:\n- for club volunteers = Rs. 200 per person\n- for non volunteers = Rs. 300 per person\n- for Outsiders (from other institutes) = Rs. 500 per person\n\nDeliver the Pizza – Objectives\n1. To encourage the design and development of multirotor drones with payload-carrying capabilities.\n2. To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.\n3. To challenge students to achieve accurate and reliable payload transportation and delivery.\n4. To promote innovation, teamwork, and problem-solving through real-world UAV applications.\n\nFor the fabrication part of the competition, Component's expenditure will be completely bear by the Team itself.\n\nNote: the team from the college which will win the competition and students who will be active during competition and performs well of NIT Raipur , Will be selected to participate in SAE AEROTHON 2027 on the behalf of Aviation Club.",
+    outcomes: [
+      "Hands-on multirotor payload delivery assembly and piloting",
+      "Direct opportunity to represent NIT Raipur at SAE AEROTHON 2027",
+      "Cash awards and advanced flight controller calibration training"
     ]
   },
   {

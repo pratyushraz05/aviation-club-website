@@ -212,6 +212,39 @@ export default function Events() {
     setShowFormModal(true);
   };
 
+  const handleCloneEvent = (event) => {
+    setEditingId(null);
+    setFormData({
+      title: `${event.title} (New Edition)`,
+      tagline: event.tagline || '',
+      date: 'Upcoming 2026 – 2027 Academic Session',
+      duration: event.duration || '',
+      venue: event.venue || '',
+      speakerInfo: event.speakerInfo || '',
+      isUpcoming: true,
+      isFlagship: false,
+      flagshipStatus: 'Upcoming',
+      registrationLink: event.registrationLink || '',
+      registrationStartDate: '',
+      registrationEndDate: '',
+      registrationStatusMode: 'auto',
+      teamEligibility: event.teamEligibility || '',
+      registrationFee: event.registrationFee || '',
+      rulebookLink: event.rulebookLink || '',
+      prizePool: event.prizePool || '',
+      contactInfo: event.contactInfo || '',
+      customLinks: Array.isArray(event.customLinks)
+        ? event.customLinks.map((l) => ({ label: l.label || '', url: l.url || '' }))
+        : [],
+      image: event.image || '',
+      photos: Array.isArray(event.photos) ? event.photos.join('\n') : (event.photos || ''),
+      purpose: Array.isArray(event.purpose) ? event.purpose.join('\n') : (event.purpose || ''),
+      description: event.description || '',
+      outcomes: Array.isArray(event.outcomes) ? event.outcomes.join('\n') : (event.outcomes || ''),
+    });
+    setShowFormModal(true);
+  };
+
   const openEditModal = (event) => {
     setEditingId(event._id || event.id || event.eventId);
     setFormData({
@@ -503,6 +536,23 @@ export default function Events() {
                       title="Switch active flagship to another event"
                     >
                       ⭐ Change Flagship
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCloneEvent(flagshipEvent)}
+                      style={{
+                        background: '#10b981',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '6px',
+                        padding: '6px 12px',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                      title="Create a new edition from this flagship while leaving this one intact"
+                    >
+                      📋 Clone as New
                     </button>
                     <button
                       type="button"
@@ -799,7 +849,7 @@ export default function Events() {
                         ) : null}
 
                         {isHead && (
-                          <div style={{ display: 'flex', gap: '6px', width: '100%', marginTop: '8px' }}>
+                          <div style={{ display: 'flex', gap: '6px', width: '100%', marginTop: '8px', flexWrap: 'wrap' }}>
                             <button
                               type="button"
                               onClick={() => handleSetFlagship(event._id || event.id || event.eventId)}
@@ -815,7 +865,25 @@ export default function Events() {
                                 cursor: 'pointer',
                               }}
                             >
-                              ⭐ Make Flagship
+                              ⭐ Flagship
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleCloneEvent(event)}
+                              style={{
+                                flex: 1,
+                                background: '#10b981',
+                                color: '#fff',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '6px 8px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                              title="Create a new edition while keeping this one intact"
+                            >
+                              📋 New Edition
                             </button>
                             <button
                               type="button"
@@ -875,7 +943,7 @@ export default function Events() {
                       View Full Report
                     </button>
                     {isHead && (
-                      <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '10px', flexWrap: 'wrap' }}>
                         <button
                           type="button"
                           onClick={() => handleSetFlagship(event._id || event.id || event.eventId)}
@@ -896,6 +964,24 @@ export default function Events() {
                         </button>
                         <button
                           type="button"
+                          onClick={() => handleCloneEvent(event)}
+                          style={{
+                            flex: 1,
+                            background: '#10b981',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '6px 8px',
+                            fontSize: '0.8rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                          }}
+                          title="Create a new edition from this past event while keeping this original report intact"
+                        >
+                          📋 New Edition
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => openEditModal(event)}
                           style={{
                             flex: 1,
@@ -903,13 +989,13 @@ export default function Events() {
                             color: '#fff',
                             border: 'none',
                             borderRadius: '6px',
-                            padding: '6px 10px',
-                            fontSize: '0.85rem',
+                            padding: '6px 8px',
+                            fontSize: '0.8rem',
                             fontWeight: 600,
                             cursor: 'pointer',
                           }}
                         >
-                          ✏️ Edit Everything
+                          ✏️ Edit
                         </button>
                         <button
                           type="button"
@@ -920,8 +1006,8 @@ export default function Events() {
                             color: '#fff',
                             border: 'none',
                             borderRadius: '6px',
-                            padding: '6px 10px',
-                            fontSize: '0.85rem',
+                            padding: '6px 8px',
+                            fontSize: '0.8rem',
                             fontWeight: 600,
                             cursor: 'pointer',
                           }}
@@ -1103,6 +1189,26 @@ export default function Events() {
                       ⭐ Set as Flagship Event
                     </button>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const ev = selectedEvent;
+                      setSelectedEvent(null);
+                      handleCloneEvent(ev);
+                    }}
+                    style={{
+                      background: '#10b981',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '6px',
+                      padding: '6px 14px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                    title="Create a new edition from this event while leaving this one intact"
+                  >
+                    📋 Clone as New Edition
+                  </button>
                   <button
                     type="button"
                     onClick={() => {
