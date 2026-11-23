@@ -4,6 +4,15 @@ import useAuth from "../../context/useAuth";
 import API from "../../services/api";
 
 function MemberCard({ member, featured = false, noPhoto = false, isHead = false, onDelete }) {
+  const displayRole =
+    member.role === "Technical Team"
+      ? "WEB dev team"
+      : member.role === "Non-Technical Team" ||
+        member.role === "Technical Member" ||
+        member.role === "Non-Technical Member"
+      ? "Core Member"
+      : member.role;
+
   return (
     <div className={`member-card ${featured ? "featured" : ""} ${noPhoto ? "no-photo" : ""}`}>
       {!noPhoto && (
@@ -22,7 +31,7 @@ function MemberCard({ member, featured = false, noPhoto = false, isHead = false,
       <div className="member-info">
         <h3>{member.name}</h3>
 
-        {!noPhoto && <p>{member.role}</p>}
+        {!noPhoto && <p>{displayRole}</p>}
 
         {member.branch && (
           <span className="branch">
@@ -91,13 +100,15 @@ export default function Team() {
     faculty: [],
     mentor: [],
     coreTeam: [],
+    technicalTeam: [],
+    nonTechnicalTeam: [],
   });
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newMember, setNewMember] = useState({
     name: "",
     role: "",
-    section: "CoreTeam",
+    section: "coreTeam",
     branch: "CSE",
     image: "",
   });
@@ -131,7 +142,7 @@ export default function Team() {
       setNewMember({
         name: "",
         role: "",
-        section: "CoreTeam",
+        section: "coreTeam",
         branch: "CSE",
         image: "",
       });
@@ -286,7 +297,9 @@ export default function Team() {
                     onChange={(e) => setNewMember({ ...newMember, section: e.target.value })}
                     style={{ width: "100%", padding: "0.6rem", borderRadius: "8px", background: "#1e293b", border: "1px solid #334155", color: "#fff", marginTop: "0.25rem" }}
                   >
-                    <option value="CoreTeam">Core Team</option>
+                    <option value="coreTeam">Core Team</option>
+                    <option value="technicalTeam">WEB dev team</option>
+                    <option value="nonTechnicalTeam">Core Member</option>
                     <option value="faculty">Faculty</option>
                     <option value="mentor">Mentor</option>
                   </select>
@@ -365,14 +378,14 @@ export default function Team() {
           />
 
           <TeamSection
-            title="Technical Team"
+            title="WEB dev team"
             members={teamData.technicalTeam}
             isHead={isHead}
             onDelete={handleDeleteMember}
           />
 
           <TeamSection
-            title="Core Team"
+            title="Core Member"
             members={teamData.nonTechnicalTeam}
             isHead={isHead}
             onDelete={handleDeleteMember}

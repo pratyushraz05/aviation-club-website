@@ -41,7 +41,7 @@ const defaultTeamMembers = [
   // Technical Team
   {
     name: "RAGHAVA",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "IT",
     image: "/team/raghava.jpg",
@@ -49,7 +49,7 @@ const defaultTeamMembers = [
   },
   {
     name: "PRATYUSH RAJ",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "CSE",
     image: "/team/pratyush.jpg",
@@ -57,7 +57,7 @@ const defaultTeamMembers = [
   },
   {
     name: "PRAVALIKA",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "IT",
     image: "/team/pravalika.jpg",
@@ -65,7 +65,7 @@ const defaultTeamMembers = [
   },
   {
     name: "PREMANVITHA",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "CSE",
     image: "/team/premanvitha.jpg",
@@ -73,7 +73,7 @@ const defaultTeamMembers = [
   },
   {
     name: "AMRUTHA",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "CSE",
     image: "/team/amrutha.jpg",
@@ -81,7 +81,7 @@ const defaultTeamMembers = [
   },
   {
     name: "VAISHNAVI",
-    role: "Technical Team",
+    role: "Core Member",
     section: "technicalTeam",
     branch: "CSE",
     image: "/team/Vaishnavi.jpg",
@@ -90,7 +90,7 @@ const defaultTeamMembers = [
   // Non-Technical Team
   {
     name: "Subhash Kumar Saho",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/subhash.jpg",
@@ -98,7 +98,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Ashwajit Dalal",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/ashwajit.jpg",
@@ -106,7 +106,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Kritika Misti",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/kritika-misti.jpg",
@@ -114,7 +114,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Shivesh Vikrant S",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/shivesh.jpg",
@@ -122,7 +122,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Joshnavi",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/joshnavi.jpg",
@@ -130,7 +130,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Aman",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/aman.jpg",
@@ -138,7 +138,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Rasazna",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/Rasazna.jpg",
@@ -146,7 +146,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Pranav",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/pranav.jpg",
@@ -154,7 +154,7 @@ const defaultTeamMembers = [
   },
   {
     name: "V Sai Akhil",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/abhijeet.jpg",
@@ -162,7 +162,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Jasmitha Abhi",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "ECE",
     image: "/team/jamniti-abhi.jpg",
@@ -170,7 +170,7 @@ const defaultTeamMembers = [
   },
   {
     name: "Vijay Karan",
-    role: "Non-Technical Team",
+    role: "Core Member",
     section: "nonTechnicalTeam",
     branch: "MECHANICAL",
     image: "/team/vijay.jpg",
