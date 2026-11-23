@@ -75,38 +75,116 @@ const defaultMilestones = [
   {
     icon: "✈",
     date: "8 October 2025",
-    title: "Air Force Day",
+    title: "Air Force Day Celebration & Quiz",
+    venue: "Hira Hall, NIT Raipur",
+    duration: "10:00 A.M. – 06:00 P.M.",
+    speakerInfo: "Dr. N.V. Swamy Naidu, HOD Mechanical Department",
+    image: "/images/2.png",
     desc: "Aviation quiz, RC plane landing and parachute landing challenges honoring the Indian Air Force, with 50 participants at Hira Hall.",
+    fullDesc: "The event commenced with a presentation session, followed by a quiz competition assessing participants' knowledge of aviation technology and IAF history. Following the address by Chief Guest Dr. N.V. Swamy Naidu, an RC Plane Landing Competition and Parachute Landing Challenge were conducted, demonstrating key aerodynamic principles, precision control, and drag variations.",
+    purpose: [
+      "Increase awareness and knowledge of aviation technology and IAF legacy",
+      "Experiential learning through precision RC plane and parachute landing activities",
+      "Build teamwork, critical thinking, and student engagement in aerospace"
+    ],
+    outcomes: [
+      "Feedback – 63.2% 5-star rating, 26.3% 4-star rating across 50 participants"
+    ],
   },
   {
     icon: "◧",
     date: "8 November 2025",
     title: "DIMENSIONS: CAD Workshop & Competition",
+    venue: "S-11, Academic Building, NIT Raipur",
+    duration: "02:00 P.M. – 05:30 P.M.",
+    speakerInfo: "Aniket Singh, 3rd year Mechanical",
+    image: "/images/cad-workshop.jpg",
     desc: "Creo Parametric training followed by a two-tier CAD design competition for 75 beginner and expert participants.",
+    fullDesc: "A hands-on workshop introducing 75 participants to the fundamentals of Computer-Aided Design (CAD) using Creo Parametric software. The learning session was followed by a 2-tier design contest (Beginner and Expert tiers) evaluating sketching precision, 3D modelling speed, and parametric optimization.",
+    purpose: [
+      "Teach CAD fundamentals using Creo Parametric with industry-standard workflows",
+      "Two-tier competition catering to both beginner and expert designers",
+      "Improve design thinking, spatial visualization, and modeling efficiency"
+    ],
+    outcomes: [
+      "Feedback – 49.1% 5-star rating, 47.2% 4-star rating across 75 students"
+    ],
   },
   {
     icon: "〜",
     date: "31 Jan – 1 Feb 2026",
-    title: "Aerodynamics Workshop",
+    title: "Aerodynamics Workshop & Air Show",
+    venue: "S-11, Academic Building & Flying Grounds",
+    duration: "10:00 A.M. – 05:30 P.M.",
+    speakerInfo: "Dr. N.V. Swamy Naidu, Dr. Aruna Rana & Honumant Nethani",
+    image: "/images/3.png",
     desc: "Two-day session on flight principles and drone systems with glider-building and a live air show, for 95 participants.",
+    fullDesc: "A two-day aeromodelling intensive for 95 students. Day 1 covered key principles of flight, forces (lift, drag, thrust, weight), and control mechanisms, concluding with glider-making and flying. Day 2 featured industry expert Dr. Aruna Rana on drone principles and flight controllers, followed by a live air show featuring drones, gliders, and RC planes.",
+    purpose: [
+      "Build foundational understanding of aerodynamics and aircraft take-off mechanisms",
+      "Hands-on glider-making and live flight competitions",
+      "Demonstrate multirotor drone working principles and telemetry"
+    ],
+    outcomes: [
+      "Feedback – 52.5% 5-star rating, 41.3% 4-star rating across 95 participants"
+    ],
   },
   {
     icon: "◆",
     date: "7 February 2026",
     title: "Deliver the Pizza (DTP)",
+    venue: "Football Ground, NIT Raipur",
+    duration: "10:00 A.M. – 05:30 P.M.",
+    speakerInfo: "Senior Mentors & Aeromodelling Team",
+    image: "/images/4.png",
     desc: "Drone design and assembly competition across four teams; Team MACHX6 won, Team Garud finished as runner-up.",
+    fullDesc: "Four mentored teams (MACHX6, Aeroverse, Garud, Vayuveg) competed across two phases. Phase 1 evaluated technical design documentation, motor/ESC calculations, and delivery strategy. Phase 2 provided complete drone kits for assembly from scratch and payload delivery flight trials under strict time limits.",
+    purpose: [
+      "Bridge theory and practice in quadcopter drone systems",
+      "Assemble, wire, and calibrate flight controllers from scratch",
+      "Test payload delivery precision, stability, and real-time decision making"
+    ],
+    outcomes: [
+      "Feedback – 54.5% 5-star rating; Team MACHX6 1st place, Team Garud runner-up"
+    ],
   },
   {
     icon: "🏁",
     date: "8 February 2026",
     title: "UAV Racing Competition",
+    venue: "Football Ground, NIT Raipur",
+    duration: "10:00 A.M. – 05:30 P.M.",
+    speakerInfo: "Lakshmi Sahithi & Aviation Club Flight Crew",
+    image: "/images/6.png",
     desc: "End-to-end UAV design, FEA/CFD analysis and a live racing round; Team Garud took first place, MACHX6 second.",
+    fullDesc: "Following two months of aeromodelling and structural analysis training in the Makerspace, mentored teams built custom fixed-wing UAVs. Match day featured strict safety inspections, flight telemetry evaluations, and dynamic obstacle racing on the football ground. Team Garud won 1st place overall.",
+    purpose: [
+      "End-to-end exposure across fixed-wing UAV design, FEA/CFD, and fabrication",
+      "Hands-on high-speed flight piloting and obstacle track maneuvering",
+      "Evaluate aerodynamic efficiency, speed, stability, and team coordination"
+    ],
+    outcomes: [
+      "Feedback – 50% 5-star rating; Team Garud 1st place, Team MACHX6 2nd place"
+    ],
   },
   {
     icon: "⚡",
     date: "4 April 2026",
     title: "Blitz Competition",
+    venue: "S-11, Academic Building, NIT Raipur",
+    duration: "02:00 P.M. – 6:00 P.M.",
+    speakerInfo: "Aviation Club Technical Team",
+    image: "/images/3.png",
     desc: "A three-hour, individual CAD-FEA-CFD sprint testing 21 participants on design, analysis and optimization speed.",
+    fullDesc: "An individual software-led competition centered on end-to-end engineering workflows. Participants received on-the-spot problem statements and had 3 hours to design, run FEA stress simulations, analyze CFD airflow, and optimize models under strict time pressure.",
+    purpose: [
+      "Bridge the gap between theoretical knowledge and real-world engineering software",
+      "Test proficiency in Creo CAD, ANSYS FEA, and CFD airflow optimization",
+      "Strengthen analytical thinking and fast decision-making under strict time limits"
+    ],
+    outcomes: [
+      "Feedback – 72.2% 5-star rating, 27.8% 4-star rating across 21 participants"
+    ],
   },
 ];
 
@@ -196,6 +274,7 @@ export default function Home() {
   const [flagshipEvent, setFlagshipEvent] = useState(null);
   const [homeTrackIdx, setHomeTrackIdx] = useState(0);
   const [timelineItems, setTimelineItems] = useState(defaultMilestones);
+  const [expandedTimelineIdx, setExpandedTimelineIdx] = useState(null);
   const [faculty, setFaculty] = useState(null);
   const [stats, setStats] = useState({
     projectsCount: 2,
@@ -249,7 +328,15 @@ export default function Home() {
             icon: iconList[idx % iconList.length],
             date: e.date,
             title: e.title,
-            desc: e.description?.slice(0, 160) + (e.description?.length > 160 ? "..." : ""),
+            desc: e.description?.slice(0, 140) + (e.description?.length > 140 ? "..." : ""),
+            fullDesc: e.description || "",
+            venue: e.venue || "",
+            duration: e.duration || "",
+            speakerInfo: e.speakerInfo || "",
+            image: e.image || "",
+            purpose: Array.isArray(e.purpose) ? e.purpose : [],
+            outcomes: Array.isArray(e.outcomes) ? e.outcomes : [],
+            eventId: e._id || e.id || e.eventId,
           }));
           setTimelineItems(dynamicMilestones);
         }
@@ -865,21 +952,105 @@ export default function Home() {
           </div>
 
           <ol className="timeline">
-            {timelineItems.map((item, index) => (
-              <li
-                key={index}
-                className={`timeline-item reveal ${index % 2 === 0 ? "fade-right" : "fade-left"}`}
-              >
-                <div className="timeline-dot" aria-hidden="true">
-                  {item.icon || "✈"}
-                </div>
-                <div className="timeline-card">
-                  <span className="timeline-date">{item.date}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              </li>
-            ))}
+            {timelineItems.map((item, index) => {
+              const isExpanded = expandedTimelineIdx === index;
+              return (
+                <li
+                  key={index}
+                  className={`timeline-item reveal ${index % 2 === 0 ? "fade-right" : "fade-left"}`}
+                >
+                  <div className="timeline-dot" aria-hidden="true">
+                    {item.icon || "✈"}
+                  </div>
+                  <div
+                    className={`timeline-card ${isExpanded ? "expanded" : ""}`}
+                    onClick={() => setExpandedTimelineIdx(isExpanded ? null : index)}
+                    title="Hover or click to view full event details"
+                  >
+                    <div className="timeline-card-header">
+                      <span className="timeline-date">{item.date}</span>
+                      <span className="timeline-hover-cue">
+                        <span className="cue-icon">🔍</span>
+                        <span className="cue-text">Hover for Full Details</span>
+                      </span>
+                    </div>
+
+                    <h3 className="timeline-title">{item.title}</h3>
+
+                    {/* Short summary snippet always visible */}
+                    <p className="timeline-short-desc">{item.desc}</p>
+
+                    {/* Full details revealed smoothly on hover and click */}
+                    <div className="timeline-full-details">
+                      {item.image && (
+                        <div className="timeline-detail-media">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {item.fullDesc && item.fullDesc !== item.desc && (
+                        <div className="timeline-full-desc-block">
+                          <p className="timeline-full-desc">{item.fullDesc}</p>
+                        </div>
+                      )}
+
+                      {(item.venue || item.duration || item.speakerInfo) && (
+                        <div className="timeline-meta-tags">
+                          {item.venue && (
+                            <div className="timeline-tag">
+                              <span className="tag-icon">📍</span>
+                              <span><strong>Venue:</strong> {item.venue}</span>
+                            </div>
+                          )}
+                          {item.duration && (
+                            <div className="timeline-tag">
+                              <span className="tag-icon">🕒</span>
+                              <span><strong>Timing:</strong> {item.duration}</span>
+                            </div>
+                          )}
+                          {item.speakerInfo && (
+                            <div className="timeline-tag">
+                              <span className="tag-icon">🎙️</span>
+                              <span><strong>Lead / Mentor:</strong> {item.speakerInfo}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {Array.isArray(item.purpose) && item.purpose.length > 0 && (
+                        <div className="timeline-purpose-box">
+                          <strong className="purpose-box-title">🎯 Key Objectives &amp; Highlights:</strong>
+                          <ul className="timeline-purpose-list">
+                            {item.purpose.slice(0, 3).map((p, pIdx) => (
+                              <li key={pIdx}>{p}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {Array.isArray(item.outcomes) && item.outcomes.length > 0 && (
+                        <div className="timeline-outcomes-box">
+                          <strong className="outcomes-box-title">🏆 Outcomes &amp; Feedback:</strong>
+                          <p className="outcomes-box-text">{item.outcomes[0]}</p>
+                        </div>
+                      )}
+
+                      <div className="timeline-action-strip">
+                        <Link to="/events" className="btn-timeline-explore">
+                          View Full Report on Events Page &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </section>
