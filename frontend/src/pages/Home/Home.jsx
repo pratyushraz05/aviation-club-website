@@ -192,6 +192,7 @@ export default function Home() {
   // Dynamic Data States
   const [notifications, setNotifications] = useState(defaultNotificationsData);
   const [upcomingEvent, setUpcomingEvent] = useState(null);
+  const [flagshipEvent, setFlagshipEvent] = useState(null);
   const [timelineItems, setTimelineItems] = useState(defaultMilestones);
   const [faculty, setFaculty] = useState(null);
   const [stats, setStats] = useState({
@@ -232,8 +233,11 @@ export default function Home() {
       const evRes = await API.get("/events");
       if (evRes.data?.data && Array.isArray(evRes.data.data)) {
         const allEvents = evRes.data.data;
-        const upcoming = allEvents.find((e) => e.isUpcoming);
-        if (upcoming) setUpcomingEvent(upcoming);
+        const flagship = allEvents.find((e) => e.isFlagship) || allEvents.find((e) => e.isUpcoming);
+        if (flagship) {
+          setFlagshipEvent(flagship);
+          setUpcomingEvent(flagship);
+        }
 
         // Map past events to timeline milestones if available
         const pastEvents = allEvents.filter((e) => !e.isUpcoming);
@@ -475,18 +479,21 @@ export default function Home() {
             </button>
           </div>
 
-          {/* DYNAMIC UPCOMING EVENT ALERT BADGE */}
-          {upcomingEvent && (
-            <div className="hero-live-badge-container">
-              <span className="live-pulse"></span>
-              <span>
-                🚀 LIVE FLAGSHIP: <strong>{upcomingEvent.title}</strong> ({upcomingEvent.date})
-              </span>
-              <Link to="/events" className="hero-live-link">
-                View Event Details &rarr;
-              </Link>
-            </div>
-          )}
+          {/* DYNAMIC UPCOMING / FLAGSHIP EVENT ALERT BADGE */}
+          {(flagshipEvent || upcomingEvent) && (() => {
+            const featured = flagshipEvent || upcomingEvent;
+            return (
+              <div className="hero-live-badge-container">
+                <span className="live-pulse"></span>
+                <span>
+                  🚀 {featured.isFlagship ? "CLUB FLAGSHIP" : "UPCOMING"} ({(featured.flagshipStatus || "UPCOMING").toUpperCase()}): <strong>{featured.title}</strong> ({featured.date})
+                </span>
+                <Link to="/events" className="hero-live-link">
+                  Explore Flagship &rarr;
+                </Link>
+              </div>
+            );
+          })()}
 
           {/* Join Us Popup Modal */}
           {showJoinModal && (
@@ -557,6 +564,142 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* =====================================================
+          FEATURED FLAGSHIP EVENT SHOWCASE SECTION
+      ===================================================== */}
+      {flagshipEvent && (
+        <section className="home-flagship-section" aria-label="Official Club Flagship Event">
+          <div className="container">
+            <div className="home-flagship-card reveal fade-up">
+              <div className="home-flagship-glow" aria-hidden="true"></div>
+              <div className="home-flagship-inner">
+                {flagshipEvent.image && (
+                  <div className="home-flagship-media">
+                    <img
+                      src={flagshipEvent.image}
+                      alt={flagshipEvent.title}
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/7.png";
+                      }}
+                    />
+                    <div className="home-flagship-media-badge">
+                      {flagshipEvent.flagshipStatus === "Ongoing" ? "🔴 LIVE NOW" : "⭐ CLUB FLAGSHIP"}
+                    </div>
+                  </div>
+                )}
+
+                <div className="home-flagship-content">
+                  <div className="home-flagship-header">
+                    <div className="home-flagship-pills">
+                      <span className="home-flagship-pill">
+                        <span className="live-pulse"></span>
+                        {(flagshipEvent.flagshipStatus || "UPCOMING").toUpperCase()} FLAGSHIP
+                      </span>
+                      {flagshipEvent.prizePool && (
+                        <span className="home-flagship-prize">
+                          🏆 {flagshipEvent.prizePool}
+                        </span>
+                      )}
+                    </div>
+                    {isHead && (
+                      <Link
+                        to="/events"
+                        className="home-flagship-head-edit"
+                        title="Edit or switch flagship in Events page"
+                      >
+                        ✏️ Manage Flagship
+                      </Link>
+                    )}
+                  </div>
+
+                  <h2 className="home-flagship-title">{flagshipEvent.title}</h2>
+                  {flagshipEvent.tagline && (
+                    <p className="home-flagship-tagline">{flagshipEvent.tagline}</p>
+                  )}
+
+                  <div className="home-flagship-meta">
+                    <span>📅 {flagshipEvent.date}</span>
+                    {flagshipEvent.duration && <span>🕒 {flagshipEvent.duration}</span>}
+                    {flagshipEvent.venue && <span>📍 {flagshipEvent.venue}</span>}
+                    {flagshipEvent.speakerInfo && <span>🎙️ {flagshipEvent.speakerInfo}</span>}
+                  </div>
+
+                  <p className="home-flagship-desc">
+                    {flagshipEvent.description?.slice(0, 240)}...
+                  </p>
+
+                  {/* Action Buttons */}
+                  <div className="home-flagship-actions">
+                    {flagshipEvent.registrationLink ? (
+                      <a
+                        href={flagshipEvent.registrationLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-primary"
+                      >
+                        Register Now 🚀
+                      </a>
+                    ) : (
+                      <Link to="/events" className="btn btn-primary">
+                        Register on Event Page
+                      </Link>
+                    )}
+
+                    {flagshipEvent.rulebookLink && (
+                      <a
+                        href={flagshipEvent.rulebookLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-outline home-rulebook-btn"
+                      >
+                        📘 Rule Book
+                      </a>
+                    )}
+
+                    <Link to="/events" className="btn btn-secondary">
+                      Full Event Details &rarr;
+                    </Link>
+
+                    {/* Dynamic custom links */}
+                    {Array.isArray(flagshipEvent.customLinks) &&
+                      flagshipEvent.customLinks.map((link, idx) => (
+                        <a
+                          key={idx}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-custom-pill"
+                        >
+                          🔗 {link.label}
+                        </a>
+                      ))}
+                  </div>
+
+                  {/* Optional photo strip preview */}
+                  {Array.isArray(flagshipEvent.photos) && flagshipEvent.photos.length > 0 && (
+                    <div className="home-flagship-gallery-preview">
+                      <p className="gallery-label">📸 Event Highlights &amp; Gallery Preview:</p>
+                      <div className="gallery-strip">
+                        {flagshipEvent.photos.slice(0, 4).map((pUrl, pIdx) => (
+                          <img
+                            key={pIdx}
+                            src={pUrl}
+                            alt={`Flagship highlight ${pIdx + 1}`}
+                            onError={(e) => {
+                              e.currentTarget.style.display = "none";
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* =====================================================
           ABOUT

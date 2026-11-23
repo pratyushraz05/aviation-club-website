@@ -38,6 +38,50 @@ const eventSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isFlagship: {
+      type: Boolean,
+      default: false,
+    },
+    flagshipStatus: {
+      type: String,
+      enum: ["Upcoming", "Ongoing", "Completed"],
+      default: "Upcoming",
+    },
+    tagline: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    registrationLink: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    rulebookLink: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    prizePool: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    contactInfo: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+    customLinks: [
+      {
+        label: { type: String, default: "", trim: true },
+        url: { type: String, default: "", trim: true },
+      },
+    ],
+    photos: {
+      type: [String],
+      default: [],
+    },
     image: {
       type: String,
       default: "",
