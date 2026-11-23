@@ -258,10 +258,12 @@ const getEvents = async (req, res) => {
     }
 
     const data = await Event.find().sort({ createdAt: -1 });
+    const flagship = data.find((e) => e.isFlagship) || data.find((e) => e.isUpcoming) || null;
 
     return res.status(200).json({
       success: true,
       count: data.length,
+      flagship,
       data,
     });
   } catch (error) {
@@ -310,6 +312,24 @@ const parseArrayField = (field) => {
   return [];
 };
 
+const parseCustomLinks = (field) => {
+  if (!field) return [];
+  if (Array.isArray(field)) {
+    return field.filter((item) => item && (item.label || item.url));
+  }
+  if (typeof field === "string") {
+    try {
+      const parsed = JSON.parse(field);
+      if (Array.isArray(parsed)) {
+        return parsed.filter((item) => item && (item.label || item.url));
+      }
+    } catch {
+      // not JSON string
+    }
+  }
+  return [];
+};
+
 const createEvent = async (req, res) => {
   try {
     const eventData = { ...req.body };
@@ -333,8 +353,21 @@ const createEvent = async (req, res) => {
     if (eventData.outcomes !== undefined) {
       eventData.outcomes = parseArrayField(eventData.outcomes);
     }
+    if (eventData.photos !== undefined) {
+      eventData.photos = parseArrayField(eventData.photos);
+    }
+    if (eventData.customLinks !== undefined) {
+      eventData.customLinks = parseCustomLinks(eventData.customLinks);
+    }
     if (typeof eventData.isUpcoming === "string") {
       eventData.isUpcoming = eventData.isUpcoming === "true" || eventData.isUpcoming === "1";
+    }
+    if (typeof eventData.isFlagship === "string") {
+      eventData.isFlagship = eventData.isFlagship === "true" || eventData.isFlagship === "1";
+    }
+
+    if (eventData.isFlagship) {
+      await Event.updateMany({}, { $set: { isFlagship: false } });
     }
 
     const data = await Event.create(eventData);
@@ -365,8 +398,24 @@ const updateEvent = async (req, res) => {
     if (updateData.outcomes !== undefined) {
       updateData.outcomes = parseArrayField(updateData.outcomes);
     }
+    if (updateData.photos !== undefined) {
+      updateData.photos = parseArrayField(updateData.photos);
+    }
+    if (updateData.customLinks !== undefined) {
+      updateData.customLinks = parseCustomLinks(updateData.customLinks);
+    }
     if (typeof updateData.isUpcoming === "string") {
       updateData.isUpcoming = updateData.isUpcoming === "true" || updateData.isUpcoming === "1";
+    }
+    if (typeof updateData.isFlagship === "string") {
+      updateData.isFlagship = updateData.isFlagship === "true" || updateData.isFlagship === "1";
+    }
+
+    if (updateData.isFlagship) {
+      await Event.updateMany(
+        { $and: [{ _id: { $ne: req.params.id } }, { eventId: { $ne: req.params.id } }] },
+        { $set: { isFlagship: false } }
+      );
     }
 
     const data = await Event.findOneAndUpdate(filter, updateData, {
@@ -414,10 +463,59 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+const getFlagshipEvent = async (req, res) => {
+  try {
+    let flagship = await Event.findOne({ isFlagship: true });
+    if (!flagship) {
+      flagship = await Event.findOne({ isUpcoming: true });
+    }
+    return res.status(200).json({
+      success: true,
+      data: flagship,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+const setFlagshipEvent = async (req, res) => {
+  try {
+    const filter = mongoose.isValidObjectId(req.params.id)
+      ? { _id: req.params.id }
+      : { eventId: req.params.id };
+
+    // Unset all existing flagships
+    await Event.updateMany({}, { $set: { isFlagship: false } });
+
+    const event = await Event.findOneAndUpdate(
+      filter,
+      { $set: { isFlagship: true, isUpcoming: true } },
+      { new: true }
+    );
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: "Event not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `"${event.title}" is now set as the active Flagship Event!`,
+      data: event,
+    });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
 module.exports = {
   getEvents,
   getEventById,
   createEvent,
   updateEvent,
   deleteEvent,
+  getFlagshipEvent,
+  setFlagshipEvent,
 };

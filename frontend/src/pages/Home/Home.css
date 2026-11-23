@@ -1390,3 +1390,252 @@ h3 {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
+
+
+/* =========================================================
+   HOME FEATURED FLAGSHIP EVENT SHOWCASE
+   ========================================================= */
+
+.home-flagship-section {
+  padding: 60px 0 30px;
+  background: radial-gradient(circle at 50% 30%, rgba(202, 138, 4, 0.08) 0%, transparent 70%);
+}
+
+.home-flagship-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  border: 2px solid #ca8a04;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(202, 138, 4, 0.16), 0 0 30px rgba(56, 189, 248, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-flagship-card:hover {
+  transform: translateY(-4px);
+  border-color: #facc15;
+  box-shadow: 0 25px 60px rgba(250, 204, 21, 0.22), 0 0 40px rgba(56, 189, 248, 0.15);
+}
+
+.home-flagship-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 1.6fr;
+  gap: 36px;
+  padding: 36px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .home-flagship-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
+.home-flagship-media {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  max-height: 380px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.home-flagship-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  display: block;
+}
+
+.home-flagship-card:hover .home-flagship-media img {
+  transform: scale(1.04);
+}
+
+.home-flagship-media-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid #eab308;
+  color: #facc15;
+  font-weight: 800;
+  font-size: 0.75rem;
+  letter-spacing: 0.6px;
+  padding: 5px 12px;
+  border-radius: 6px;
+}
+
+.home-flagship-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-flagship-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-flagship-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.home-flagship-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(202, 138, 4, 0.15);
+  border: 1px solid #eab308;
+  color: #facc15;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 5px 14px;
+  border-radius: 30px;
+}
+
+.home-flagship-prize {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 30px;
+}
+
+.home-flagship-head-edit {
+  font-size: 0.8rem;
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  transition: all 0.2s;
+}
+
+.home-flagship-head-edit:hover {
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.home-flagship-title {
+  font-size: clamp(1.8rem, 3.2vw, 2.3rem);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  line-height: 1.25;
+}
+
+.home-flagship-tagline {
+  font-size: 1rem;
+  font-style: italic;
+  color: #38bdf8;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.home-flagship-meta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-flagship-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.home-flagship-desc {
+  font-size: 0.98rem;
+  color: #cbd5e1;
+  line-height: 1.7;
+  margin: 0 0 24px 0;
+}
+
+.home-flagship-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.home-rulebook-btn {
+  border: 1.5px solid #facc15 !important;
+  color: #facc15 !important;
+  background: rgba(234, 179, 8, 0.08) !important;
+  font-weight: 700 !important;
+}
+
+.home-rulebook-btn:hover {
+  background: rgba(234, 179, 8, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+.btn-custom-pill {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #e2e8f0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  font-size: 0.88rem !important;
+  min-width: auto !important;
+  padding: 12px 20px !important;
+}
+
+.btn-custom-pill:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.home-flagship-gallery-preview {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gallery-label {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.gallery-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.gallery-strip img {
+  width: 90px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.gallery-strip img:hover {
+  transform: scale(1.05);
+  border-color: #38bdf8;
+}
