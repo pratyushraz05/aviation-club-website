@@ -4,14 +4,20 @@ import useAuth from "../../context/useAuth";
 import API from "../../services/api";
 
 function MemberCard({ member, featured = false, noPhoto = false, isHead = false, onDelete }) {
-  const displayRole =
-    member.role === "Technical Team"
-      ? "WEB dev team"
-      : member.role === "Non-Technical Team" ||
-        member.role === "Technical Member" ||
-        member.role === "Non-Technical Member"
-      ? "Core Member"
-      : member.role;
+  let displayRole = member.role;
+  if (member.name === "Sivaratri Lakshmi Sahithi" && (!member.role || member.role === "Core Team")) {
+    displayRole = "President";
+  } else if ((member.name === "Kritika Tripathi" || member.name?.includes("Tripathi")) && (!member.role || member.role === "Core Team")) {
+    displayRole = "Vice President";
+  } else if (member.role === "Technical Team") {
+    displayRole = "WEB dev team";
+  } else if (
+    member.role === "Non-Technical Team" ||
+    member.role === "Technical Member" ||
+    member.role === "Non-Technical Member"
+  ) {
+    displayRole = "Core Member";
+  }
 
   return (
     <div className={`member-card ${featured ? "featured" : ""} ${noPhoto ? "no-photo" : ""}`}>
@@ -298,8 +304,8 @@ export default function Team() {
                     style={{ width: "100%", padding: "0.6rem", borderRadius: "8px", background: "#1e293b", border: "1px solid #334155", color: "#fff", marginTop: "0.25rem" }}
                   >
                     <option value="coreTeam">Core Team</option>
-                    <option value="technicalTeam">WEB dev team</option>
-                    <option value="nonTechnicalTeam">Core Member</option>
+                    <option value="technicalTeam">WEB DEV team</option>
+                    <option value="nonTechnicalTeam">Core Team</option>
                     <option value="faculty">Faculty</option>
                     <option value="mentor">Mentor</option>
                   </select>
@@ -385,7 +391,7 @@ export default function Team() {
           />
 
           <TeamSection
-            title="Core Member"
+            title="Core Team"
             members={teamData.nonTechnicalTeam}
             isHead={isHead}
             onDelete={handleDeleteMember}
