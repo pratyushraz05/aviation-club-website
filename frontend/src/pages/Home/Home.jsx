@@ -236,6 +236,21 @@ export default function Home() {
   const [noticeMsg, setNoticeMsg] = useState("");
   const [submittingNotice, setSubmittingNotice] = useState(false);
 
+  // Milestone Admin CRUD state (The Route So Far)
+  const [showMilestoneModal, setShowMilestoneModal] = useState(false);
+  const [editingMilestoneId, setEditingMilestoneId] = useState(null);
+  const [milestoneForm, setMilestoneForm] = useState({
+    title: "",
+    date: "",
+    icon: "✈",
+    desc: "",
+    link: "/events",
+    linkLabel: "Full Event Report →",
+    order: 0,
+  });
+  const [milestoneMsg, setMilestoneMsg] = useState("");
+  const [submittingMilestone, setSubmittingMilestone] = useState(false);
+
   // Fetch dynamic notices from backend
   const fetchNotifications = useCallback(async () => {
     try {
@@ -245,6 +260,18 @@ export default function Home() {
       }
     } catch {
       // Keep initial default notifications if server unreachable
+    }
+  }, []);
+
+  // Fetch dynamic milestones (Route So Far) from backend
+  const fetchMilestones = useCallback(async () => {
+    try {
+      const res = await API.get("/milestones");
+      if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+        setTimelineItems(res.data.data);
+      }
+    } catch {
+      // Keep initial default milestones if server unreachable
     }
   }, []);
 
@@ -259,24 +286,6 @@ export default function Home() {
         if (flagship) {
           setFlagshipEvent(flagship);
           setUpcomingEvent(flagship);
-        }
-
-        // Map past events to timeline milestones if available
-        const pastEvents = allEvents.filter((e) => !e.isUpcoming);
-        if (pastEvents.length > 0) {
-          const iconList = ["✈", "◧", "〜", "◆", "🏁", "⚡"];
-          const dynamicMilestones = pastEvents.map((e, idx) => {
-            const firstPara = getFirstParagraph(e.description) || e.description || "";
-            return {
-              icon: iconList[idx % iconList.length],
-              date: e.date,
-              title: e.title,
-              desc: firstPara.length > 130 ? firstPara.slice(0, 130) + "..." : firstPara,
-              firstParagraph: firstPara,
-              eventId: e._id || e.id || e.eventId,
-            };
-          });
-          setTimelineItems(dynamicMilestones);
         }
 
         setStats((prev) => ({
@@ -328,8 +337,9 @@ export default function Home() {
 
   useEffect(() => {
     fetchNotifications();
+    fetchMilestones();
     fetchHighlights();
-  }, [fetchNotifications, fetchHighlights]);
+  }, [fetchNotifications, fetchMilestones, fetchHighlights]);
 
   // Notice Admin CRUD Handlers
   const openAddNoticeModal = () => {
@@ -395,6 +405,99 @@ export default function Home() {
       setTimeout(() => setNoticeMsg(""), 3000);
     } catch (err) {
       setNoticeMsg(err.response?.data?.message || err.message || "Failed to delete notice");
+    }
+  };
+
+  // Milestone Admin CRUD Handlers (Route So Far)
+  const openAddMilestoneModal = () => {
+    setEditingMilestoneId(null);
+    setMilestoneForm({
+      title: "",
+      date: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }),
+      icon: "✈",
+      desc: "",
+      link: "/events",
+      linkLabel: "Full Event Report →",
+      order: (timelineItems?.length || 0) + 1,
+    });
+    setShowMilestoneModal(true);
+  };
+
+  const openEditMilestoneModal = (milestone) => {
+    setEditingMilestoneId(milestone._id || milestone.id);
+    setMilestoneForm({
+      title: milestone.title || "",
+      date: milestone.date || "",
+      icon: milestone.icon || "✈",
+      desc: milestone.desc || milestone.firstParagraph || "",
+      link: milestone.link || "/events",
+      linkLabel: milestone.linkLabel || "Full Event Report →",
+      order: milestone.order !== undefined ? milestone.order : 0,
+    });
+    setShowMilestoneModal(true);
+  };
+
+  const handleMilestoneSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setSubmittingMilestone(true);
+      setMilestoneMsg("");
+
+      const payload = {
+        title: milestoneForm.title.trim(),
+        date: milestoneForm.date.trim(),
+        icon: milestoneForm.icon.trim() || "✈",
+        desc: milestoneForm.desc.trim(),
+        link: milestoneForm.link.trim() || "/events",
+        linkLabel: milestoneForm.linkLabel.trim() || "Full Event Report →",
+        order: Number(milestoneForm.order) || 0,
+      };
+
+      if (editingMilestoneId) {
+        await API.put(`/milestones/${editingMilestoneId}`, payload);
+        setMilestoneMsg("✓ Milestone updated successfully!");
+      } else {
+        await API.post("/milestones", payload);
+        setMilestoneMsg("✓ New milestone added to Route So Far!");
+      }
+
+      setShowMilestoneModal(false);
+      await fetchMilestones();
+      setTimeout(() => setMilestoneMsg(""), 4000);
+    } catch (err) {
+      setMilestoneMsg(err.response?.data?.message || err.message || "Failed to save milestone");
+    } finally {
+      setSubmittingMilestone(false);
+    }
+  };
+
+  const handleDeleteMilestone = async (milestone) => {
+    if (!window.confirm(`Delete milestone "${milestone.title}" from Route So Far?`)) return;
+
+    try {
+      if (milestone._id) {
+        await API.delete(`/milestones/${milestone._id}`);
+      } else {
+        setTimelineItems((prev) => prev.filter((item) => item !== milestone));
+      }
+      setMilestoneMsg(`✓ Milestone "${milestone.title}" deleted.`);
+      await fetchMilestones();
+      setTimeout(() => setMilestoneMsg(""), 3500);
+    } catch (err) {
+      setMilestoneMsg(err.response?.data?.message || err.message || "Failed to delete milestone");
+    }
+  };
+
+  const handleResetMilestones = async () => {
+    if (!window.confirm("Reset Route So Far back to default official club milestones? Any custom milestones will be replaced.")) return;
+
+    try {
+      await API.post("/milestones/reset");
+      setMilestoneMsg("✓ Milestones reset to defaults.");
+      await fetchMilestones();
+      setTimeout(() => setMilestoneMsg(""), 3500);
+    } catch (err) {
+      setMilestoneMsg(err.response?.data?.message || err.message || "Failed to reset milestones");
     }
   };
 
@@ -879,7 +982,7 @@ export default function Home() {
       </section>
 
       {/* =====================================================
-          CLUB HISTORY (DYNAMIC FROM EVENTS)
+          CLUB HISTORY & MILESTONES (DYNAMIC BACKEND CRUD)
       ===================================================== */}
 
       <section className="history" id="history" aria-labelledby="history-heading">
@@ -889,12 +992,52 @@ export default function Home() {
             <h2 id="history-heading">The route so far</h2>
           </div>
 
+          {/* Club Head Admin Route Controls */}
+          {isHead && (
+            <div className="milestone-admin-bar reveal fade-up">
+              <div className="milestone-admin-info">
+                <span className="milestone-admin-badge">👑 Club Head Mode Active</span>
+                <p>Manage Route So Far: add new milestones, customize descriptions, or delete stops.</p>
+              </div>
+              <div className="milestone-admin-actions">
+                <button
+                  type="button"
+                  className="btn-milestone-add"
+                  onClick={openAddMilestoneModal}
+                >
+                  ➕ Add Milestone
+                </button>
+                <button
+                  type="button"
+                  className="btn-milestone-reset"
+                  onClick={handleResetMilestones}
+                  title="Reset to default official club milestones"
+                >
+                  🔄 Reset Defaults
+                </button>
+              </div>
+            </div>
+          )}
+
+          {milestoneMsg && (
+            <div
+              className={`milestone-feedback-msg ${
+                milestoneMsg.startsWith("✓") ? "success" : "error"
+              }`}
+            >
+              {milestoneMsg}
+            </div>
+          )}
+
           <ol className="timeline">
             {timelineItems.map((item, index) => {
               const isExpanded = expandedTimelineIdx === index;
+              const isExternal = item.link && (item.link.startsWith("http://") || item.link.startsWith("https://"));
+              const itemContent = item.desc || item.firstParagraph || "";
+
               return (
                 <li
-                  key={index}
+                  key={item._id || item.id || index}
                   className={`timeline-item reveal ${index % 2 === 0 ? "fade-right" : "fade-left"}`}
                 >
                   <div className="timeline-dot" aria-hidden="true">
@@ -907,23 +1050,61 @@ export default function Home() {
                   >
                     <div className="timeline-card-header">
                       <span className="timeline-date">{item.date}</span>
-                      <span className="timeline-hover-cue">
-                        <span className="cue-icon">✨</span>
-                        <span className="cue-text">Hover to read</span>
-                      </span>
+
+                      <div className="timeline-header-right">
+                        <span className="timeline-hover-cue">
+                          <span className="cue-icon">✨</span>
+                          <span className="cue-text">Hover to read</span>
+                        </span>
+
+                        {isHead && (
+                          <div
+                            className="timeline-head-actions"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              type="button"
+                              className="btn-milestone-action btn-milestone-edit"
+                              onClick={() => openEditMilestoneModal(item)}
+                              title="Edit milestone title, content, or details"
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="btn-milestone-action btn-milestone-delete"
+                              onClick={() => handleDeleteMilestone(item)}
+                              title="Delete this milestone from Route So Far"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <h3 className="timeline-title">{item.title}</h3>
 
                     {/* Single unified first paragraph: clamped initially, unclamps on hover without glitch/layout shifts */}
                     <p className="timeline-card-desc">
-                      {item.firstParagraph || item.desc}
+                      {itemContent}
                     </p>
 
                     <div className="timeline-action-strip">
-                      <Link to="/events" className="btn-timeline-explore">
-                        Full Event Report &rarr;
-                      </Link>
+                      {isExternal ? (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-timeline-explore"
+                        >
+                          {item.linkLabel || "Full Event Report →"}
+                        </a>
+                      ) : (
+                        <Link to={item.link || "/events"} className="btn-timeline-explore">
+                          {item.linkLabel || "Full Event Report →"}
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </li>
@@ -1250,6 +1431,155 @@ export default function Home() {
                     : editingNoticeId
                     ? "Update Notice"
                     : "Publish Notice"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* =====================================================
+          HEAD MILESTONE MODAL: CREATE / EDIT (ROUTE SO FAR)
+      ===================================================== */}
+      {showMilestoneModal && (
+        <div
+          className="milestone-modal-overlay"
+          onClick={() => setShowMilestoneModal(false)}
+        >
+          <div
+            className="milestone-modal-container"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="milestone-modal-header">
+              <h3>
+                {editingMilestoneId ? "✏️ Edit Route Milestone" : "➕ Add New Route Milestone"}
+              </h3>
+              <button
+                type="button"
+                className="btn-modal-close"
+                onClick={() => setShowMilestoneModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="milestone-modal-subhead">
+              Manage what displays on this Route So Far milestone card. The description below is displayed as the milestone paragraph and unclamps smoothly on hover.
+            </p>
+
+            <form onSubmit={handleMilestoneSubmit} className="milestone-modal-form">
+              <div className="milestone-form-group">
+                <label>Milestone Title *</label>
+                <input
+                  type="text"
+                  required
+                  value={milestoneForm.title}
+                  onChange={(e) => setMilestoneForm({ ...milestoneForm, title: e.target.value })}
+                  placeholder="e.g. UAV Racing Competition or Air Show 2026"
+                />
+              </div>
+
+              <div className="milestone-form-row">
+                <div className="milestone-form-group" style={{ flex: 1 }}>
+                  <label>Date / Timeframe *</label>
+                  <input
+                    type="text"
+                    required
+                    value={milestoneForm.date}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, date: e.target.value })}
+                    placeholder="e.g. 8 October 2025 or April 2026"
+                  />
+                </div>
+
+                <div className="milestone-form-group" style={{ width: "120px" }}>
+                  <label>Icon / Symbol</label>
+                  <input
+                    type="text"
+                    value={milestoneForm.icon}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, icon: e.target.value })}
+                    placeholder="✈"
+                    maxLength={4}
+                    style={{ textAlign: "center", fontSize: "1.2rem" }}
+                  />
+                </div>
+              </div>
+
+              {/* Quick Preset Icon Chips */}
+              <div className="milestone-icon-strip">
+                <span className="milestone-icon-label">Presets:</span>
+                {["✈", "🏁", "⚡", "🚀", "🏆", "🛸", "🎯", "◧", "〜", "◆"].map((sym) => (
+                  <button
+                    key={sym}
+                    type="button"
+                    className={`milestone-icon-chip ${milestoneForm.icon === sym ? "active" : ""}`}
+                    onClick={() => setMilestoneForm({ ...milestoneForm, icon: sym })}
+                  >
+                    {sym}
+                  </button>
+                ))}
+              </div>
+
+              <div className="milestone-form-group">
+                <label>Content / Description (What to display on the card) *</label>
+                <textarea
+                  required
+                  rows={5}
+                  value={milestoneForm.desc}
+                  onChange={(e) => setMilestoneForm({ ...milestoneForm, desc: e.target.value })}
+                  placeholder="Enter the full description to display on this card. It starts neatly clamped to 2 lines and unclamps fully on hover with zero glitch."
+                />
+              </div>
+
+              <div className="milestone-form-row">
+                <div className="milestone-form-group" style={{ flex: 1 }}>
+                  <label>Action Button Link</label>
+                  <input
+                    type="text"
+                    value={milestoneForm.link}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, link: e.target.value })}
+                    placeholder="/events or external URL"
+                  />
+                </div>
+
+                <div className="milestone-form-group" style={{ flex: 1 }}>
+                  <label>Button Label</label>
+                  <input
+                    type="text"
+                    value={milestoneForm.linkLabel}
+                    onChange={(e) => setMilestoneForm({ ...milestoneForm, linkLabel: e.target.value })}
+                    placeholder="Full Event Report →"
+                  />
+                </div>
+              </div>
+
+              <div className="milestone-form-group" style={{ maxWidth: "160px" }}>
+                <label>Timeline Order / Position</label>
+                <input
+                  type="number"
+                  value={milestoneForm.order}
+                  onChange={(e) => setMilestoneForm({ ...milestoneForm, order: e.target.value })}
+                  placeholder="1, 2, 3..."
+                />
+              </div>
+
+              <div className="milestone-modal-actions">
+                <button
+                  type="button"
+                  className="btn-milestone-cancel"
+                  onClick={() => setShowMilestoneModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn-milestone-submit"
+                  disabled={submittingMilestone}
+                >
+                  {submittingMilestone
+                    ? "Saving..."
+                    : editingMilestoneId
+                    ? "✓ Save Changes"
+                    : "➕ Add to Route So Far"}
                 </button>
               </div>
             </form>
