@@ -35,7 +35,11 @@ const getCsrfToken = (req, res) => {
     const raw = crypto.randomBytes(32).toString("hex");
     token = `${raw}.${sign(raw)}`;
   }
-  res.cookie(CSRF_COOKIE, token, { ...cookieOptions(), maxAge: ONE_DAY });
+  res.cookie(CSRF_COOKIE, token, {
+    ...cookieOptions(),
+    httpOnly: false, // Allow client JavaScript / Axios to read it
+    maxAge: ONE_DAY,
+  });
   res.status(200).json({ success: true, csrfToken: token });
 };
 
@@ -60,7 +64,12 @@ const csrfProtection = (req, res, next) => {
   }
 
   // Allow registration and login to proceed if CSRF cookie hasn't been negotiated yet
-  if (req.path === "/auth/login" || req.path === "/auth/register") {
+  if (
+    req.path === "/auth/login" ||
+    req.path === "/auth/register" ||
+    req.originalUrl?.includes("/auth/login") ||
+    req.originalUrl?.includes("/auth/register")
+  ) {
     const headerToken = req.get("x-csrf-token");
     const cookieToken = req.cookies && req.cookies[CSRF_COOKIE];
     if (headerToken && cookieToken) {
@@ -69,17 +78,51 @@ const csrfProtection = (req, res, next) => {
     return next();
   }
 
-  const origin = req.get("origin");
-  if (
-    origin &&
-    !allowedOrigins().includes(origin.replace(/\/+$/, "")) &&
-    !origin.endsWith(".vercel.app")
-  ) {
+  const origin = req.get("origin") || req.get("referer");
+  let isAllowedOrigin = false;
+
+  if (origin) {
+    try {
+      const parsed = new URL(origin);
+      const originBase = `${parsed.protocol}//${parsed.host}`;
+      const isLocal = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(originBase);
+      const isVercel = parsed.protocol === "https:" && parsed.hostname.endsWith(".vercel.app");
+      const isConfigured = allowedOrigins().some((o) => o.replace(/\/+$/, "") === originBase);
+
+      if (isLocal || isVercel || isConfigured) {
+        isAllowedOrigin = true;
+      }
+    } catch {
+      isAllowedOrigin = false;
+    }
+  }
+
+  // If origin is present but comes from an unauthorized cross-site domain, reject immediately
+  if (origin && !isAllowedOrigin) {
     return res.status(403).json({ success: false, message: "Request origin not allowed" });
   }
 
   const headerToken = req.get("x-csrf-token");
   const cookieToken = req.cookies && req.cookies[CSRF_COOKIE];
+
+  // If both tokens exist, verify match and cryptographic signature
+  if (headerToken && cookieToken) {
+    if (!safeEqual(headerToken, cookieToken) || !isValidToken(cookieToken)) {
+      return csrfFail(res);
+    }
+    return next();
+  }
+
+  // If header token alone is provided (e.g. from /api/auth/csrf), verify signature
+  if (headerToken && isValidToken(headerToken)) {
+    return next();
+  }
+
+  // If request comes from an authorized frontend origin (local Vite or Vercel production), allow through
+  if (isAllowedOrigin) {
+    return next();
+  }
+
   if (!headerToken || !cookieToken) return csrfFail(res);
   if (!safeEqual(headerToken, cookieToken) || !isValidToken(cookieToken)) return csrfFail(res);
 
