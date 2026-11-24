@@ -915,19 +915,15 @@ export default function Home() {
 
                     <h3 className="timeline-title">{item.title}</h3>
 
-                    {/* Short preview snippet shown initially */}
-                    <p className="timeline-short-desc">{item.desc}</p>
+                    {/* Single unified first paragraph: clamped initially, unclamps on hover without glitch/layout shifts */}
+                    <p className="timeline-card-desc">
+                      {item.firstParagraph || item.desc}
+                    </p>
 
-                    {/* Only the first paragraph is displayed on hover - NO IMAGES */}
-                    <div className="timeline-full-details">
-                      <p className="timeline-first-paragraph">
-                        {item.firstParagraph || item.fullDesc || item.desc}
-                      </p>
-                      <div className="timeline-action-strip">
-                        <Link to="/events" className="btn-timeline-explore">
-                          Full Event Report &rarr;
-                        </Link>
-                      </div>
+                    <div className="timeline-action-strip">
+                      <Link to="/events" className="btn-timeline-explore">
+                        Full Event Report &rarr;
+                      </Link>
                     </div>
                   </div>
                 </li>
