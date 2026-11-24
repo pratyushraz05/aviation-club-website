@@ -129,6 +129,71 @@ const defaultMilestones = [
   },
 ];
 
+// ===================== DEFAULT UPCOMING FLAGSHIP EVENT =====================
+
+const defaultFlagshipEvent = {
+  eventId: "aerosprint-annual-flagship-2027",
+  title: "AeroSprint: UAV Racing & Deliver the Pizza (DTP)",
+  tagline: "NIT Raipur's Premier Dual-Track Aviation Championship: Fixed-Wing UAV Racing & Multirotor Payload Delivery",
+  date: "Upcoming 2026 – 2027 Academic Session",
+  duration: "Full Day Aeromodelling & Multirotor Championship",
+  venue: "Football Ground, NIT Raipur",
+  speakerInfo: "Aviation Club Executive Team & Mentors",
+  isUpcoming: true,
+  isFlagship: true,
+  flagshipStatus: "Upcoming",
+  registrationLink: "https://docs.google.com/forms/d/e/1FAIpQLSepdVSIlzd3tuBHCDPkJ6t4WjY3rvN9TY_S3_fhc8kTWq_MHw/viewform?usp=publish-editor",
+  registrationStatusMode: "auto",
+  teamEligibility: "Members of a Team must be undergraduate or postgraduate student. Cross college and cross branches are allowed for the members of a team. Each team can have minimum of 3 members and maximum of 5 members. And one student from 2nd or Higher grade (year) is mandatory in one team.",
+  registrationFee: "For club volunteers = Rs. 200 per person | For non volunteers = Rs. 300 per person | For Outsiders (from other institutes) = Rs. 500 per person",
+  prizePool: "Cash Prizes + SAE AEROTHON 2027 Team Sponsorship",
+  contactInfo: "Coordinator: +91 98765 43210 / aviation@nitrr.ac.in",
+  image: "/images/6.png",
+  tracks: [
+    {
+      id: "uav-racing",
+      title: "Track 1: UAV Racing Competition",
+      badge: "Fixed-Wing Challenge",
+      tagline: "High-Speed Fixed-Wing Aerodynamic Design, Fabrication & Piloting",
+      description: "**UAV Racing** is a hands-on aerospace challenge where innovation meets speed and precision. Participants will design, fabricate, and fly their own fixed-wing UAVs, putting their aerodynamic knowledge, engineering skills, and piloting abilities to the ultimate test. Build your aircraft, push the limits of performance, and race towards victory!",
+      objectives: [
+        "To encourage students to design and fabricate efficient, high-performance fixed-wing UAVs.",
+        "To develop practical skills in aerodynamics, aircraft structures, propulsion, and flight control systems.",
+        "To enhance problem-solving, innovation, and teamwork through hands-on aircraft development.",
+        "To evaluate UAV performance in terms of speed, stability, manoeuvrability, and flight efficiency."
+      ],
+      image: "/images/6.png"
+    },
+    {
+      id: "deliver-the-pizza",
+      title: "Track 2: Deliver the Pizza (DTP)",
+      badge: "Multirotor Challenge",
+      tagline: "Autonomous / Manual Multirotor Drone Payload Delivery & Precision Flight",
+      description: "**Deliver the Pizza** is an exciting drone engineering challenge that tests innovation, stability, and payload-carrying capabilities. Participants will design and develop custom multirotor drones capable of carrying and delivering a payload to a designated target. Engineer your solution, master precision, and prove that your drone can deliver under pressure!",
+      objectives: [
+        "To encourage the design and development of multirotor drones with payload-carrying capabilities.",
+        "To develop practical knowledge of flight stability, propulsion systems, weight distribution, and control mechanisms.",
+        "To challenge students to achieve accurate and reliable payload transportation and delivery.",
+        "To promote innovation, teamwork, and problem-solving through real-world UAV applications."
+      ],
+      image: "/images/4.png"
+    }
+  ],
+  purpose: [
+    "Track 1 (UAV Racing): Encourage design & fabrication of high-performance fixed-wing UAVs.",
+    "Track 1 (UAV Racing): Develop practical skills in aerodynamics, structures, propulsion, and flight control.",
+    "Track 2 (Deliver the Pizza): Encourage design & development of multirotor drones with payload capabilities.",
+    "Track 2 (Deliver the Pizza): Master flight stability, weight distribution, and precision payload delivery.",
+    "Champion Selection: Winning NIT Raipur team & top performers selected for SAE AEROTHON 2027 representation."
+  ],
+  description: "Welcome to AeroSprint 2027, the flagship aeromodelling championship of the Aviation Club, NIT Raipur! Dual-track competition combining high-speed Fixed-Wing UAV Racing and precision Multirotor Payload Delivery ('Deliver the Pizza'). Complete engineering lifecycle, component expenditure by teams, and winner selection for SAE AEROTHON 2027.",
+  outcomes: [
+    "End-to-end fixed-wing & multirotor engineering, testing, and competitive flying experience",
+    "Official selection & sponsorship for SAE AEROTHON 2027 representation on behalf of Aviation Club",
+    "Cash prizes, merit certificates, and mentorship from senior aeromodellers"
+  ]
+};
+
 // ===================== NOTICE CARD =====================
 
 function NoticeCard({ notice, isHead, onEdit, onDelete }) {
@@ -211,8 +276,8 @@ export default function Home() {
 
   // Dynamic Data States
   const [notifications, setNotifications] = useState(defaultNotificationsData);
-  const [upcomingEvent, setUpcomingEvent] = useState(null);
-  const [flagshipEvent, setFlagshipEvent] = useState(null);
+  const [upcomingEvent, setUpcomingEvent] = useState(defaultFlagshipEvent);
+  const [flagshipEvent, setFlagshipEvent] = useState(defaultFlagshipEvent);
   const [homeTrackIdx, setHomeTrackIdx] = useState(0);
   const [timelineItems, setTimelineItems] = useState(defaultMilestones);
   const [expandedTimelineIdx, setExpandedTimelineIdx] = useState(null);
@@ -618,9 +683,9 @@ export default function Home() {
                 <span>
                   🚀 {featured.isFlagship ? "CLUB FLAGSHIP" : "UPCOMING"} ({(featured.flagshipStatus || "UPCOMING").toUpperCase()}): <strong>{featured.title}</strong> ({featured.date})
                 </span>
-                <Link to="/events" className="hero-live-link">
-                  Explore Flagship &rarr;
-                </Link>
+                <a href="#upcoming-event" className="hero-live-link">
+                  View Upcoming Event &rarr;
+                </a>
               </div>
             );
           })()}
@@ -704,8 +769,12 @@ export default function Home() {
         const displayImage = currentTrack?.image || flagshipEvent.image;
 
         return (
-          <section className="home-flagship-section" aria-label="Official Club Flagship Event">
+          <section className="home-flagship-section" id="upcoming-event" aria-labelledby="upcoming-event-heading">
             <div className="container">
+              <div className="section-head reveal fade-up" style={{ textAlign: "center", marginBottom: "32px" }}>
+                <p className="eyebrow">Upcoming Events &amp; Competitions</p>
+                <h2 id="upcoming-event-heading">Featured Upcoming Flagship</h2>
+              </div>
               <div className="home-flagship-card reveal fade-up">
                 <div className="home-flagship-glow" aria-hidden="true"></div>
                 <div className="home-flagship-inner">
