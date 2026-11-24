@@ -17,6 +17,7 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const memberRoutes = require("./routes/memberRoutes");
+const milestoneRoutes = require("./routes/milestoneRoutes");
 
 const app = express();
 
@@ -105,6 +106,7 @@ app.use("/api/team", teamRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/events", eventRoutes);
+app.use("/api/milestones", milestoneRoutes);
 
 app.use("/api", notFound);
 app.use(errorHandler);
