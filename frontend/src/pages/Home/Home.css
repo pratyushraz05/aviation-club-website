@@ -669,30 +669,18 @@ h3 {
   left: -22px;
 }
 
-.timeline-card {
-  padding: 22px 26px;
-
-  background: var(--white);
-
-  border: 1px solid var(--card-border);
-
-  border-radius: var(--radius-md);
-
-  box-shadow: var(--shadow-soft);
-}
-
 .timeline-date {
   display: inline-block;
 
-  margin-bottom: 10px;
+  margin-bottom: 0;
 
   padding: 5px 14px;
 
   border-radius: 999px;
 
-  background: var(--primary);
+  background: var(--primary, #38bdf8);
 
-  color: var(--accent);
+  color: var(--accent, #0f172a);
 
   font-size: 0.72rem;
 
@@ -701,22 +689,6 @@ h3 {
   letter-spacing: 0.05em;
 
   text-transform: uppercase;
-}
-
-.timeline-card h3 {
-  margin-bottom: 8px;
-
-  font-size: 1.1rem;
-}
-
-.timeline-card p {
-  margin: 0;
-
-  color: var(--text-soft);
-
-  font-size: 0.92rem;
-
-  line-height: 1.6;
 }
 
 /* =========================================================
@@ -735,17 +707,28 @@ h3 {
   border: 1px solid var(--card-border, #334155);
   border-radius: var(--radius-lg, 20px);
   padding: 24px;
-  transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   position: relative;
-  overflow: hidden;
   text-align: left !important;
   cursor: pointer;
 }
 
-/* When you hover over a milestone card, it lifts up and glows! */
+/* Invisible hit-area buffer bridge at the bottom to guarantee zero flicker on the lower edge */
+.timeline-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  height: 24px;
+  pointer-events: auto;
+}
+
+/* When you hover over a milestone card, it lifts gently and glows */
 .timeline-card:hover,
-.timeline-card.expanded {
-  transform: translateY(-6px) scale(1.015);
+.timeline-card.expanded,
+.timeline-item:hover .timeline-card {
+  transform: translateY(-3px);
   border-color: var(--primary, #38bdf8);
   box-shadow: 0 16px 36px rgba(56, 189, 248, 0.16), var(--shadow-lift);
   z-index: 10;
@@ -757,15 +740,18 @@ h3 {
   position: absolute;
   top: 0;
   left: 0;
+  bottom: 0;
   width: 4px;
-  height: 100%;
+  border-top-left-radius: var(--radius-lg, 20px);
+  border-bottom-left-radius: var(--radius-lg, 20px);
   background: var(--primary, #38bdf8);
   opacity: 0.4;
   transition: opacity 0.3s ease;
 }
 
 .timeline-card:hover::before,
-.timeline-card.expanded::before {
+.timeline-card.expanded::before,
+.timeline-item:hover .timeline-card::before {
   opacity: 1;
 }
 
@@ -799,7 +785,8 @@ h3 {
 }
 
 .timeline-card:hover .timeline-hover-cue,
-.timeline-card.expanded .timeline-hover-cue {
+.timeline-card.expanded .timeline-hover-cue,
+.timeline-item:hover .timeline-hover-cue {
   background: rgba(234, 179, 8, 0.2);
   border-color: #facc15;
   color: #fef08a;
@@ -810,60 +797,48 @@ h3 {
   font-size: 1.15rem;
   font-weight: 700;
   color: #f8fafc;
-  margin: 0 0 8px 0;
+  margin: 0 0 10px 0;
   line-height: 1.35;
 }
 
-.timeline-short-desc {
+/* Single unified paragraph: shows 2 lines in default state, fully expands on hover with ZERO height collapse */
+.timeline-card-desc {
   margin: 0;
   color: #cbd5e1;
   font-size: 0.92rem;
-  line-height: 1.6;
-  transition: opacity 0.2s ease;
-}
-
-.timeline-card:hover .timeline-short-desc,
-.timeline-card.expanded .timeline-short-desc {
-  display: none;
-}
-
-/* Full First Paragraph Section (Smoothly Expanded on Hover - NO IMAGES) */
-.timeline-full-details {
-  max-height: 0;
-  opacity: 0;
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  transform: translateY(6px);
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 1px dashed transparent;
-  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.3s ease,
-              transform 0.3s ease,
-              margin-top 0.25s ease,
-              padding-top 0.25s ease;
+  transition: color 0.25s ease;
 }
 
-.timeline-card:hover .timeline-full-details,
-.timeline-card.expanded .timeline-full-details {
-  max-height: 500px;
-  opacity: 1;
+.timeline-card:hover .timeline-card-desc,
+.timeline-card.expanded .timeline-card-desc,
+.timeline-item:hover .timeline-card-desc {
+  -webkit-line-clamp: unset;
+  display: block;
   overflow: visible;
-  transform: translateY(0);
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top-color: rgba(56, 189, 248, 0.3);
+  color: #f1f5f9;
 }
 
-.timeline-first-paragraph {
-  margin: 0;
-  color: #e2e8f0;
-  font-size: 0.92rem;
-  line-height: 1.7;
-}
-
+/* Action button strip: smooth height expansion downwards */
 .timeline-action-strip {
   display: flex;
   justify-content: flex-end;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.25s ease;
+}
+
+.timeline-card:hover .timeline-action-strip,
+.timeline-card.expanded .timeline-action-strip,
+.timeline-item:hover .timeline-action-strip {
+  max-height: 50px;
+  opacity: 1;
   margin-top: 14px;
 }
 
