@@ -318,6 +318,15 @@ const getEvents = async (req, res) => {
     let count = await Event.countDocuments();
     if (count === 0) {
       await Event.insertMany(defaultEvents);
+    } else {
+      // Ensure the official flagship event exists in DB even if DB was previously seeded
+      const flagshipExists = await Event.findOne({ eventId: "aerosprint-annual-flagship-2027" });
+      if (!flagshipExists) {
+        const flagshipData = defaultEvents.find((e) => e.eventId === "aerosprint-annual-flagship-2027");
+        if (flagshipData) {
+          await Event.create(flagshipData);
+        }
+      }
     }
 
     const data = await Event.find().sort({ createdAt: -1 });
